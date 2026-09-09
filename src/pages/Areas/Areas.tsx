@@ -179,13 +179,6 @@ const Areas = () => {
       render: (v: number) => `৳ ${money(v)}`,
     },
     {
-      title: "Yield",
-      dataIndex: "rentalYield",
-      key: "rentalYield",
-      width: 90,
-      render: (v: string) => v || "—",
-    },
-    {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",

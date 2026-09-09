@@ -117,13 +117,10 @@ const AreaModal = ({ open, onClose, area }: Props) => {
               <InputNumber placeholder="18000" className="!w-full" min={0} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
-            <LangInput label="Rental yield" name="rentalYield" lang="en" placeholder="5.2%" />
-          </Col>
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12}>
             <LangInput label="Security tier" name="securityTier" lang="en" placeholder="Diplomatic zone" />
           </Col>
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12}>
             <LangInput label="Metro connectivity" name="metroConnectivity" lang="en" placeholder="MRT-6, 800m" />
           </Col>
 

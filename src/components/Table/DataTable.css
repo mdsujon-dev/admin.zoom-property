@@ -63,17 +63,13 @@
   background-color: #f3f3f3 !important;
 }
 
-/* Table Wrapper Background and Border Removal */
-.ant-table-wrapper,
-.ant-table-wrapper .ant-table-container,
-.ant-table-wrapper .ant-table {
+/* Table Wrapper Background and Rounded Styling */
+.ant-table-wrapper {
   background-color: #fff;
-  border: none !important;
-  box-shadow: none !important;
 }
 
 .ant-table-wrapper .ant-table-container {
-  border-radius: 0 !important;
+  border-radius: 0.75rem !important;
 }
 
 /* Horizontal overflow scrolling */

@@ -137,7 +137,7 @@ export default function DataTable(props: any) {
   };
 
   return (
-    <div ref={tableRef} className="overflow-x-auto">
+    <div style={{ boxShadow: "rgba(15, 15, 15, 0.10) 0px 8px 25px 0px" }} ref={tableRef} className="border border-gray-300 rounded-lg overflow-hidden bg-white ">
       <Table
       loading={{
         spinning: showLoader,
