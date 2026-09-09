@@ -10,14 +10,18 @@ import {
   Row,
   Select,
   Switch,
+  Tooltip,
 } from "antd";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { Languages, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import LangInput, { translateToBanglaApi } from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
+import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import { useGetProjectsQuery } from "../../redux/features/project/projectApi";
@@ -50,6 +54,44 @@ interface Props {
  * manage a repeating field for something they think of as "the description"
  * is how descriptions end up as one long unbroken block.
  */
+const normalizeDescriptionForEditor = (desc?: string[] | string) => {
+  if (!desc) return "";
+  if (typeof desc === "string") return desc;
+  if (Array.isArray(desc)) {
+    return desc
+      .map((p) => (p.trim().startsWith("<") ? p : `<p>${p}</p>`))
+      .join("");
+  }
+  return "";
+};
+
+const toDescriptionArray = (value?: string) => {
+  if (!value || !value.trim()) return [];
+  return [value.trim()];
+};
+
+const translateNodeText = async (node: Node) => {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.textContent?.trim();
+    if (text) {
+      const translated = await translateToBanglaApi(text);
+      node.textContent = translated;
+    }
+  } else if (node.nodeType === Node.ELEMENT_NODE) {
+    for (const child of Array.from(node.childNodes)) {
+      await translateNodeText(child);
+    }
+  }
+};
+
+const translateRichTextToBangla = async (html: string): Promise<string> => {
+  if (!html || !html.trim()) return "";
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  await translateNodeText(tempDiv);
+  return tempDiv.innerHTML || (await translateToBanglaApi(html));
+};
+
 const PropertyForm = ({
   initial,
   saving,
@@ -59,6 +101,25 @@ const PropertyForm = ({
 }: Props) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [translatingDescBn, setTranslatingDescBn] = useState(false);
+
+  const handleTranslateDescription = async () => {
+    const enText = form.getFieldValue("description");
+    if (!enText || !enText.trim() || enText === "<p><br></p>" || enText === "<p></p>") {
+      toast.info("অনুবাদের জন্য আগে ইংরেজিতে বিবরণ (English description) লিখুন");
+      return;
+    }
+    setTranslatingDescBn(true);
+    try {
+      const bnText = await translateRichTextToBangla(enText);
+      form.setFieldsValue({ descriptionBn: bnText });
+      toast.success("বিবরণ বাংলায় রূপান্তর করা হয়েছে!");
+    } catch {
+      toast.error("অনুবাদ করতে সমস্যা হয়েছে");
+    } finally {
+      setTranslatingDescBn(false);
+    }
+  };
 
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
   const { data: projectData } = useGetProjectsQuery({ limit: 300, activeOnly: true });
@@ -79,24 +140,20 @@ const PropertyForm = ({
       images: (initial.images || []).map((i: any) => i?._id ?? i),
       imageUrls: (initial.images || []).map((i: any) => i?.key).filter(Boolean),
       expiresAt: initial.expiresAt ? dayjs(initial.expiresAt) : undefined,
-      description: (initial.description || []).join("\n\n"),
-      descriptionBn: (initial.descriptionBn || []).join("\n\n"),
+      description: normalizeDescriptionForEditor(initial.description),
+      descriptionBn: normalizeDescriptionForEditor(initial.descriptionBn),
     });
   }, [initial, form]);
 
-  const paragraphs = (value?: string) =>
-    (value || "")
-      .split(/\n\s*\n/)
-      .map((p) => p.trim())
-      .filter(Boolean);
-
   const handleFinish = async (values: any) => {
     const { coverImageUrl, imageUrls, ...rest } = values;
+    void coverImageUrl;
+    void imageUrls;
     await onSubmit({
       purpose: "sale",
       ...rest,
-      description: paragraphs(values.description),
-      descriptionBn: paragraphs(values.descriptionBn),
+      description: toDescriptionArray(values.description),
+      descriptionBn: toDescriptionArray(values.descriptionBn),
       expiresAt: values.expiresAt ? values.expiresAt.toISOString() : null,
     });
   };
@@ -135,22 +192,23 @@ const PropertyForm = ({
         <Card title="The basics">
           <Row gutter={16}>
             <Col xs={24} md={12}>
-              <Form.Item
+              <LangInput
                 label="Title"
                 name="title"
-                rules={[{ required: true, message: "Give the listing a title" }]}
-              >
-                <Input placeholder="e.g. Harbour View Loft" />
-              </Form.Item>
+                lang="en"
+                required
+                placeholder="e.g. Harbour View Loft"
+              />
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item
+              <LangInput
                 label="Title (Bangla)"
                 name="titleBn"
-                tooltip="Shown on the Bangla site. Falls back to the English title."
-              >
-                <Input placeholder="বাংলা শিরোনাম" />
-              </Form.Item>
+                lang="bn"
+                sourceFieldName="title"
+                form={form}
+                placeholder="বাংলা শিরোনাম"
+              />
             </Col>
 
             <Col xs={24} md={8}>
@@ -169,7 +227,7 @@ const PropertyForm = ({
             </Col>
             <Col xs={24} md={8}>
               <Form.Item label="Badge" name="badge">
-                <Select allowClear options={BADGES} placeholder="None" />
+                <Select allowClear options={BADGES} placeholder="Select badge" />
               </Form.Item>
             </Col>
 
@@ -178,14 +236,13 @@ const PropertyForm = ({
                 label="Price (৳)"
                 name="price"
                 rules={[{ required: true, message: "Enter the asking price" }]}
-                tooltip="Monthly rent when the purpose is To rent."
               >
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 15,000,000" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
               <Form.Item label="Service charge (৳ / month)" name="serviceCharge">
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 5,000" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
@@ -194,7 +251,7 @@ const PropertyForm = ({
                 name="expiresAt"
                 tooltip="Past this date the nightly sweep archives the listing."
               >
-                <DatePicker className="w-full" format="DD-MM-YYYY" />
+                <DatePicker className="w-full" format="DD-MM-YYYY" placeholder="Select end date" />
               </Form.Item>
             </Col>
           </Row>
@@ -221,7 +278,7 @@ const PropertyForm = ({
             </Col>
             <Col xs={24} md={8}>
               <Form.Item label="City" name="city">
-                <Input />
+                <Input placeholder="e.g. Dhaka" />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
@@ -240,12 +297,12 @@ const PropertyForm = ({
           <Row gutter={16}>
             <Col xs={12} md={4}>
               <Form.Item label="Beds" name="beds">
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 3" />
               </Form.Item>
             </Col>
             <Col xs={12} md={4}>
               <Form.Item label="Baths" name="baths">
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 3" />
               </Form.Item>
             </Col>
             <Col xs={12} md={4}>
@@ -254,12 +311,12 @@ const PropertyForm = ({
                 name="size"
                 rules={[{ required: true, message: "Enter the covered area" }]}
               >
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 1600" />
               </Form.Item>
             </Col>
             <Col xs={12} md={4}>
               <Form.Item label="Land (katha)" name="katha">
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 5" />
               </Form.Item>
             </Col>
             <Col xs={12} md={4}>
@@ -269,7 +326,7 @@ const PropertyForm = ({
             </Col>
             <Col xs={12} md={4}>
               <Form.Item label="Parking" name="parking">
-                <InputNumber className="!w-full" min={0} />
+                <InputNumber className="!w-full" min={0} placeholder="e.g. 1" />
               </Form.Item>
             </Col>
 
@@ -408,14 +465,40 @@ const PropertyForm = ({
 
         <Card title="Description">
           <Form.Item
-            label="English"
+            label="Description (English)"
             name="description"
-            tooltip="Leave a blank line between paragraphs."
+            tooltip="Detailed property description with rich formatting."
           >
-            <Input.TextArea rows={6} />
+            <RichTextEditor placeholder="Enter description in English..." height={500} />
           </Form.Item>
-          <Form.Item label="Bangla" name="descriptionBn">
-            <Input.TextArea rows={6} />
+          <Form.Item
+            label={
+              <div className="flex items-center justify-between w-full gap-2">
+                <span>Description (Bangla)</span>
+                <Tooltip title="ইংরেজিতে লেখা বিবরণ থেকে বাংলায় রূপান্তর করুন">
+                  <Button
+                    type="link"
+                    size="small"
+                    className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+                    onClick={handleTranslateDescription}
+                    loading={translatingDescBn}
+                    icon={
+                      translatingDescBn ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Languages className="w-3.5 h-3.5" />
+                      )
+                    }
+                  >
+                    {translatingDescBn ? "রূপান্তর হচ্ছে..." : "বাংলা করুন"}
+                  </Button>
+                </Tooltip>
+              </div>
+            }
+            name="descriptionBn"
+            tooltip="বাংলায় বিস্তারিত বিবরণ"
+          >
+            <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={500} />
           </Form.Item>
         </Card>
 

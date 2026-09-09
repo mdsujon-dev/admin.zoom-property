@@ -97,7 +97,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value = '',
   onChange,
   placeholder,
-  height = 480,
+  height = 500,
 }) => {
   const editorRef = useRef<any>(null);
 
@@ -664,8 +664,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           content_style: `
             body {
               font-family: Outfit, 'Segoe UI', system-ui, -apple-system, sans-serif;
-              font-size: 15px;
-              line-height: 1.65;
+              font-size: 16px;
+              line-height: 1.8;
               color: #1f2937;
               padding: 16px;
             }

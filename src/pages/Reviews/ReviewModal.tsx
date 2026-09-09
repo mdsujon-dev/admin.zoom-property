@@ -64,6 +64,8 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
 
   const onFinish = async (values: any) => {
     const { photoUrl, videoPosterUrl, videoPoster, ...rest } = values;
+    void photoUrl;
+    void videoPosterUrl;
     const body = {
       ...rest,
       video: { ...(rest.video || {}), poster: videoPoster || null },

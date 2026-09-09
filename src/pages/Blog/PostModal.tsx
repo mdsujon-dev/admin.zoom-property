@@ -59,6 +59,8 @@ const PostModal = ({ open, onClose, post }: Props) => {
 
   const onFinish = async (values: any) => {
     const { coverImageUrl, authorAvatarUrl, authorAvatar, ...rest } = values;
+    void coverImageUrl;
+    void authorAvatarUrl;
     const body = {
       ...rest,
       author: { ...(rest.author || {}), avatar: authorAvatar || null },

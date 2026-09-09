@@ -3,7 +3,6 @@ import {
   Check,
   CreditCard,
   Eye,
-  GraduationCap,
   Printer,
   RotateCcw,
   Users,

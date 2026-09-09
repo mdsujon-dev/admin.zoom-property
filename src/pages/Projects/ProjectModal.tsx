@@ -9,12 +9,15 @@ import {
   Row,
   Select,
   Switch,
+  Tooltip,
 } from "antd";
 import dayjs from "dayjs";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { Languages, Loader2, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import LangInput, { translateToBanglaApi } from "../../components/Common/LangInput";
+import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
@@ -35,6 +38,44 @@ export const STAGES = [
   { value: "Handover ready", label: "Handover ready" },
 ];
 
+const normalizeDescriptionForEditor = (desc?: string[] | string) => {
+  if (!desc) return "";
+  if (typeof desc === "string") return desc;
+  if (Array.isArray(desc)) {
+    return desc
+      .map((p) => (p.trim().startsWith("<") ? p : `<p>${p}</p>`))
+      .join("");
+  }
+  return "";
+};
+
+const toDescriptionArray = (value?: string) => {
+  if (!value || !value.trim()) return [];
+  return [value.trim()];
+};
+
+const translateNodeText = async (node: Node) => {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.textContent?.trim();
+    if (text) {
+      const translated = await translateToBanglaApi(text);
+      node.textContent = translated;
+    }
+  } else if (node.nodeType === Node.ELEMENT_NODE) {
+    for (const child of Array.from(node.childNodes)) {
+      await translateNodeText(child);
+    }
+  }
+};
+
+const translateRichTextToBangla = async (html: string): Promise<string> => {
+  if (!html || !html.trim()) return "";
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  await translateNodeText(tempDiv);
+  return tempDiv.innerHTML || (await translateToBanglaApi(html));
+};
+
 /**
  * A development, and the programme behind it.
  *
@@ -45,9 +86,28 @@ export const STAGES = [
  */
 const ProjectModal = ({ open, onClose, project }: Props) => {
   const [form] = Form.useForm();
+  const [translatingDescBn, setTranslatingDescBn] = useState(false);
   const [createProject, { isLoading: creating }] = useCreateProjectMutation();
   const [updateProject, { isLoading: updating }] = useUpdateProjectMutation();
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
+
+  const handleTranslateDescription = async () => {
+    const enText = form.getFieldValue("description");
+    if (!enText || !enText.trim() || enText === "<p><br></p>" || enText === "<p></p>") {
+      toast.info("অনুবাদের জন্য আগে ইংরেজিতে বিবরণ (English description) লিখুন");
+      return;
+    }
+    setTranslatingDescBn(true);
+    try {
+      const bnText = await translateRichTextToBangla(enText);
+      form.setFieldsValue({ descriptionBn: bnText });
+      toast.success("বিবরণ বাংলায় রূপান্তর করা হয়েছে!");
+    } catch {
+      toast.error("অনুবাদ করতে সমস্যা হয়েছে");
+    } finally {
+      setTranslatingDescBn(false);
+    }
+  };
 
   useEffect(() => {
     if (!open) return form.resetFields();
@@ -62,24 +122,20 @@ const ProjectModal = ({ open, onClose, project }: Props) => {
         lastInspected: project.lastInspected
           ? dayjs(project.lastInspected)
           : undefined,
-        description: (project.description || []).join("\n\n"),
-        descriptionBn: (project.descriptionBn || []).join("\n\n"),
+        description: normalizeDescriptionForEditor(project.description),
+        descriptionBn: normalizeDescriptionForEditor(project.descriptionBn),
       });
     }
   }, [open, project, form]);
 
-  const paragraphs = (value?: string) =>
-    (value || "")
-      .split(/\n\s*\n/)
-      .map((p) => p.trim())
-      .filter(Boolean);
-
   const onFinish = async (values: any) => {
     const { coverImageUrl, imageUrls, ...rest } = values;
+    void coverImageUrl;
+    void imageUrls;
     const body = {
       ...rest,
-      description: paragraphs(values.description),
-      descriptionBn: paragraphs(values.descriptionBn),
+      description: toDescriptionArray(values.description),
+      descriptionBn: toDescriptionArray(values.descriptionBn),
       lastInspected: values.lastInspected
         ? values.lastInspected.toISOString()
         : null,
@@ -120,18 +176,23 @@ const ProjectModal = ({ open, onClose, project }: Props) => {
       >
         <Row gutter={16}>
           <Col xs={24} md={12}>
-            <Form.Item
+            <LangInput
               label="Name"
               name="name"
-              rules={[{ required: true, message: "Name the project" }]}
-            >
-              <Input />
-            </Form.Item>
+              lang="en"
+              required
+              placeholder="e.g. Navana Platinum"
+            />
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Name (Bangla)" name="nameBn">
-              <Input />
-            </Form.Item>
+            <LangInput
+              label="Name (Bangla)"
+              name="nameBn"
+              lang="bn"
+              sourceFieldName="name"
+              form={form}
+              placeholder="প্রজেক্টের নাম"
+            />
           </Col>
 
           <Col xs={24} md={8}>
@@ -336,14 +397,40 @@ const ProjectModal = ({ open, onClose, project }: Props) => {
         </Form.List>
 
         <Form.Item
-          label="Description"
+          label="Description (English)"
           name="description"
-          tooltip="Leave a blank line between paragraphs."
+          tooltip="Detailed project description with rich formatting."
         >
-          <Input.TextArea rows={4} />
+          <RichTextEditor placeholder="Enter description in English..." height={420} />
         </Form.Item>
-        <Form.Item label="Description (Bangla)" name="descriptionBn">
-          <Input.TextArea rows={3} />
+        <Form.Item
+          label={
+            <div className="flex items-center justify-between w-full gap-2">
+              <span>Description (Bangla)</span>
+              <Tooltip title="ইংরেজিতে লেখা বিবরণ থেকে বাংলায় রূপান্তর করুন">
+                <Button
+                  type="link"
+                  size="small"
+                  className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+                  onClick={handleTranslateDescription}
+                  loading={translatingDescBn}
+                  icon={
+                    translatingDescBn ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Languages className="w-3.5 h-3.5" />
+                    )
+                  }
+                >
+                  {translatingDescBn ? "রূপান্তর হচ্ছে..." : "বাংলা করুন"}
+                </Button>
+              </Tooltip>
+            </div>
+          }
+          name="descriptionBn"
+          tooltip="বাংলায় বিস্তারিত বিবরণ"
+        >
+          <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={420} />
         </Form.Item>
 
         <div className="flex justify-end gap-2">

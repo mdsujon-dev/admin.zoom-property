@@ -17,7 +17,6 @@ import {
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
   PROPERTY_TYPES,
-  PURPOSES,
   STATUSES,
   STATUS_COLOUR,
   money,
@@ -40,7 +39,7 @@ const Properties = () => {
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>();
-  const [purpose, setPurpose] = useState<string | undefined>();
+  const [purpose] = useState<string | undefined>();
   const [type, setType] = useState<string | undefined>();
   const [area, setArea] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -274,17 +273,6 @@ const Properties = () => {
           onChange={(v) => {
             setPage(1);
             setStatus(v);
-          }}
-        />
-        <Select
-          allowClear
-          placeholder="Purpose"
-          className="w-36"
-          value={purpose}
-          options={PURPOSES}
-          onChange={(v) => {
-            setPage(1);
-            setPurpose(v);
           }}
         />
         <Select
