@@ -7,7 +7,7 @@ export const DESIGNATION_SCOPE_OPTIONS = [
 
 export type SelectableScope = (typeof DESIGNATION_SCOPE_OPTIONS)[number]["value"];
 
-export const scopeLabel = (scope?: string): string => "Employee";
+export const scopeLabel = (_scope?: string): string => "Employee";
 
 export const ScopeRadio: React.FC<{
   value?: SelectableScope;
