@@ -66,7 +66,12 @@ const AreaModal = ({ open, onClose, area }: Props) => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{ city: "Dhaka", isActive: true, featured: false }}
+        initialValues={{
+          city: "Dhaka",
+          isActive: true,
+          featured: false,
+          isHome: false,
+        }}
       >
         <Row gutter={16}>
           <Col xs={24} md={12}>
@@ -143,6 +148,16 @@ const AreaModal = ({ open, onClose, area }: Props) => {
           </Col>
           <Col xs={12} md={6}>
             <Form.Item label="Featured" name="featured" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          </Col>
+          <Col xs={12} md={6}>
+            <Form.Item
+              label="On home page"
+              name="isHome"
+              valuePropName="checked"
+              tooltip="Areas ticked here are the ones the home page shows."
+            >
               <Switch />
             </Form.Item>
           </Col>

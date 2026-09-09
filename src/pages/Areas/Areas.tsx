@@ -1,4 +1,4 @@
-import { Button, Input, InputNumber, Modal, Space, Tag, Tooltip } from "antd";
+import { Button, Input, InputNumber, Modal, Space, Switch, Tag, Tooltip } from "antd";
 import { ArrowDown, ArrowUp, Check, Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -105,6 +105,7 @@ const Areas = () => {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any>(null);
   const [open, setOpen] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const { data, isFetching } = useGetAreasQuery({
     page,
@@ -113,6 +114,29 @@ const Areas = () => {
     sort: "order",
   });
   const [deleteArea] = useDeleteAreaMutation();
+  const [updateArea] = useUpdateAreaMutation();
+
+  const onToggle = async (
+    id: string,
+    field: "isActive" | "isHome" | "featured",
+    value: boolean
+  ) => {
+    setBusyId(id);
+    try {
+      await updateArea({ id, data: { [field]: value } }).unwrap();
+      const label =
+        field === "isHome"
+          ? "Home display"
+          : field === "isActive"
+          ? "Status"
+          : "Featured";
+      toast.success(`${label} updated`);
+    } catch (e: any) {
+      toast.error(e?.data?.message || "Could not update area");
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
@@ -198,17 +222,78 @@ const Areas = () => {
       render: (v: string) => <DateTimeStacked value={v} />,
     },
     {
-      title: "Status",
+      title: "Home",
+      dataIndex: "isHome",
+      key: "isHome",
+      width: 90,
+      align: "center" as const,
+      render: (isHome: boolean, r: any) => (
+        <PermissionGate
+          module="Areas"
+          action="Update"
+          fallback={
+            <Tag color={isHome ? "blue" : "default"}>
+              {isHome ? "Home" : "Off"}
+            </Tag>
+          }
+        >
+          <Switch
+            size="small"
+            checked={!!isHome}
+            loading={busyId === r._id}
+            onChange={(checked) => onToggle(r._id, "isHome", checked)}
+          />
+        </PermissionGate>
+      ),
+    },
+    {
+      title: "Active",
       dataIndex: "isActive",
       key: "isActive",
-      width: 110,
-      render: (active: boolean, r: any) => (
-        <Space size={4}>
-          <Tag color={active ? "green" : "default"}>
-            {active ? "Active" : "Off"}
-          </Tag>
-          {r.featured && <Tag color="gold">Featured</Tag>}
-        </Space>
+      width: 90,
+      align: "center" as const,
+      render: (isActive: boolean, r: any) => (
+        <PermissionGate
+          module="Areas"
+          action="Update"
+          fallback={
+            <Tag color={isActive !== false ? "green" : "default"}>
+              {isActive !== false ? "Active" : "Off"}
+            </Tag>
+          }
+        >
+          <Switch
+            size="small"
+            checked={isActive !== false}
+            loading={busyId === r._id}
+            onChange={(checked) => onToggle(r._id, "isActive", checked)}
+          />
+        </PermissionGate>
+      ),
+    },
+    {
+      title: "Featured",
+      dataIndex: "featured",
+      key: "featured",
+      width: 90,
+      align: "center" as const,
+      render: (featured: boolean, r: any) => (
+        <PermissionGate
+          module="Areas"
+          action="Update"
+          fallback={
+            <Tag color={featured ? "gold" : "default"}>
+              {featured ? "Yes" : "No"}
+            </Tag>
+          }
+        >
+          <Switch
+            size="small"
+            checked={!!featured}
+            loading={busyId === r._id}
+            onChange={(checked) => onToggle(r._id, "featured", checked)}
+          />
+        </PermissionGate>
       ),
     },
     {

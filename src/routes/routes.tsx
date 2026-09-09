@@ -17,6 +17,7 @@ import ResetPassword from "../pages/Login/ResetPassword";
 import AllMediaLibraryList from "../pages/media-library/AllMediaLibraryList";
 import AllNotifications from "../pages/Notifications/AllNotifications";
 import Profile from "../pages/Profile/Profile";
+import CmsPage from "../pages/CMS/CmsPage";
 import CreateProject from "../pages/Projects/CreateProject";
 import Projects from "../pages/Projects/Projects";
 import UpdateProject from "../pages/Projects/UpdateProject";
@@ -68,6 +69,7 @@ const routes = [
         ],
       },
       { path: "areas", element: <Areas /> },
+      { path: "cms/:pageId", element: <CmsPage /> },
 
       /* ── Content ─────────────────────────────────────────────────────── */
       { path: "blog", element: <Blog /> },

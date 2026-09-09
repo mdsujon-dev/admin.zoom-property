@@ -140,6 +140,7 @@ const ProjectForm = ({
           stage: "Planning",
           isActive: true,
           featured: false,
+          isHome: false,
           cctvStreamActive: false,
           units: 0,
           unitsLeft: 0,
@@ -265,6 +266,16 @@ const ProjectForm = ({
             </Col>
             <Col xs={12} md={6}>
               <Form.Item label="Active" name="isActive" valuePropName="checked">
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col xs={12} md={6}>
+              <Form.Item
+                label="On home page"
+                name="isHome"
+                valuePropName="checked"
+                tooltip="Projects ticked here are the ones the home page shows."
+              >
                 <Switch />
               </Form.Item>
             </Col>
