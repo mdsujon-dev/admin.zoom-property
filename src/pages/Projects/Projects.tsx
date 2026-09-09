@@ -8,6 +8,7 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
+import OrderInputCell from "../../components/shared/OrderInputCell";
 import {
   useDeleteProjectMutation,
   useGetProjectsQuery,
@@ -28,6 +29,7 @@ const Projects = () => {
     page,
     limit,
     searchTerm: search || undefined,
+    sort: "order",
   });
   const [deleteProject] = useDeleteProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
@@ -86,6 +88,22 @@ const Projects = () => {
     });
 
   const columns = [
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      width: 120,
+      align: "center" as const,
+      render: (_: number, r: any, index: number) => (
+        <OrderInputCell
+          record={r}
+          index={index}
+          onUpdateOrder={(id, order) =>
+            updateProject({ id, data: { order } }).unwrap()
+          }
+        />
+      ),
+    },
     {
       title: "Project",
       dataIndex: "name",

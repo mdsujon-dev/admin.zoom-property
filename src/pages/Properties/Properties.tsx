@@ -8,11 +8,12 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
+import OrderInputCell from "../../components/shared/OrderInputCell";
 import {
   useChangePropertyStatusMutation,
   useDeletePropertyMutation,
   useGetPropertiesQuery,
-  useTogglePropertyFeaturedMutation,
+  useUpdatePropertyMutation,
 } from "../../redux/features/property/propertyApi";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
@@ -52,12 +53,13 @@ const Properties = () => {
     purpose,
     type,
     area,
+    sort: "order",
   });
   const { data: areaData } = useGetAreasQuery({ limit: 200, activeOnly: true });
 
   const [changeStatus] = useChangePropertyStatusMutation();
-  const [toggleFeatured] = useTogglePropertyFeaturedMutation();
   const [deleteProperty] = useDeletePropertyMutation();
+  const [updateProperty] = useUpdatePropertyMutation();
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
@@ -74,11 +76,17 @@ const Properties = () => {
     }
   };
 
-  const onFeatured = async (id: string) => {
+  const onToggleField = async (
+    id: string,
+    field: "isHome" | "featured",
+    value: boolean
+  ) => {
     setBusyId(id);
     try {
-      const res = await toggleFeatured(id).unwrap();
-      toast.success(res?.message || "Saved");
+      await updateProperty({ id, data: { [field]: value } }).unwrap();
+      toast.success(
+        `${field === "isHome" ? "Home visibility" : "Featured"} updated`
+      );
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update the listing");
     } finally {
@@ -104,6 +112,22 @@ const Properties = () => {
     });
 
   const columns = [
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      width: 120,
+      align: "center" as const,
+      render: (_: number, r: any, index: number) => (
+        <OrderInputCell
+          record={r}
+          index={index}
+          onUpdateOrder={(id, order) =>
+            updateProperty({ id, data: { order } }).unwrap()
+          }
+        />
+      ),
+    },
     {
       title: "Reference",
       dataIndex: "referenceNo",
@@ -172,10 +196,35 @@ const Properties = () => {
       ),
     },
     {
+      title: "Home",
+      dataIndex: "isHome",
+      key: "isHome",
+      width: 85,
+      align: "center" as const,
+      render: (isHome: boolean, r: any) => (
+        <PermissionGate
+          module="Properties"
+          action="Update"
+          fallback={
+            <Tag color={isHome ? "blue" : "default"}>
+              {isHome ? "Home" : "Off"}
+            </Tag>
+          }
+        >
+          <Switch
+            size="small"
+            checked={!!isHome}
+            loading={busyId === r._id}
+            onChange={(checked) => onToggleField(r._id, "isHome", checked)}
+          />
+        </PermissionGate>
+      ),
+    },
+    {
       title: "Featured",
       dataIndex: "featured",
       key: "featured",
-      width: 110,
+      width: 85,
       align: "center" as const,
       render: (featured: boolean, r: any) => (
         <PermissionGate
@@ -185,9 +234,9 @@ const Properties = () => {
         >
           <Switch
             size="small"
-            checked={featured}
+            checked={!!featured}
             loading={busyId === r._id}
-            onChange={() => onFeatured(r._id)}
+            onChange={(checked) => onToggleField(r._id, "featured", checked)}
           />
         </PermissionGate>
       ),
