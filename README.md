@@ -1,43 +1,37 @@
-# Training Institute — Admin Panel
+# Zoom Property — Admin Panel
 
-The staff control panel (Admin Panel) for **Training Institute**. Manage products,
-categories, orders, content, media and people — with a sidebar, routes and
-per-row actions all gated by the signed-in user's role permissions.
+The staff administrative control panel for **Zoom Property**, a real estate management platform. Manage property listings, development projects, areas/locations, enquiries, editorial content, media assets, and employee personnel — with a sidebar, routes, and action buttons all gated by fine-grained role permissions.
 
-Built with React 18 + Vite + TypeScript, talking to the [API server](../server.TrainingInstituteManagement)
-over REST.
+Built with **React 18 + Vite + TypeScript**, communicating with the [API Server](../server.zoom-property) over REST.
 
 ---
 
-## Tech stack
+## Tech Stack
 
 | Area | Choice |
 |------|--------|
-| Framework | **React 18** + **Vite** + TypeScript |
-| Data | **Redux Toolkit / RTK Query** + redux-persist |
-| UI | **Ant Design** + **Tailwind CSS** |
-| Charts | **Recharts** (dashboard) |
-| Icons | lucide-react + react-icons |
-| Routing | react-router-dom v6 |
-| Rich text | TinyMCE / Quill / Jodit |
-| Export | xlsx, jsPDF |
-| Realtime | socket.io-client (live notifications) |
+| Framework | **React 18** + **Vite** + **TypeScript** |
+| State & Data | **Redux Toolkit / RTK Query** + `redux-persist` |
+| UI Components | **Ant Design** + **Tailwind CSS** |
+| Animations | **Framer Motion** |
+| Icons | `lucide-react` + `@ant-design/icons` |
+| Routing | `react-router-dom` v6 |
+| Rich Text | TinyMCE |
+| Notifications | `react-toastify` + `socket.io-client` |
 
 ---
 
-## Getting started
+## Getting Started
 
-### 1. Install
+### 1. Installation
 
 ```bash
 npm install
 ```
 
-> `postinstall` copies TinyMCE assets into `public/tinymce`.
+### 2. Environment Configuration
 
-### 2. Environment
-
-Create `.env.development` (Vite reads `VITE_`-prefixed vars):
+Create `.env.development` (Vite reads `VITE_`-prefixed environment variables):
 
 ```ini
 VITE_PUBLIC_API_URL=http://localhost:5005/api
@@ -47,10 +41,10 @@ VITE_PUBLIC_IMAGE_ACCESS_URL=http://localhost:5005
 VITE_PUBLIC_TINY_API_KEY=your-tinymce-key
 ```
 
-### 3. Run
+### 3. Run Development Server
 
 ```bash
-npm run dev      # Vite dev server  →  http://localhost:3010
+npm run dev      # Starts Vite dev server on http://localhost:3010
 ```
 
 ---
@@ -59,57 +53,64 @@ npm run dev      # Vite dev server  →  http://localhost:3010
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start the Vite dev server on port `3010` |
-| `npm run build` | Production build |
-| `npm run preview` | Preview the production build |
-| `npm run lint` | Run ESLint |
+| `npm run dev` | Start dev server on port `3010` |
+| `npm run build` | Compile production build (`tsc && vite build`) |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint check |
 
 ---
 
-## Project structure
+## Project Structure
 
 ```
 src/
+├── access/                  # Action permissions catalog & route access rules
+├── api/                     # Base RTK Query setup (baseApi.ts)
 ├── components/
-│   ├── Dashboard/Sidebar/   # section-grouped, permission-filtered sidebar
-│   ├── modal/               # create/update/permission modals
-│   ├── Form/                # shared form inputs
-│   └── Common/              # PageHeader, PermissionGate, RichEditor, …
-├── pages/                   # one folder per screen (Dashboard, Products, Orders, …)
-│   ├── Dashboard/           # e-commerce dashboard (stats, charts, modals)
-│   ├── ContentManagement/   # CMS pages (Home, About, Contact, policies …)
-│   └── UserGuide/           # in-app help guide
+│   ├── Common/              # PageHeader, PageMeta, PermissionGate, RichTextEditor
+│   ├── Dashboard/Sidebar/   # Permission-filtered sidebar navigation
+│   ├── Details/             # Detail view kit components
+│   ├── Form/                # Shared form fields & address components
+│   ├── modal/               # Create/edit/permission dialogs
+│   └── shared/              # ID card modal, media uploader, record history
+├── hooks/                   # useMe, useHasPermission, useFilteredSidebar
+├── layout/                  # MainLayout with header, sidebar & drawer
+├── pages/
+│   ├── ActionLog/           # Audit action logs & error logs
+│   ├── Areas/               # Neighbourhood & area management
+│   ├── Blog/                # Editorial blog posts
+│   ├── Dashboard/           # Overview KPI metrics & listing trends
+│   ├── Inquiries/           # Contact messages & quotation requests
+│   ├── Projects/            # Property development projects
+│   ├── Properties/          # Property listing management (create, edit, view)
+│   ├── Reports/             # Analytics & operational summaries
+│   ├── Reviews/             # Testimonials & client reviews
+│   ├── Settings/            # Company details, ID cards, amenities, countries
+│   └── Users/               # Employee directory, roles, and designations
 ├── redux/
-│   ├── api/baseApi.ts       # RTK Query base
-│   └── features/            # per-domain API slices + auth slice
-├── routes/                  # routes.tsx, ProtectedRoute, routePermissions
-├── hooks/                   # useMe, useHasPermission, useFilteredSidebar, …
-└── utils/                   # permission helpers, formatters, …
+│   ├── api/baseApi.ts       # RTK Query base API
+│   └── features/            # Feature-specific API slices & auth slice
+├── routes/                  # App router, ProtectedRoute, route permissions
+└── utils/                   # Formatting, permission checks, table exports
 ```
 
 ---
 
-## How access control works
+## Access Control & Security
 
-- **`/user/me`** returns the user + their role permissions. `useMe()` caches it
-  and polls, so a permission change made by an admin auto-reloads affected
-  users within a minute.
-- **Sidebar** items with a `module` are hidden unless the role has access
-  (`useFilteredSidebar`); items without a `module` (Dashboard, Profile, User
-  Guide) are always visible.
-- **Routes** are guarded by `routePermissions.ts` + `ProtectedRoute`.
-- **Row actions** (status toggle, edit, delete) are wrapped in `PermissionGate`
-  / `useHasPermission`, so they disable or disappear without the right access.
-- **SUPER_ADMIN** bypasses everything and is hidden from role/user lists.
+- **`/user/me`**: Returns the current user's profile and granted role permissions.
+- **Sidebar Filtering**: Items with a `module` are automatically filtered based on user access (`useFilteredSidebar`).
+- **Route Protection**: URL paths are guarded by `routePermissions.ts` and `ProtectedRoute`.
+- **Action Buttons**: UI actions (edit, delete, status toggle) are gated using `PermissionGate` and `useHasPermission`.
+- **SUPER_ADMIN**: Super Admin accounts bypass permission checks and are hidden from user management lists.
 
 ---
 
-## Notable features
+## Key Features
 
-- **E-commerce dashboard** — revenue, orders, top products, order-status donut,
-  clickable stat cards with detail modals, all split into small components.
-- **Content Management** — edit the storefront's public pages (Home, About,
-  Contact, Checkout, policies) section-by-section with rich-text editors.
-- **Media Library** — upload to R2, organise in folders, Media Bin with restore.
-- **Orders** — full lifecycle, status filters, SKU column, per-month order
-  numbers, order bin.
+- 🏡 **Property Management**: Full lifecycle tracking (Draft, Available, Reserved, Sold, Rented, Archived) with automatic slug generation and price cut detection.
+- 🏢 **Development Projects**: Manage real estate projects and stage timelines.
+- 📬 **Enquiry Inbox**: Manage contact messages and quotation requests from buyers and tenants.
+- 👥 **HR Personnel**: Manage employees, designations, ID card generation, and custom role permissions.
+- 🖼️ **Media Manager & Bin**: Upload, organize, and soft-delete/restore media files.
+- 📜 **Audit History**: Track creation, updates, and status changes for records.
