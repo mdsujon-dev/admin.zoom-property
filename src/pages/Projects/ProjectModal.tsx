@@ -24,6 +24,7 @@ import {
   useCreateProjectMutation,
   useUpdateProjectMutation,
 } from "../../redux/features/project/projectApi";
+import { normalizeUrl } from "../../utils/normalizeUrl";
 
 interface Props {
   open: boolean;
@@ -74,16 +75,6 @@ const translateRichTextToBangla = async (html: string): Promise<string> => {
   tempDiv.innerHTML = html;
   await translateNodeText(tempDiv);
   return tempDiv.innerHTML || (await translateToBanglaApi(html));
-};
-
-const normalizeUrl = (url?: string) => {
-  if (!url) return undefined;
-  const trimmed = url.trim();
-  if (!trimmed) return undefined;
-  if (!/^https?:\/\//i.test(trimmed)) {
-    return `https://${trimmed}`;
-  }
-  return trimmed;
 };
 
 /**

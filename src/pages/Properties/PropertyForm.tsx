@@ -32,6 +32,7 @@ import {
   PROPERTY_TYPES,
   STATUSES,
 } from "./propertyMeta";
+import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
 
 interface Props {
   /** Undefined when creating. */
@@ -90,16 +91,6 @@ const translateRichTextToBangla = async (html: string): Promise<string> => {
   tempDiv.innerHTML = html;
   await translateNodeText(tempDiv);
   return tempDiv.innerHTML || (await translateToBanglaApi(html));
-};
-
-const normalizeUrl = (url?: string) => {
-  if (!url) return undefined;
-  const trimmed = url.trim();
-  if (!trimmed) return undefined;
-  if (!/^https?:\/\//i.test(trimmed)) {
-    return `https://${trimmed}`;
-  }
-  return trimmed;
 };
 
 const PropertyForm = ({
@@ -394,7 +385,11 @@ const PropertyForm = ({
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item label="Virtual tour URL" name="virtualTourUrl">
+              <Form.Item
+                label="Virtual tour URL"
+                name="virtualTourUrl"
+                rules={[urlRule]}
+              >
                 <Input placeholder="https://…" />
               </Form.Item>
             </Col>
@@ -435,6 +430,7 @@ const PropertyForm = ({
                 label="Walkthrough video"
                 name="videoUrl"
                 tooltip="A YouTube or Vimeo link. The player only loads when somebody presses play."
+                rules={[urlRule]}
               >
                 <Input placeholder="https://youtube.com/watch?v=…" />
               </Form.Item>
