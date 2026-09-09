@@ -47,10 +47,7 @@ export const routePermissions: Record<string, RoutePermission> = {
   "/logs/errors": { module: "Error Logs", action: "View" },
   "/action-logs": { module: "Action Logs", action: "View" },
 
-  "/settings/company": { module: "Company Settings", action: "View" },
-  "/settings/id-cards": { module: "Company Settings", action: "View" },
   "/settings/amenities": { module: "Properties", action: "View" },
-  "/settings/countries": { module: "Countries", action: "View" },
   "/settings/services-countries": {
     module: "Services Countries",
     action: "View",

@@ -25,9 +25,6 @@ import UpdateProperty from "../pages/Properties/UpdateProperty";
 import Reports from "../pages/Reports/Reports";
 import Reviews from "../pages/Reviews/Reviews";
 import Amenities from "../pages/Settings/Amenities/Amenities";
-import CompanySettings from "../pages/Settings/Company/CompanySettings";
-import IdCardSettings from "../pages/Settings/Company/IdCardSettings";
-import Countries from "../pages/Settings/Countries/Countries";
 import Designation from "../pages/Settings/Desgination/Designation";
 import MediaBin from "../pages/Settings/MediaBin/MediaBin";
 import NotificationSounds from "../pages/Settings/NotificationSounds/NotificationSounds";
@@ -141,15 +138,8 @@ const routes = [
           { path: "profile", element: <Profile /> },
           { path: "roles", element: <Roles /> },
           { path: "roles/:id/permissions", element: <RolePermissions /> },
-          { path: "company", element: <CompanySettings /> },
-          {
-            path: "company",
-            element: <Navigate to="/settings/company" replace />,
-          },
-          { path: "id-cards", element: <IdCardSettings /> },
           { path: "amenities", element: <Amenities /> },
           { path: "designation", element: <Designation /> },
-          { path: "countries", element: <Countries /> },
           { path: "services-countries", element: <ServicesCountries /> },
           { path: "notification-sounds", element: <NotificationSounds /> },
           { path: "media-library", element: <AllMediaLibraryList /> },

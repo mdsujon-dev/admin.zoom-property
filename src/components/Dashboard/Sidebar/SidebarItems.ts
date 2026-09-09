@@ -6,9 +6,7 @@ import {
   Briefcase,
   Building2,
   FileText,
-  Globe,
   Home,
-  IdCard,
   Inbox,
   MapPin,
   MessageSquareQuote,
@@ -155,28 +153,10 @@ const sidebarMenuRoutes: RouteItem[] = [
     submenus: [
       { label: "Profile", address: "/settings/profile", icon: UserRound },
       {
-        label: "Company",
-        address: "/settings/company",
-        icon: Building2,
-        module: "Company Settings",
-      },
-      {
         label: "Roles",
         address: "/settings/roles",
         icon: Shield,
         module: "Roles",
-      },
-      {
-        label: "ID Cards",
-        address: "/settings/id-cards",
-        icon: IdCard,
-        module: "Company Settings",
-      },
-      {
-        label: "Countries",
-        address: "/settings/countries",
-        icon: Globe,
-        module: "Countries",
       },
       {
         label: "Media Library",
