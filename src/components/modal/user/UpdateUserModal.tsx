@@ -1,23 +1,10 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import { FormInput } from "../../../components/Form/FormInput";
-import { FormSelect } from "../../../components/Form/FormSelect";
 import UploadImage from "../../../components/shared/UploadImage";
 import { useGetDesignationsQuery } from "../../../redux/features/designation/designationApi";
 import { useGetRolesQuery } from "../../../redux/features/role/roleApi";
 import { useUpdateUserMutation } from "../../../redux/features/user/userApi";
-
-/** Sunday-first, the order a week is read in and the order the server keys on. */
-const WEEKDAY_OPTIONS = [
-  { value: "sun", label: "Sunday" },
-  { value: "mon", label: "Monday" },
-  { value: "tue", label: "Tuesday" },
-  { value: "wed", label: "Wednesday" },
-  { value: "thu", label: "Thursday" },
-  { value: "fri", label: "Friday" },
-  { value: "sat", label: "Saturday" },
-];
 
 interface UpdateUserModalProps {
   open: boolean;
@@ -35,158 +22,144 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
   const { data: rolesData, isFetching: rolesLoading } = useGetRolesQuery({
     limit: 100,
   });
-  // Employee designations only — an agent's belong to the agent form, and the
-  // client one is issued by the system and never listed.
   const { data: designationsData, isFetching: designationsLoading } =
     useGetDesignationsQuery({ scope: "employee" });
-  // Exclude the protected SUPER_ADMIN role — it can never be assigned here.
-  const roles: any[] = (rolesData?.result || []).filter(
-    (r: any) =>
-      r.isActive !== false && r.role?.toUpperCase() !== "SUPER_ADMIN"
-  );
-  const designations: any[] = (designationsData?.data || []).filter(
-    (d: any) => d.is_active !== false
-  );
+
+  const roles = (rolesData?.result || [])
+    .filter(
+      (r: any) =>
+        r.isActive !== false && r.role?.toUpperCase() !== "SUPER_ADMIN",
+    )
+    .map((r: any) => ({ value: r._id, label: r.role }));
+
+  const designations = (designationsData?.data || [])
+    .filter((d: any) => d.is_active !== false)
+    .map((d: any) => ({ value: d._id, label: d.name }));
 
   useEffect(() => {
-    if (data) {
+    if (data && open) {
       form.setFieldsValue({
         name: data.name,
         email: data.email,
+        phone: data.phone,
         roleId: data.roleId?._id || data.roleId,
         designationId: data.designationId?._id || data.designationId,
-        phone: data.phone,
         profilePhoto: data.profilePhoto,
-        weekendDays: data.weekendDays || [],
-        note: data.note,
+        photoUrl: data.profilePhoto,
       });
     }
-  }, [data, form]);
+  }, [data, open, form]);
 
   const handleSubmit = async (values: any) => {
     try {
-      const { profilePhotoId, ...rest } = values;
+      const { profilePhotoId, photoUrl, ...rest } = values;
       void profilePhotoId;
-      await updateUser({ id: data._id, data: rest }).unwrap();
-      toast.success("User updated successfully!");
-      form.resetFields();
+
+      const payload = {
+        ...rest,
+        profilePhoto: photoUrl || values.profilePhoto,
+      };
+
+      await updateUser({ id: data._id, data: payload }).unwrap();
+      toast.success("Employee updated successfully!");
       setOpen(false);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update user");
+      toast.error(error?.data?.message || "Failed to update employee");
     }
   };
 
   return (
     <Modal
-      title="Update User"
+      title={<span className="text-lg font-bold text-secondary-900">Update Employee</span>}
       open={open}
       onCancel={() => setOpen(false)}
-      width={600}
+      width={720}
       footer={null}
+      destroyOnClose
+      centered
     >
-      <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <div className="mb-4">
-          <UploadImage
-            form={form}
-            fieldPath="profilePhoto"
-            idFieldPath="profilePhotoId"
-            mode="single"
-          />
-          <div className="text-xs text-secondary-500 mt-1">
-            <p>Upload a square photo for the ID card.</p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-4 mb-4">
-          <FormInput
-            label="Name"
-            name="name"
-            placeholder="Enter user name"
-            rules={[{ required: true, message: "Please enter user name" }]}
-          />
-
-          <FormInput
-            label="Email"
-            name="email"
-            placeholder="Enter email address"
-            rules={[
-              { required: true, message: "Please enter email" },
-              { type: "email", message: "Please enter a valid email" },
-            ]}
-          />
-
-          <FormSelect
-            label="Role"
-            name="roleId"
-            placeholder={rolesLoading ? "Loading roles..." : "Select role"}
-            rules={[{ required: true, message: "Please select a role" }]}
-            options={roles.map((r: any) => ({
-              value: r._id,
-              label: r.role,
-            }))}
-          />
-
-          <FormSelect
-            label="Designation"
-            name="designationId"
-            placeholder={
-              designationsLoading
-                ? "Loading designations..."
-                : "Select designation"
-            }
-            options={designations.map((d: any) => ({
-              value: d._id,
-              label: d.name,
-            }))}
-          />
-
-          <FormInput
-            label="Phone"
-            name="phone"
-            placeholder="Enter phone number (optional)"
-          />
-
-          {/* Their own days off, not the company's.
-              The office does not all take the same day — the accountant is off
-              Friday and Saturday, the caretaker on a Sunday because somebody
-              has to open the building on Friday. Held against one shared week,
-              every one of those reads as a month of absences. */}
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        requiredMark={false}
+        className="pt-2 space-y-4"
+      >
+        <div className="grid gap-x-4 gap-y-2 md:grid-cols-3">
           <Form.Item
-            label="Weekly off days"
-            name="weekendDays"
-            className="md:col-span-2"
-            extra="Leave empty to follow the company's week (Friday)."
+            label={<span className="text-xs font-semibold text-secondary-700">Full Name <span className="text-red-500">*</span></span>}
+            name="name"
+            rules={[{ required: true, message: "Name is required" }]}
+          >
+            <Input placeholder="Enter full name" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Email <span className="text-red-500">*</span></span>}
+            name="email"
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email address" },
+            ]}
+          >
+            <Input placeholder="admin@gmail.com" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Mobile <span className="text-red-500">*</span></span>}
+            name="phone"
+            rules={[{ required: true, message: "Mobile number is required" }]}
+          >
+            <Input placeholder="01XXXXXXXXX" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Permission Role <span className="text-red-500">*</span></span>}
+            name="roleId"
+            rules={[{ required: true, message: "Pick a role" }]}
           >
             <Select
-              mode="multiple"
-              allowClear
-              placeholder="Company default"
-              options={WEEKDAY_OPTIONS}
+              showSearch
+              optionFilterProp="label"
+              loading={rolesLoading}
+              options={roles}
+              placeholder="Select permission role"
             />
           </Form.Item>
 
-          <Form.Item label="Notes" name="note" className="md:col-span-2">
-            <Input.TextArea
-              rows={2}
-              placeholder="Anything the office needs to remember (optional)"
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Designation</span>}
+            name="designationId"
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={designationsLoading}
+              options={designations}
+              placeholder="Select designation"
             />
           </Form.Item>
         </div>
-        <div className="flex justify-end gap-2">
+
+        <div className="pt-2 border-t border-secondary-100">
+          <p className="mb-2 text-xs font-semibold text-secondary-700">Photo</p>
+          <UploadImage
+            form={form}
+            fieldPath="photoUrl"
+            idFieldPath="profilePhoto"
+            mode="single"
+          />
+        </div>
+
+        <div className="flex justify-end gap-2 pt-4 border-t border-secondary-100">
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
           <Button
             type="primary"
             onClick={() => form.submit()}
             loading={isLoading}
-            className="w-fit"
           >
-            Update
-          </Button>
-          <Button
-            onClick={() => setOpen(false)}
-            className="w-fit"
-            type="default"
-          >
-            Cancel
+            Save Changes
           </Button>
         </div>
       </Form>

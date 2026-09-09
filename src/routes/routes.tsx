@@ -30,11 +30,9 @@ import MediaBin from "../pages/Settings/MediaBin/MediaBin";
 import NotificationSounds from "../pages/Settings/NotificationSounds/NotificationSounds";
 import ServicesCountries from "../pages/Settings/ServicesCountries/ServicesCountries";
 import UserGuide from "../pages/UserGuide/UserGuide";
-import CreateEmployee from "../pages/Users/CreateEmployee";
 import EmployeeDetails from "../pages/Users/EmployeeDetails";
 import RolePermissions from "../pages/Users/RolePermissions";
 import Roles from "../pages/Users/Roles";
-import UpdateEmployee from "../pages/Users/UpdateEmployee";
 import Users from "../pages/Users/Users";
 
 const routes = [
@@ -94,8 +92,8 @@ const routes = [
         path: "employees",
         children: [
           { path: "", element: <Users /> },
-          { path: "create", element: <CreateEmployee /> },
-          { path: "edit/:id", element: <UpdateEmployee /> },
+          { path: "create", element: <Navigate to="/employees" replace /> },
+          { path: "edit/:id", element: <Navigate to="/employees" replace /> },
           { path: "view/:id", element: <EmployeeDetails /> },
           { path: "roles", element: <Navigate to="/settings/roles" replace /> },
           {

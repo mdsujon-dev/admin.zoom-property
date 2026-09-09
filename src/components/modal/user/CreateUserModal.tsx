@@ -1,8 +1,6 @@
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import { FormInput } from "../../../components/Form/FormInput";
-import { FormSelect } from "../../../components/Form/FormSelect";
 import UploadImage from "../../../components/shared/UploadImage";
 import { useGetDesignationsQuery } from "../../../redux/features/designation/designationApi";
 import { useGetRolesQuery } from "../../../redux/features/role/roleApi";
@@ -19,171 +17,149 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ open, setOpen }) => {
   const { data: rolesData, isFetching: rolesLoading } = useGetRolesQuery({
     limit: 100,
   });
-  // Employee designations only. An agent's designations belong to the agent
-  // form, and the client one is issued by the system and never listed.
   const { data: designationsData, isFetching: designationsLoading } =
     useGetDesignationsQuery({ scope: "employee" });
-  // Exclude the protected SUPER_ADMIN role — it can never be assigned here.
-  // AGENT is already absent: the API does not return it,
-  // because those accounts are issued from their own profile forms.
-  const roles: any[] = (rolesData?.result || []).filter(
-    (r: any) =>
-      r.isActive !== false && r.role?.toUpperCase() !== "SUPER_ADMIN"
-  );
-  const designations: any[] = (designationsData?.data || []).filter(
-    (d: any) => d.is_active !== false
-  );
+
+  const roles = (rolesData?.result || [])
+    .filter(
+      (r: any) =>
+        r.isActive !== false && r.role?.toUpperCase() !== "SUPER_ADMIN",
+    )
+    .map((r: any) => ({ value: r._id, label: r.role }));
+
+  const designations = (designationsData?.data || [])
+    .filter((d: any) => d.is_active !== false)
+    .map((d: any) => ({ value: d._id, label: d.name }));
 
   useEffect(() => {
-    form.resetFields();
+    if (open) {
+      form.resetFields();
+    }
   }, [open, form]);
 
   const handleSubmit = async (values: any) => {
     try {
-      const leadInfo = {
-        device: "pc",
-        browser: navigator.userAgent,
-        ipAddress: "0.0.0.0",
-        userAgent: navigator.userAgent,
-      };
-
-      // Strip confirmPassword and profilePhotoId — backend only needs password and profilePhoto url.
-      const { confirmPassword, profilePhotoId, ...rest } = values;
+      const { confirmPassword, profilePhotoId, photoUrl, ...rest } = values;
       void confirmPassword;
       void profilePhotoId;
-      const userData = {
+
+      const payload = {
         ...rest,
-        leadInfo,
+        profilePhoto: photoUrl || values.profilePhoto,
       };
 
-      await createUser(userData).unwrap();
-      toast.success("User created successfully!");
+      await createUser(payload).unwrap();
+      toast.success("Employee created successfully!");
       form.resetFields();
       setOpen(false);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create user");
+      toast.error(error?.data?.message || "Failed to create employee");
     }
   };
 
   return (
     <Modal
-      title="Create User"
+      title={<span className="text-lg font-bold text-secondary-900">Add New Employee</span>}
       open={open}
       onCancel={() => setOpen(false)}
-      width={800}
+      width={720}
       footer={null}
+      destroyOnClose
+      centered
     >
-      <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <div className="mb-4">
-          <UploadImage
-            form={form}
-            fieldPath="profilePhoto"
-            idFieldPath="profilePhotoId"
-            mode="single"
-          />
-          <div className="text-xs text-secondary-500 mt-1">
-            <p>Upload a square photo for the ID card.</p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-4 mb-2">
-          <FormInput
-            label="Name"
-            name="name"
-            placeholder="Enter user name"
-            rules={[{ required: true, message: "Please enter user name" }]}
-          />
-
-          <FormInput
-            label="Email"
-            name="email"
-            placeholder="Enter email address"
-            rules={[
-              { required: true, message: "Please enter email" },
-              { type: "email", message: "Please enter a valid email" },
-            ]}
-          />
-
-          <FormSelect
-            label="Role"
-            name="roleId"
-            placeholder={rolesLoading ? "Loading roles..." : "Select role"}
-            rules={[{ required: true, message: "Please select a role" }]}
-            options={roles.map((r: any) => ({
-              value: r._id,
-              label: r.role,
-            }))}
-          />
-
-          <FormSelect
-            label="Designation"
-            name="designationId"
-            placeholder={
-              designationsLoading
-                ? "Loading designations..."
-                : "Select designation"
-            }
-            options={designations.map((d: any) => ({
-              value: d._id,
-              label: d.name,
-            }))}
-          />
-
-          <FormInput
-            label="Phone"
-            name="phone"
-            placeholder="Enter phone number (optional)"
-          />
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-4 mb-4">
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        requiredMark={false}
+        className="pt-2 space-y-4"
+      >
+        <div className="grid gap-x-4 gap-y-2 md:grid-cols-3">
           <Form.Item
-            label="Password"
+            label={<span className="text-xs font-semibold text-secondary-700">Full Name <span className="text-red-500">*</span></span>}
+            name="name"
+            rules={[{ required: true, message: "Name is required" }]}
+          >
+            <Input placeholder="Enter full name" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Email <span className="text-red-500">*</span></span>}
+            name="email"
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email address" },
+            ]}
+          >
+            <Input placeholder="admin@gmail.com" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Mobile <span className="text-red-500">*</span></span>}
+            name="phone"
+            rules={[{ required: true, message: "Mobile number is required" }]}
+          >
+            <Input placeholder="01XXXXXXXXX" />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Password <span className="text-red-500">*</span></span>}
             name="password"
             rules={[
-              { required: true, message: "Please enter password" },
-              { min: 6, message: "Password must be at least 6 characters" },
+              { required: true, message: "Password is required" },
+              { min: 6, message: "At least 6 characters" },
             ]}
           >
-            <Input.Password placeholder="Enter password" />
+            <Input.Password placeholder="........" />
           </Form.Item>
 
           <Form.Item
-            label="Confirm Password"
-            name="confirmPassword"
-            dependencies={["password"]}
-            rules={[
-              { required: true, message: "Please confirm password" },
-              ({ getFieldValue }) => ({
-                validator(_rule, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("Passwords do not match")
-                  );
-                },
-              }),
-            ]}
+            label={<span className="text-xs font-semibold text-secondary-700">Permission Role <span className="text-red-500">*</span></span>}
+            name="roleId"
+            rules={[{ required: true, message: "Pick a role" }]}
           >
-            <Input.Password placeholder="Re-enter password" />
+            <Select
+              showSearch
+              optionFilterProp="label"
+              loading={rolesLoading}
+              options={roles}
+              placeholder="Select permission role"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="text-xs font-semibold text-secondary-700">Designation</span>}
+            name="designationId"
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              loading={designationsLoading}
+              options={designations}
+              placeholder="Select designation"
+            />
           </Form.Item>
         </div>
-        <div className="flex justify-end gap-2">
+
+        <div className="pt-2 border-t border-secondary-100">
+          <p className="mb-2 text-xs font-semibold text-secondary-700">Photo</p>
+          <UploadImage
+            form={form}
+            fieldPath="photoUrl"
+            idFieldPath="profilePhoto"
+            mode="single"
+          />
+        </div>
+
+        <div className="flex justify-end gap-2 pt-4 border-t border-secondary-100">
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
           <Button
             type="primary"
             onClick={() => form.submit()}
             loading={isLoading}
-            className="w-fit"
           >
-            Create
-          </Button>
-          <Button
-            onClick={() => setOpen(false)}
-            className="w-fit"
-            type="default"
-          >
-            Cancel
+            Add Employee
           </Button>
         </div>
       </Form>

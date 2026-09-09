@@ -121,11 +121,8 @@ const Users = () => {
   };
 
   const handleEdit = (user: any) => {
-    // The record has thirty-odd fields across five sections. The dialog showed
-    // five of them, so the rest were unreachable and stayed empty.
-    navigate(`/employees/edit/${user._id}`);
-    void setSelectedUser;
-    void setIsOpenUpdateModal;
+    setSelectedUser(user);
+    setIsOpenUpdateModal(true);
   };
 
   const handleChangePassword = (user: any) => {
@@ -315,7 +312,7 @@ const Users = () => {
               <Button
                 type="primary"
                 icon={<Plus className="w-4 h-4" />}
-                onClick={() => navigate("/employees/create")}
+                onClick={() => setIsOpenCreateModal(true)}
               >
                 Add New User
               </Button>
