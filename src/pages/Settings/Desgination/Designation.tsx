@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Radio, Space, Switch, Tag, Tooltip } from "antd";
+import { Button, Input, Modal, Space, Switch, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -9,8 +9,6 @@ import PermissionGate from "../../../components/Common/PermissionGate";
 import CreateDesignationModal from "../../../components/modal/settings/designation/CreateDesignationModal";
 import UpdateDesignationModal from "../../../components/modal/settings/designation/UpdateDesignationModal";
 import {
-  DESIGNATION_SCOPE_OPTIONS,
-  scopeLabel,
   type SelectableScope,
 } from "../../../components/modal/settings/designation/designationScopes";
 import DataTable from "../../../components/Table/DataTable";
@@ -35,7 +33,7 @@ const Designation = () => {
   // different forms, so they are shown as two lists rather than one mixed table.
   // There is no tab for the client designation: it is a system row the API never
   // returns. See server/src/app/access/access.constant.ts.
-  const [scope, setScope] = useState<SelectableScope>("employee");
+  const [scope] = useState<SelectableScope>("employee");
 
   const { data, isFetching } = useGetDesignationsQuery({ scope });
   const [deleteDesignation] = useDeleteDesignationMutation();

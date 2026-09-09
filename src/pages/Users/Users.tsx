@@ -1,7 +1,7 @@
 import { Avatar, Button, Input, Modal, Space, Switch, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { CreditCard, Edit, Key, Plus, Search, Trash2 } from "lucide-react";
+import { Edit, Key, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import PageHeader from "../../components/Common/PageHeader";
@@ -22,7 +22,6 @@ import {
   useToggleUserStatusMutation,
 } from "../../redux/features/user/userApi";
 import ExportMenu from "../../components/Common/ExportMenu";
-import IdCardModal from "../../components/shared/IdCardModal";
 import { makeSheet } from "../../utils/tableExport";
 
 const { confirm } = Modal;
@@ -36,7 +35,6 @@ const Users = () => {
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenChangePasswordModal, setIsOpenChangePasswordModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
-  const [idCardFor, setIdCardFor] = useState<any | null>(null);
 
   const { me } = useMe();
   const myId = me?._id;
@@ -239,14 +237,6 @@ const Users = () => {
           // The row navigates, so the cell holding the buttons has to swallow
           // the click — otherwise pressing Edit opens the page instead.
           <Space onClick={(e) => e.stopPropagation()}>
-            {/* Prints on whichever design the office picked for employees in
-                Settings → ID Cards. */}
-            <Tooltip title="ID card">
-              <Button
-                icon={<CreditCard className="w-4 h-4" />}
-                onClick={() => setIdCardFor(record)}
-              />
-            </Tooltip>
             <PermissionGate module="Employees" action="Update">
               <Tooltip title="Edit User">
                 <Button
@@ -352,30 +342,6 @@ const Users = () => {
           onClick: () => navigate(`/employees/view/${record._id}`),
           className: "cursor-pointer",
         })}
-      />
-
-      <IdCardModal
-        person={
-          idCardFor
-            ? {
-                name: idCardFor.name,
-                code: idCardFor.employeeId || idCardFor.phone,
-                role: idCardFor.designationId?.name || idCardFor.role || "Staff",
-                photo: idCardFor.profilePhoto,
-                phone: idCardFor.phone,
-                department: idCardFor.designationId?.name,
-                departmentLabel: "DEPARTMENT",
-                group: idCardFor.role
-                  ? String(idCardFor.role).replace(/_/g, " ")
-                  : undefined,
-                groupLabel: "ROLE",
-                audience: "employee" as const,
-                email: idCardFor.email,
-                joinedOn: idCardFor.createdAt,
-              }
-            : null
-        }
-        onClose={() => setIdCardFor(null)}
       />
 
       {isOpenCreateModal && (

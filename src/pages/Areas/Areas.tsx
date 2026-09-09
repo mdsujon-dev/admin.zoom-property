@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Space, Tag, Tooltip } from "antd";
-import { Edit, Plus, Search, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -10,8 +10,9 @@ import DataTable from "../../components/Table/DataTable";
 import {
   useDeleteAreaMutation,
   useGetAreasQuery,
+  useUpdateAreaMutation,
 } from "../../redux/features/area/areaApi";
-import AreaModal from "./AreaModal";
+import AreaModal from "../../components/modal/area/AreaModal";
 
 const { confirm } = Modal;
 
@@ -30,11 +31,63 @@ const Areas = () => {
     page,
     limit,
     searchTerm: search || undefined,
+    sort: "order",
   });
   const [deleteArea] = useDeleteAreaMutation();
+  const [updateArea, { isLoading: updatingOrder }] = useUpdateAreaMutation();
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
+
+  const handleMoveUp = async (index: number) => {
+    if (index <= 0 || updatingOrder) return;
+    const current = rows[index];
+    const prev = rows[index - 1];
+
+    let currentOrder = typeof current.order === "number" ? current.order : index + 1;
+    let prevOrder = typeof prev.order === "number" ? prev.order : index;
+
+    if (currentOrder >= prevOrder) {
+      const temp = currentOrder;
+      currentOrder = Math.max(0, prevOrder - 1);
+      prevOrder = temp;
+    }
+
+    try {
+      await Promise.all([
+        updateArea({ id: current._id, data: { order: currentOrder } }).unwrap(),
+        updateArea({ id: prev._id, data: { order: prevOrder } }).unwrap(),
+      ]);
+      toast.success("Order updated");
+    } catch {
+      toast.error("Could not update order");
+    }
+  };
+
+  const handleMoveDown = async (index: number) => {
+    if (index >= rows.length - 1 || updatingOrder) return;
+    const current = rows[index];
+    const next = rows[index + 1];
+
+    let currentOrder = typeof current.order === "number" ? current.order : index + 1;
+    let nextOrder = typeof next.order === "number" ? next.order : index + 2;
+
+    if (currentOrder <= nextOrder) {
+      const temp = currentOrder;
+      currentOrder = nextOrder + 1;
+      nextOrder = temp;
+    }
+
+    try {
+      await Promise.all([
+        updateArea({ id: current._id, data: { order: currentOrder } }).unwrap(),
+        updateArea({ id: next._id, data: { order: nextOrder } }).unwrap(),
+      ]);
+      toast.success("Order updated");
+    } catch {
+      toast.error("Could not update order");
+    }
+  };
 
   const onDelete = (id: string, name: string) =>
     confirm({
@@ -53,6 +106,40 @@ const Areas = () => {
     });
 
   const columns = [
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      width: 110,
+      align: "center" as const,
+      render: (ord: number, _: any, index: number) => (
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="font-semibold text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full min-w-[28px] text-center border border-blue-200">
+            #{ord ?? index + 1}
+          </span>
+          <div className="flex flex-col gap-0.5">
+            <Button
+              type="text"
+              size="small"
+              disabled={index === 0 || updatingOrder}
+              icon={<ArrowUp className="h-3.5 w-3.5" />}
+              onClick={() => handleMoveUp(index)}
+              className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
+              title="Move Up"
+            />
+            <Button
+              type="text"
+              size="small"
+              disabled={index === rows.length - 1 || updatingOrder}
+              icon={<ArrowDown className="h-3.5 w-3.5" />}
+              onClick={() => handleMoveDown(index)}
+              className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
+              title="Move Down"
+            />
+          </div>
+        </div>
+      ),
+    },
     {
       title: "Area",
       dataIndex: "name",

@@ -14,6 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { store } from "./redux/features/store";
 import router from "./routes/routes";
 import "./styles/index.css";
+import { initGlobalNumberInputHandler } from "./utils/globalNumberInputHandler";
+
+// Prevent text input globally in all numeric fields
+initGlobalNumberInputHandler();
 
 const config = {
   token: {

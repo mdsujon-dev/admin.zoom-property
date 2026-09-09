@@ -63,9 +63,23 @@
   background-color: #f3f3f3 !important;
 }
 
-/* Table Wrapper Background */
-.ant-table-wrapper {
+/* Table Wrapper Background and Border Removal */
+.ant-table-wrapper,
+.ant-table-wrapper .ant-table-container,
+.ant-table-wrapper .ant-table {
   background-color: #fff;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ant-table-wrapper .ant-table-container {
+  border-radius: 0 !important;
+}
+
+/* Horizontal overflow scrolling */
+.ant-table-wrapper .ant-table-content,
+.ant-table-wrapper .ant-table-body {
+  overflow-x: auto !important;
 }
 
 /* Drag to scroll.

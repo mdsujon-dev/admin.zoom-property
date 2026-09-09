@@ -137,19 +137,19 @@ export default function DataTable(props: any) {
   };
 
   return (
-    <div ref={tableRef}>
+    <div ref={tableRef} className="overflow-x-auto">
       <Table
       loading={{
         spinning: showLoader,
         indicator: <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
       }}
-      className="border rounded-lg overflow-hidden "
+      className="overflow-x-auto"
       rowKey={rowKey ? rowKey : "_id"}
       rowSelection={selectRow ? rowSelection : undefined}
       dataSource={data || []}
       columns={columns}
       expandable={expandable}
-      scroll={{ x: true }}
+      scroll={{ x: "max-content" }}
       pagination={
         isPaginate
           ? {
