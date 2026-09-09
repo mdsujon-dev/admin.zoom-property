@@ -1,0 +1,649 @@
+/* Brand typefaces, same pair as the public site: Quicksand stands in for
+   Bryant Bold Alternate (display), Montserrat for Proxima Nova Alt (body). */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300..800&family=Quicksand:wght@500;600;700&display=swap");
+/* The registration form's second page is entirely Bengali. The Latin faces
+   have no Bengali glyphs, so without this the terms print as boxes. */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap");
+@import "./text-editor.css";
+
+
+/* Base Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #133050;
+  --primary-blue: #2867a0;
+  --secondary: #101010;
+  --red: #c00918;
+  --white: #fff;
+  --soft-primary: #13305018;
+  
+  /* React Toastify overrides — it ships its own `sans-serif` default, so the
+     brand face has to be handed to it explicitly. */
+  --toastify-color-success: var(--primary);
+  --toastify-font-family: "Montserrat", "Noto Sans Bengali", sans-serif;
+}
+
+/* Force colored success toast to use primary color */
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background-color: var(--primary) !important;
+}
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--success {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Custom Styles */
+body {
+  font-family: "Montserrat", "Noto Sans Bengali", sans-serif;
+  font-size: 0.8125rem;
+  color: var(--secondary);
+  flex-direction: column;
+  letter-spacing: 0.1px;
+}
+
+/* ---------------------------
+   Number inputs
+   The native up/down stepper is easy to nudge by accident (a stray scroll
+   over a focused field changes the value) and it crowds an already narrow
+   box, so it is off everywhere. Typing still works normally.
+--------------------------- */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ---------------------------
+   Printing a voucher.
+
+   Hiding the app and un-hiding one subtree is the reliable way to do this:
+   the alternative — a hidden iframe or a second window — loses the stylesheet
+   and prints unstyled markup. `visibility` rather than `display` so the
+   voucher keeps its layout instead of collapsing, and it is pulled to the top
+   of the page so it does not print on page three of a blank document.
+--------------------------- */
+/* The registration form previews as two stacked sheets. On paper the page
+   break separates them; on screen nothing does, so they run together into one
+   long strip. Scoped to the preview so the printed pages never inherit it. */
+.reg-form-preview .reg-form-page + .reg-form-page {
+  margin-top: 6mm;
+}
+
+.reg-form-preview .reg-form-page {
+  box-shadow: 0 1px 6px rgb(15 23 42 / 0.12);
+}
+
+@media print {
+  /* No page margin, for one reason: the browser prints its own date, page
+     title, URL and "1/1" into whatever margin it is given, and those bands
+     were landing across the top and bottom of a receipt somebody hands to a
+     student. With nothing to put them in, they are left out. The documents
+     carry their own margins below instead. */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+
+  /*
+   * Let the paper be as long as it needs to be.
+   *
+   * The shell locks the window's own scrolling — it is one viewport tall and
+   * scrolls inside itself, so a second scrollbar down the edge would be a bug.
+   * That lock is set on `html` and `body`, and it does not know it is being
+   * printed: the body stayed 720px tall with `overflow: hidden`, so everything
+   * past the first sheet was clipped away. Paged.js was laying out three pages
+   * and the printer was being handed one.
+   */
+  html.app-shell-locked,
+  html.app-shell-locked body {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .voucher-print,
+  .voucher-print *,
+  .register-print,
+  .register-print *,
+  .ledger-print,
+  .ledger-print * {
+    visibility: visible;
+  }
+
+  /* The printed document is inside a modal, and the modal is a positioned,
+     620px-wide box — so `width: 100%` was 100% *of the modal*, which printed
+     the receipt down the left of the page with a hand's width of nothing
+     beside it. Flattening the dialog's own layout for print puts the document
+     back against the page itself. */
+  .ant-modal-root,
+  .ant-modal-wrap,
+  .ant-modal,
+  .ant-modal-content,
+  .ant-modal-body {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  /* A receipt is one sheet, so lifting it out of the flow to the top-left of
+     the paper is exactly right. */
+  .voucher-print,
+  .register-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /*
+   * A ledger is not. It has to stay in normal flow — an absolutely positioned
+   * element does not break across printed pages, so everything past the first
+   * sheet was simply clipped away and a twelve-page cash book printed as one
+   * page with the rest missing. The shell around it is flattened in
+   * `MainLayout` so that flow starts at the top of the paper.
+   */
+  /*
+   * Back into the flow for printing.
+   *
+   * Off screen the paginated sheets are parked far to the left — they have to
+   * be *laid out* to be paginated at all, and an element with `display: none`
+   * has no height to measure, so hiding them that way produced a print with
+   * nothing on it. `!important` because the off-screen position is set as a
+   * utility class on the element itself.
+   *
+   * Flow, not `position: absolute`: an absolutely positioned element does not
+   * break across printed pages, so everything past the first sheet was clipped
+   * away and a twelve-page cash book printed as one page with the rest missing.
+   *
+   * `.ledger-paged` is the narrower case: a container the paginator has filled
+   * with fixed 210x297mm sheets, printed against a zero page margin. It can
+   * carry no padding of its own or the first sheet is pushed off the paper.
+   * Not every ledger is paginated — the profit and loss sheet is one page and
+   * prints itself, keeping the browser's margins and its own padding — so this
+   * must stay off `.ledger-print`.
+   */
+  .ledger-print {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+  }
+
+  .ledger-paged {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* The margins the page no longer supplies. */
+  .voucher-print {
+    padding: 12mm 8mm !important;
+  }
+
+  .register-print {
+    padding: 10mm !important;
+  }
+
+  /*
+   * The ledgers are cut into sheets by `utils/printLedger.ts`, not by this
+   * stylesheet.
+   *
+   * It runs on the Print button, measures the entries into fixed A4 sheets and
+   * writes them into `.ledger-print` — which is why the page margins, the
+   * repeating column headings, the page numbers and the carried-forward totals
+   * all live there. It also injects `@page { margin: 0 }` for the duration of
+   * the print and takes it away afterwards, because every other print view in
+   * the app wants the browser's own margins. Repeating any of it here would
+   * apply it twice: once to the page and once to the sheet inside it.
+   *
+   * Four earlier attempts sat in this spot — forced page breaks, a fixed sheet
+   * height, a named `@page`, then Paged.js — and each printed blank pages,
+   * nothing at all, or every row twice. None of them is missed.
+   */
+
+  .ledger-print,
+  .ledger-print * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Browsers drop background colours when printing unless told otherwise, and
+     the receipt's title sits as white text on a green chip — dropped, it prints
+     white on white and the document loses the line that says what it is. The
+     watermark and the amount panel go the same way. */
+  .voucher-print,
+  .voucher-print * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* The register is a wide grid. On paper there is nothing to scroll, so the
+     sideways scroller has to be released or the columns past the fold are
+     simply cut off — and the sticky name column has to stop being sticky,
+     because a fixed element repeats on every printed page. */
+  .register-print .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  .register-print table {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 9px !important;
+  }
+
+  .register-print .sticky {
+    position: static !important;
+  }
+
+  /* Colour is the whole point of the marks; without this browsers drop the
+     backgrounds and every cell prints as an unreadable pale letter. */
+  .register-print * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* A student's row must not be split across two sheets. */
+  .register-print tr {
+    break-inside: avoid;
+  }
+
+  /* The modal chrome around it is not part of the document. */
+  .ant-modal-mask,
+  .ant-modal-footer,
+  .ant-modal-close {
+    display: none !important;
+  }
+
+  .ant-modal {
+    top: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .ant-modal-content {
+    box-shadow: none !important;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}
+
+/* ---------------------------
+   Scrollbar Styling
+--------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track {
+  /* Was solid grey, which drew a hard rail down the side of every scrolling
+     panel — louder than the content it sat beside. */
+  background-color: rgb(226 232 240 / 0.6);
+  border-radius: 9999px;
+}
+
+/* ---------------------------
+   The panel owns its scrolling
+--------------------------- */
+
+/**
+ * Set by MainLayout while the admin shell is mounted.
+ *
+ * The shell is one viewport tall and scrolls inside itself, so the window has
+ * nothing left to scroll. Without this, a stray pixel of overflow — from a
+ * horizontal scrollbar, a zoom level, mobile browser chrome — puts a second
+ * scrollbar down the edge of the window next to the one doing the work.
+ */
+html.app-shell-locked,
+html.app-shell-locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ---------------------------
+   Ant Design dropdown scrollbars.
+
+   A long Select (categories, batches, courses) renders through rc-virtual-list,
+   which draws its own scrollbar as a plain div rather than using the browser's.
+   The rules above therefore never reach it, and it sits at its 8px default —
+   noticeably fatter than every other scrollbar in the panel, right next to the
+   option text. Slimmed to match, and given the brand green so the two kinds of
+   scrollbar stop looking like two different widgets.
+--------------------------- */
+.rc-virtual-list-scrollbar {
+  width: 4px !important;
+}
+
+.rc-virtual-list-scrollbar-thumb {
+  background-color: var(--primary) !important;
+  border-radius: 9999px !important;
+}
+
+/* Marquee */
+
+.marquee-inner {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Hover to pause */
+.marquee-inner:hover {
+  animation-play-state: paused;
+}
+/* AntD Css */
+.ant-modal {
+  color: rgba(20, 20, 20, 0.88) !important;
+}
+
+.ant-modal .ant-modal-title {
+  margin-bottom: 10px !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  line-height: 1.5 !important;
+  word-wrap: break-word !important;
+}
+
+/* Form Item Styles */
+.ant-form-item {
+  margin-bottom: 10px !important;
+}
+
+.ant-form-vertical
+  .ant-form-item:not(.ant-form-item-horizontal)
+  .ant-form-item-label {
+  padding: 0 0 2px !important;
+}
+
+.ant-form-item-label {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+/* Custom Required Asterisk Styles */
+.ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  visibility: hidden !important;
+  content: none !important;
+}
+
+.ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::after {
+  visibility: visible !important;
+  content: "*" !important;
+  margin-inline-start: 4px !important;
+  color: #ff4d4f !important;
+  font-size: 14px !important;
+  font-family: SimSun, sans-serif !important;
+  line-height: 1 !important;
+}
+
+/* Button Styles */
+.ant-btn-variant-solid:disabled,
+.ant-btn-variant-solid.ant-btn-disabled {
+  border-color: none !important;
+  color: var(--white) !important;
+  background: var(--primary) !important;
+  box-shadow: none !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* .ant-btn {
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+} */
+
+.ant-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed;
+}
+/* This will remove the red error border ONLY for Form.Items with class 'no-error-border' */
+.no-error-border.ant-form-item-has-error .ant-input {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+/* Add this in your CSS file or in global styles */
+.no-padding
+  .ant-select-single:not(.ant-select-customize-input)
+  .ant-select-selector {
+  padding: 0px !important;
+}
+
+.no-error-border-input.ant-form-item-has-error .ant-input {
+  border-bottom: 1px solid var(--primary) !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+}
+
+:where(.css-dev-only-do-not-override-161f05s).ant-btn-variant-solid {
+  color: var(--white) !important;
+  background: var(--primary) !important;
+}
+.vertical-timeline-element-content {
+  position: relative;
+  margin-left: 60px;
+  background: #f7f6f6;
+  border-radius: 0.25em;
+  padding: 1em;
+  box-shadow: none;
+}
+/* .vertical-timeline--two-columns .vertical-timeline-element-icon {
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  margin-left: -10px;
+  border: none !important;
+  background-color: #fff;
+} */
+
+.vertical-timeline-element-icon.shadow-size-small {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.vertical-timeline-element-icon svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  position: relative;
+  background-color: #fff;
+  border-radius: 100%;
+  left: 50%;
+  top: 50%;
+  margin-left: -11px;
+  margin-top: -11px;
+}
+
+/* React tabs custom css */
+.react-tabs__tab--selected {
+  background-color: var(--soft-primary);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.quill-editor-height {
+  height: 210px;
+}
+
+.ql-snow .ql-tooltip {
+  position: absolute;
+  transform: translateX(201px) !important;
+}
+.ql-editor .quill-better-table-wrapper {
+  overflow-x: auto;
+}
+.ql-container .quill-better-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.ql-container .quill-better-table td,
+.ql-container .quill-better-table th {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+
+.ant-modal-footer {
+  position: sticky; /* or fixed inside modal content */
+  bottom: 0;
+  z-index: 10;
+  background: white; /* footer background, adjust if needed */
+  padding: 16px 24px; /* default padding */
+  border-top: 1px solid #f0f0f0; /* optional separator */
+}
+.editor-container_classic-editor .editor-container__editor {
+  min-width: 795px;
+  max-width: 795px;
+}
+
+.ck-content h3.category {
+  font-family: "Montserrat";
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+  letter-spacing: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.ck-content h2.document-title {
+  font-family: "Montserrat";
+  font-size: 50px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ck-content h3.document-subtitle {
+  font-family: "Montserrat";
+  font-size: 20px;
+  color: #555;
+  margin: 0 0 1em;
+  font-weight: bold;
+  padding: 0;
+}
+
+.ck-content p.info-box {
+  --background-size: 30px;
+  --background-color: #e91e63;
+  padding: 1.2em 2em;
+  border: 1px solid var(--background-color);
+  background: linear-gradient(
+      135deg,
+      var(--background-color) 0%,
+      var(--background-color) var(--background-size),
+      transparent var(--background-size)
+    ),
+    linear-gradient(
+      135deg,
+      transparent calc(100% - var(--background-size)),
+      var(--background-color) calc(100% - var(--background-size)),
+      var(--background-color)
+    );
+  border-radius: 10px;
+  margin: 1.5em 2em;
+  box-shadow: 5px 5px 0 #ffe6ef;
+}
+
+.ck-content span.marker {
+  background: yellow;
+}
+
+.ck-content span.spoiler {
+  background: #000;
+  color: #000;
+}
+
+.ck-content span.spoiler:hover {
+  background: #000;
+  color: #fff;
+}
+
+.ck-content .button {
+  display: inline-block;
+  width: 260px;
+  border-radius: 8px;
+  margin: 0 auto;
+  padding: 12px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.ck-content .button--green {
+  background-color: #406b1e;
+}
+
+.ck-content .button--black {
+  background-color: #141517;
+}
+
+/* Keep date-pickers (and selects) sharing the same corner radius as the
+   large text inputs, so form fields look consistent. */
+.ant-picker.ant-picker-large,
+.ant-select-lg .ant-select-selector {
+  border-radius: 8px !important;
+}
+
+/* Hide the up/down stepper arrows on every antd InputNumber, globally. */
+.ant-input-number-handler-wrap {
+  display: none !important;
+}
+
+/* Smooth expand for accordion (expandable) table rows — fade + slide the
+   revealed content in instead of it snapping open. */
+@keyframes tableRowExpand {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ant-table-expanded-row > .ant-table-cell {
+  animation: tableRowExpand 0.28s ease;
+}
+/* Animate the expand/collapse caret rotation too. */
+.ant-table-row-expand-icon {
+  transition: transform 0.25s ease;
+}

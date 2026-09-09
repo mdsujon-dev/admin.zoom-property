@@ -1,0 +1,203 @@
+import {
+  AlertTriangle,
+  Bath,
+  Bell,
+  BookOpen,
+  Briefcase,
+  Building2,
+  FileText,
+  Globe,
+  Home,
+  IdCard,
+  Inbox,
+  MapPin,
+  MessageSquareQuote,
+  Newspaper,
+  ScrollText,
+  Shield,
+  Star,
+  Trash2,
+  UserRound,
+  Users,
+} from "lucide-react";
+import {
+  ActionLogsIcon,
+  DashboardIcon,
+  MediaIcon,
+  SettingsIcon,
+} from "../../../Icons/Index";
+import { RouteItem } from "../../../types/sidebarType";
+
+const sidebarMenuRoutes: RouteItem[] = [
+  {
+    label: "Dashboard",
+    address: "/",
+    icon: DashboardIcon,
+    section: "Main",
+  },
+  {
+    label: "Listings",
+    icon: Home,
+    section: "System",
+    submenus: [
+      {
+        label: "Properties",
+        address: "/properties",
+        module: "Properties",
+        icon: Home,
+      },
+      {
+        label: "Projects",
+        address: "/projects",
+        module: "Projects",
+        icon: Building2,
+      },
+      {
+        label: "Areas",
+        address: "/areas",
+        module: "Areas",
+        icon: MapPin,
+      },
+      {
+        label: "Amenities",
+        address: "/settings/amenities",
+        module: "Properties",
+        icon: Bath,
+      },
+    ],
+  },
+  {
+    label: "Content",
+    icon: Newspaper,
+    section: "System",
+    submenus: [
+      {
+        label: "Blog",
+        address: "/blog",
+        module: "Blog",
+        icon: FileText,
+      },
+      {
+        label: "Reviews",
+        address: "/reviews",
+        module: "Reviews",
+        icon: Star,
+      },
+    ],
+  },
+  {
+    label: "Enquiries",
+    icon: Inbox,
+    section: "System",
+    submenus: [
+      {
+        label: "Contact Messages",
+        address: "/enquiries/contact-messages",
+        module: "Contact Messages",
+        icon: MessageSquareQuote,
+      },
+      {
+        label: "Quotation Requests",
+        address: "/enquiries/quotation-requests",
+        module: "Quotation Requests",
+        icon: ScrollText,
+      },
+      {
+        label: "Notifications",
+        address: "/notifications",
+        module: "Notifications",
+        icon: Bell,
+      },
+    ],
+  },
+  {
+    label: "HR",
+    icon: Users,
+    section: "System",
+    submenus: [
+      {
+        label: "Employees",
+        address: "/employees",
+        module: "Employees",
+        icon: UserRound,
+      },
+      {
+        label: "Designations",
+        address: "/employees/designations",
+        icon: Briefcase,
+        module: "Designations",
+      },
+    ],
+  },
+  {
+    label: "Logs",
+    icon: ActionLogsIcon,
+    section: "System",
+    submenus: [
+      {
+        label: "Action Logs",
+        address: "/logs/actions",
+        icon: ScrollText,
+        module: "Action Logs",
+      },
+      {
+        label: "Error Logs",
+        address: "/logs/errors",
+        icon: AlertTriangle,
+        module: "Error Logs",
+      },
+    ],
+  },
+  {
+    label: "Settings",
+    icon: SettingsIcon,
+    section: "System",
+    submenus: [
+      { label: "Profile", address: "/settings/profile", icon: UserRound },
+      {
+        label: "Company",
+        address: "/settings/company",
+        icon: Building2,
+        module: "Company Settings",
+      },
+      {
+        label: "Roles",
+        address: "/settings/roles",
+        icon: Shield,
+        module: "Roles",
+      },
+      {
+        label: "ID Cards",
+        address: "/settings/id-cards",
+        icon: IdCard,
+        module: "Company Settings",
+      },
+      {
+        label: "Countries",
+        address: "/settings/countries",
+        icon: Globe,
+        module: "Countries",
+      },
+      {
+        label: "Media Library",
+        address: "/settings/media-library",
+        icon: MediaIcon,
+        module: "Media Library",
+      },
+      {
+        label: "Media Bin",
+        address: "/settings/media-bin",
+        icon: Trash2,
+        module: "Media Bin",
+      },
+    ],
+  },
+  {
+    label: "User Guide",
+    icon: BookOpen,
+    address: "/user-guide",
+    section: "System",
+  },
+];
+
+export default sidebarMenuRoutes;

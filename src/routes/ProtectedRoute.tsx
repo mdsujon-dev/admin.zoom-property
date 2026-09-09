@@ -1,0 +1,83 @@
+import React, { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
+import { Loading } from "../components/shared/Loading";
+import {
+  selectCurrentUser,
+  setProfile,
+  setRole,
+} from "../redux/features/auth/authSlice";
+import { useMyProfileQuery } from "../redux/features/user/userApi";
+import { hasPermission } from "../utils/permission";
+import { getRoutePermission } from "./routePermissions";
+
+interface ProtectedRouteProps {
+  children?: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const dispatch = useDispatch();
+  const user: any = useSelector(selectCurrentUser);
+  const location = useLocation();
+
+  const { data: meData, isLoading: meLoading } = useMyProfileQuery(undefined, {
+    skip: !user,
+  });
+
+  const requiredPermission = useMemo(
+    () => getRoutePermission(location.pathname),
+    [location.pathname]
+  );
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (meLoading) {
+    return <Loading />;
+  }
+
+  const profile = meData?.data;
+
+  if (profile?.profilePhoto) {
+    dispatch(setProfile(profile.profilePhoto));
+  }
+  if (profile?.role) {
+    dispatch(setRole(profile.role));
+  }
+
+  const principal = {
+    role: profile?.role ?? user?.role,
+    persona: profile?.persona,
+    permissions: profile?.permissions,
+  };
+
+  if (requiredPermission) {
+    const ok =
+      hasPermission(
+        principal,
+        requiredPermission.module,
+        requiredPermission.action
+      ) ||
+      (requiredPermission.anyOf ?? []).some((p) =>
+        hasPermission(principal, p.module, p.action)
+      );
+    if (!ok) {
+      return (
+        <Navigate
+          to="/"
+          replace
+          state={{ deniedPath: location.pathname }}
+        />
+      );
+    }
+  }
+
+  if (user?.email) {
+    return <>{children}</>;
+  }
+
+  return <Navigate to="/login" state={{ from: location }} replace />;
+};
+
+export default ProtectedRoute;
