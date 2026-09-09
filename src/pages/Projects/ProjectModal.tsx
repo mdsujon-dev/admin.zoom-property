@@ -76,6 +76,16 @@ const translateRichTextToBangla = async (html: string): Promise<string> => {
   return tempDiv.innerHTML || (await translateToBanglaApi(html));
 };
 
+const normalizeUrl = (url?: string) => {
+  if (!url) return undefined;
+  const trimmed = url.trim();
+  if (!trimmed) return undefined;
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 /**
  * A development, and the programme behind it.
  *
@@ -134,6 +144,12 @@ const ProjectModal = ({ open, onClose, project }: Props) => {
     void imageUrls;
     const body = {
       ...rest,
+      video: rest.video
+        ? {
+            ...rest.video,
+            youtubeUrl: normalizeUrl(rest.video.youtubeUrl),
+          }
+        : undefined,
       description: toDescriptionArray(values.description),
       descriptionBn: toDescriptionArray(values.descriptionBn),
       lastInspected: values.lastInspected

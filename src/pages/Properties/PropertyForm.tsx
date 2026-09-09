@@ -92,6 +92,16 @@ const translateRichTextToBangla = async (html: string): Promise<string> => {
   return tempDiv.innerHTML || (await translateToBanglaApi(html));
 };
 
+const normalizeUrl = (url?: string) => {
+  if (!url) return undefined;
+  const trimmed = url.trim();
+  if (!trimmed) return undefined;
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 const PropertyForm = ({
   initial,
   saving,
@@ -152,6 +162,8 @@ const PropertyForm = ({
     await onSubmit({
       purpose: "sale",
       ...rest,
+      virtualTourUrl: normalizeUrl(values.virtualTourUrl),
+      videoUrl: normalizeUrl(values.videoUrl),
       description: toDescriptionArray(values.description),
       descriptionBn: toDescriptionArray(values.descriptionBn),
       expiresAt: values.expiresAt ? values.expiresAt.toISOString() : null,
