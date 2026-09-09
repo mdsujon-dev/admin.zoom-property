@@ -95,17 +95,6 @@ const Designation = () => {
       render: (text: string) => <span className="line-clamp-1">{text&& text?.length > 50 ? text?.substring(0, 50) + "..." : text || "N/A"}</span>,
     },
     {
-      title: "For",
-      dataIndex: "scope",
-      key: "scope",
-      width: 110,
-      render: (value: string | undefined) => (
-        <Tag color={value === "agent" ? "green" : "default"}>
-          {scopeLabel(value)}
-        </Tag>
-      ),
-    },
-    {
       title: "People",
       dataIndex: "employeeCount",
       key: "employeeCount",
@@ -190,7 +179,7 @@ const Designation = () => {
       />
       <PageHeader
         title="Designations"
-        subtitle="Job titles for staff, and the ones an agent can hold"
+        subtitle="Manage employee job titles"
         breadcrumbs={[
           { title: "Dashboard", path: "/" },
           { title: "Employee Management" },
@@ -198,21 +187,18 @@ const Designation = () => {
         ]}
         extra={
           <div className="flex flex-wrap items-center gap-2">
-            {/* One tab at a time, because employee and agent titles are two
-                different vocabularies and a mixed file would say neither. */}
             <ExportMenu
               sheet={() =>
                 makeSheet({
-                  title: `Designations — ${scopeLabel(scope)}`,
+                  title: "Designations",
                   unit: "designation",
                   filters: [searchText && `Search: "${searchText}"`],
-                  headers: ["Name", "Description", "For", "People", "Status"],
+                  headers: ["Name", "Description", "People", "Status"],
                   rows: filteredDesignations,
                   isLow: (d: any) => d.is_active === false,
                   cells: (d: any) => [
                     d.name || "—",
                     d.description || "—",
-                    scopeLabel(d.scope),
                     d.employeeCount ?? 0,
                     d.is_active === false ? "Inactive" : "Active",
                   ],
@@ -234,21 +220,6 @@ const Designation = () => {
       />
 
       <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-        <Radio.Group
-          optionType="button"
-          buttonStyle="solid"
-          value={scope}
-          onChange={(e) => {
-            setScope(e.target.value);
-            setCurrentPage(1);
-          }}
-        >
-          {DESIGNATION_SCOPE_OPTIONS.map((o) => (
-            <Radio.Button key={o.value} value={o.value}>
-              {o.label}
-            </Radio.Button>
-          ))}
-        </Radio.Group>
         <Input
           placeholder="Search designations by name..."
           prefix={<Search className="w-4 h-4 text-gray-400" />}

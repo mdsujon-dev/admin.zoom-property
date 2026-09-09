@@ -3,19 +3,16 @@ import { Save } from "lucide-react";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreateDesignationMutation } from "../../../../redux/features/designation/designationApi";
-import { ScopeRadio } from "./designationScopes";
 
 interface CreateDesignationModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
-  /** Preselected scope — the list's active tab, so the new row lands in view. */
-  defaultScope?: "employee" | "agent";
+  defaultScope?: "employee";
 }
 
 const CreateDesignationModal: React.FC<CreateDesignationModalProps> = ({
   open,
   setOpen,
-  defaultScope = "employee",
 }) => {
   const [form] = Form.useForm();
   const [createDesignation, { isLoading }] = useCreateDesignationMutation();
@@ -23,18 +20,20 @@ const CreateDesignationModal: React.FC<CreateDesignationModalProps> = ({
   useEffect(() => {
     if (open) {
       form.resetFields();
-      form.setFieldsValue({ is_active: true, scope: defaultScope });
+      form.setFieldsValue({ is_active: true });
     }
-  }, [open, form, defaultScope]);
+  }, [open, form]);
 
   const handleSubmit = async (values: {
     name: string;
     description?: string;
     is_active?: boolean;
-    scope?: "employee" | "agent";
   }) => {
     try {
-      await createDesignation(values).unwrap();
+      await createDesignation({
+        ...values,
+        scope: "employee",
+      }).unwrap();
       toast.success("Designation created successfully!");
       form.resetFields();
       setOpen(false);
@@ -53,19 +52,11 @@ const CreateDesignationModal: React.FC<CreateDesignationModalProps> = ({
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item
-          label="For"
-          name="scope"
-          tooltip="Employee designations show in the employee form; agent ones in the agent form."
-        >
-          <ScopeRadio />
-        </Form.Item>
-
-        <Form.Item
           label="Name"
           name="name"
           rules={[{ required: true, message: "Please enter designation name" }]}
         >
-          <Input placeholder="e.g. Accountant, Senior Instructor" />
+          <Input placeholder="e.g. Accountant, Sales Executive, Manager" />
         </Form.Item>
 
         <Form.Item label="Description" name="description">

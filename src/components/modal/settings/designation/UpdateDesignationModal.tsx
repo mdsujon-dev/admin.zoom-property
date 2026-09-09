@@ -3,7 +3,6 @@ import { Save } from "lucide-react";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useUpdateDesignationMutation } from "../../../../redux/features/designation/designationApi";
-import { ScopeRadio, type SelectableScope } from "./designationScopes";
 
 interface UpdateDesignationModalProps {
   open: boolean;
@@ -31,9 +30,6 @@ const UpdateDesignationModal: React.FC<UpdateDesignationModalProps> = ({
         name: data.name,
         description: data.description,
         is_active: data.is_active ?? true,
-        // Rows written before scopes existed have no value; they have always
-        // behaved as employee designations, so that is what they are.
-        scope: data.scope === "agent" ? "agent" : "employee",
       });
     }
   }, [open, data, form]);
@@ -42,10 +38,15 @@ const UpdateDesignationModal: React.FC<UpdateDesignationModalProps> = ({
     name?: string;
     description?: string;
     is_active?: boolean;
-    scope?: SelectableScope;
   }) => {
     try {
-      await updateDesignation({ id: data._id, data: values }).unwrap();
+      await updateDesignation({
+        id: data._id,
+        data: {
+          ...values,
+          scope: "employee",
+        },
+      }).unwrap();
       toast.success("Designation updated successfully!");
       setOpen(false);
     } catch (error: any) {
@@ -63,19 +64,11 @@ const UpdateDesignationModal: React.FC<UpdateDesignationModalProps> = ({
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item
-          label="For"
-          name="scope"
-          tooltip="Moving a designation between the two lists does not change anyone already on it."
-        >
-          <ScopeRadio />
-        </Form.Item>
-
-        <Form.Item
           label="Name"
           name="name"
           rules={[{ required: true, message: "Please enter designation name" }]}
         >
-          <Input placeholder="e.g. Accountant, Senior Instructor" />
+          <Input placeholder="e.g. Accountant, Sales Executive, Manager" />
         </Form.Item>
 
         <Form.Item label="Description" name="description">
