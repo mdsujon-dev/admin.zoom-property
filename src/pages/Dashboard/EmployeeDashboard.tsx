@@ -90,9 +90,7 @@ const EmployeeDashboard: React.FC = () => {
             <Metric
               label="Projects"
               value={overview?.projects?.active ?? 0}
-              hint={`${
-                overview?.projects?.handoverReady ?? 0
-              } ready to hand over`}
+              hint={`${overview?.projects?.completed ?? 0} completed`}
               icon={Building2}
               accent="#0891b2"
               loading={isFetching}

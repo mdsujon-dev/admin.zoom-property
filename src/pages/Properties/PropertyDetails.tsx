@@ -6,12 +6,9 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import RecordHistory from "../../components/shared/RecordHistory";
-import { config } from "../../config";
 import { useGetPropertyByIdQuery } from "../../redux/features/property/propertyApi";
+import { mediaSrc } from "../../utils/mediaSrc";
 import { STATUS_COLOUR, money, typeLabel } from "./propertyMeta";
-
-const src = (key?: string) =>
-  key ? (key.startsWith("http") ? key : `${config.image_access_url}${key}`) : "";
 
 const PropertyDetails = () => {
   const { id = "" } = useParams();
@@ -61,7 +58,7 @@ const PropertyDetails = () => {
               <Image.PreviewGroup>
                 {p.coverImage && (
                   <Image
-                    src={src(p.coverImage.key)}
+                    src={mediaSrc(p.coverImage)}
                     alt={p.title}
                     className="rounded-lg"
                   />
@@ -70,7 +67,7 @@ const PropertyDetails = () => {
                   {(p.images || []).map((img: any) => (
                     <Image
                       key={img._id}
-                      src={src(img.key)}
+                      src={mediaSrc(img)}
                       alt=""
                       width={96}
                       height={72}

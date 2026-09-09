@@ -12,6 +12,8 @@ export const routePermissions: Record<string, RoutePermission> = {
   "/properties/edit/:id": { module: "Properties", action: "Update" },
   "/properties/view/:id": { module: "Properties", action: "View" },
   "/projects": { module: "Projects", action: "View" },
+  "/projects/create": { module: "Projects", action: "Create" },
+  "/projects/edit/:id": { module: "Projects", action: "Update" },
   "/areas": { module: "Areas", action: "View" },
 
   "/blog": { module: "Blog", action: "View" },

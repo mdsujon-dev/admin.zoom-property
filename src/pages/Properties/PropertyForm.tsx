@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import LangInput, { translateToBanglaApi } from "../../components/Common/LangInput";
+import LangInput from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
@@ -33,6 +33,12 @@ import {
   STATUSES,
 } from "./propertyMeta";
 import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
+import {
+  isEmptyRichText,
+  normalizeDescriptionForEditor,
+  toDescriptionArray,
+  translateRichTextToBangla,
+} from "../../utils/richText";
 
 interface Props {
   /** Undefined when creating. */
@@ -55,44 +61,6 @@ interface Props {
  * manage a repeating field for something they think of as "the description"
  * is how descriptions end up as one long unbroken block.
  */
-const normalizeDescriptionForEditor = (desc?: string[] | string) => {
-  if (!desc) return "";
-  if (typeof desc === "string") return desc;
-  if (Array.isArray(desc)) {
-    return desc
-      .map((p) => (p.trim().startsWith("<") ? p : `<p>${p}</p>`))
-      .join("");
-  }
-  return "";
-};
-
-const toDescriptionArray = (value?: string) => {
-  if (!value || !value.trim()) return [];
-  return [value.trim()];
-};
-
-const translateNodeText = async (node: Node) => {
-  if (node.nodeType === Node.TEXT_NODE) {
-    const text = node.textContent?.trim();
-    if (text) {
-      const translated = await translateToBanglaApi(text);
-      node.textContent = translated;
-    }
-  } else if (node.nodeType === Node.ELEMENT_NODE) {
-    for (const child of Array.from(node.childNodes)) {
-      await translateNodeText(child);
-    }
-  }
-};
-
-const translateRichTextToBangla = async (html: string): Promise<string> => {
-  if (!html || !html.trim()) return "";
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html;
-  await translateNodeText(tempDiv);
-  return tempDiv.innerHTML || (await translateToBanglaApi(html));
-};
-
 const PropertyForm = ({
   initial,
   saving,
@@ -106,7 +74,7 @@ const PropertyForm = ({
 
   const handleTranslateDescription = async () => {
     const enText = form.getFieldValue("description");
-    if (!enText || !enText.trim() || enText === "<p><br></p>" || enText === "<p></p>") {
+    if (isEmptyRichText(enText)) {
       toast.info("অনুবাদের জন্য আগে ইংরেজিতে বিবরণ (English description) লিখুন");
       return;
     }

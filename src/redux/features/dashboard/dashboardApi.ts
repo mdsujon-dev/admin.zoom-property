@@ -42,7 +42,7 @@ export interface CompanyOverview {
     featured: number;
     total: number;
   } | null;
-  projects: { active: number; handoverReady: number } | null;
+  projects: { active: number; completed: number } | null;
   agents: { active: number; total: number } | null;
   /** Each figure is granted separately — see the note on the server side. */
   money: {

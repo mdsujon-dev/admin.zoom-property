@@ -17,7 +17,9 @@ import ResetPassword from "../pages/Login/ResetPassword";
 import AllMediaLibraryList from "../pages/media-library/AllMediaLibraryList";
 import AllNotifications from "../pages/Notifications/AllNotifications";
 import Profile from "../pages/Profile/Profile";
+import CreateProject from "../pages/Projects/CreateProject";
 import Projects from "../pages/Projects/Projects";
+import UpdateProject from "../pages/Projects/UpdateProject";
 import CreateProperty from "../pages/Properties/CreateProperty";
 import Properties from "../pages/Properties/Properties";
 import PropertyDetails from "../pages/Properties/PropertyDetails";
@@ -57,7 +59,14 @@ const routes = [
           { path: "view/:id", element: <PropertyDetails /> },
         ],
       },
-      { path: "projects", element: <Projects /> },
+      {
+        path: "projects",
+        children: [
+          { path: "", element: <Projects /> },
+          { path: "create", element: <CreateProject /> },
+          { path: "edit/:id", element: <UpdateProject /> },
+        ],
+      },
       { path: "areas", element: <Areas /> },
 
       /* ── Content ─────────────────────────────────────────────────────── */

@@ -7,18 +7,15 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
-import { config } from "../../config";
 import {
   useDeleteReviewMutation,
   useGetReviewsQuery,
   useToggleReviewPublishedMutation,
 } from "../../redux/features/review/reviewApi";
+import { mediaSrc } from "../../utils/mediaSrc";
 import ReviewModal from "./ReviewModal";
 
 const { confirm } = Modal;
-
-const src = (key?: string) =>
-  key ? (key.startsWith("http") ? key : `${config.image_access_url}${key}`) : "";
 
 /**
  * Client reviews, and the one switch that puts them on the site.
@@ -82,7 +79,7 @@ const Reviews = () => {
       width: 220,
       render: (name: string, r: any) => (
         <div className="flex items-center gap-3">
-          <Avatar src={src(r.photo?.key)} size={36}>
+          <Avatar src={mediaSrc(r.photo)} size={36}>
             {name?.[0]}
           </Avatar>
           <div className="min-w-0">
