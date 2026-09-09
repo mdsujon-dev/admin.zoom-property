@@ -1,6 +1,6 @@
-import { Button, Input, Modal, Space, Tag, Tooltip } from "antd";
-import { ArrowDown, ArrowUp, Edit, Plus, Search, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Button, Input, InputNumber, Modal, Space, Tag, Tooltip } from "antd";
+import { ArrowDown, ArrowUp, Check, Edit, Plus, Search, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import PageHeader from "../../components/Common/PageHeader";
@@ -13,11 +13,90 @@ import {
   useUpdateAreaMutation,
 } from "../../redux/features/area/areaApi";
 import AreaModal from "../../components/modal/area/AreaModal";
+import DateTimeStacked from "../../components/shared/DateTimeStacked";
 
 const { confirm } = Modal;
 
-const money = (v?: number) =>
-  typeof v === "number" ? v.toLocaleString("en-BD") : "—";
+const OrderInputCell = ({ record, index }: { record: any; index: number }) => {
+  const currentOrder = typeof record.order === "number" ? record.order : index + 1;
+  const [val, setVal] = useState<number | null>(currentOrder);
+  const [updateArea, { isLoading }] = useUpdateAreaMutation();
+
+  useEffect(() => {
+    setVal(typeof record.order === "number" ? record.order : index + 1);
+  }, [record.order, index]);
+
+  const isChanged = val !== null && val !== undefined && val !== record.order;
+
+  const handleSaveOrder = async () => {
+    if (!isChanged) return;
+    try {
+      await updateArea({ id: record._id, data: { order: val } }).unwrap();
+      toast.success("Order updated");
+    } catch {
+      toast.error("Could not update order");
+    }
+  };
+
+  const handleMove = async (targetOrder: number) => {
+    if (targetOrder < 1 || isLoading) return;
+    setVal(targetOrder);
+    try {
+      await updateArea({ id: record._id, data: { order: targetOrder } }).unwrap();
+      toast.success("Order updated");
+    } catch {
+      toast.error("Could not update order");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center gap-1">
+      <InputNumber
+        size="small"
+        min={1}
+        value={val}
+        onChange={(v) => setVal(v)}
+        onPressEnter={handleSaveOrder}
+        disabled={isLoading}
+        className="!w-14 text-center font-medium"
+      />
+      <Tooltip title={isChanged ? "Click tick to save" : "Unchanged"}>
+        <Button
+          type={isChanged ? "primary" : "default"}
+          size="small"
+          disabled={isLoading || !isChanged}
+          icon={<Check className="h-3.5 w-3.5" />}
+          onClick={handleSaveOrder}
+          className={`!p-1 !h-6 !w-6 flex items-center justify-center rounded transition-all ${
+            isChanged
+              ? "!bg-green-600 hover:!bg-green-700 !text-white !border-green-600 shadow-sm"
+              : "text-gray-300 border-gray-200"
+          }`}
+        />
+      </Tooltip>
+      <div className="flex flex-col gap-0.5">
+        <Button
+          type="text"
+          size="small"
+          disabled={isLoading || currentOrder <= 1}
+          icon={<ArrowUp className="h-3.5 w-3.5" />}
+          onClick={() => handleMove(currentOrder - 1)}
+          className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
+          title="Move Up"
+        />
+        <Button
+          type="text"
+          size="small"
+          disabled={isLoading}
+          icon={<ArrowDown className="h-3.5 w-3.5" />}
+          onClick={() => handleMove(currentOrder + 1)}
+          className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
+          title="Move Down"
+        />
+      </div>
+    </div>
+  );
+};
 
 /** Neighbourhoods, and how many listings each one is carrying. */
 const Areas = () => {
@@ -34,60 +113,9 @@ const Areas = () => {
     sort: "order",
   });
   const [deleteArea] = useDeleteAreaMutation();
-  const [updateArea, { isLoading: updatingOrder }] = useUpdateAreaMutation();
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
-
-  const handleMoveUp = async (index: number) => {
-    if (index <= 0 || updatingOrder) return;
-    const current = rows[index];
-    const prev = rows[index - 1];
-
-    let currentOrder = typeof current.order === "number" ? current.order : index + 1;
-    let prevOrder = typeof prev.order === "number" ? prev.order : index;
-
-    if (currentOrder >= prevOrder) {
-      const temp = currentOrder;
-      currentOrder = Math.max(0, prevOrder - 1);
-      prevOrder = temp;
-    }
-
-    try {
-      await Promise.all([
-        updateArea({ id: current._id, data: { order: currentOrder } }).unwrap(),
-        updateArea({ id: prev._id, data: { order: prevOrder } }).unwrap(),
-      ]);
-      toast.success("Order updated");
-    } catch {
-      toast.error("Could not update order");
-    }
-  };
-
-  const handleMoveDown = async (index: number) => {
-    if (index >= rows.length - 1 || updatingOrder) return;
-    const current = rows[index];
-    const next = rows[index + 1];
-
-    let currentOrder = typeof current.order === "number" ? current.order : index + 1;
-    let nextOrder = typeof next.order === "number" ? next.order : index + 2;
-
-    if (currentOrder <= nextOrder) {
-      const temp = currentOrder;
-      currentOrder = nextOrder + 1;
-      nextOrder = temp;
-    }
-
-    try {
-      await Promise.all([
-        updateArea({ id: current._id, data: { order: currentOrder } }).unwrap(),
-        updateArea({ id: next._id, data: { order: nextOrder } }).unwrap(),
-      ]);
-      toast.success("Order updated");
-    } catch {
-      toast.error("Could not update order");
-    }
-  };
 
   const onDelete = (id: string, name: string) =>
     confirm({
@@ -110,34 +138,10 @@ const Areas = () => {
       title: "Order",
       dataIndex: "order",
       key: "order",
-      width: 110,
+      width: 120,
       align: "center" as const,
-      render: (ord: number, _: any, index: number) => (
-        <div className="flex items-center justify-center gap-1.5">
-          <span className="font-semibold text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full min-w-[28px] text-center border border-blue-200">
-            #{ord ?? index + 1}
-          </span>
-          <div className="flex flex-col gap-0.5">
-            <Button
-              type="text"
-              size="small"
-              disabled={index === 0 || updatingOrder}
-              icon={<ArrowUp className="h-3.5 w-3.5" />}
-              onClick={() => handleMoveUp(index)}
-              className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
-              title="Move Up"
-            />
-            <Button
-              type="text"
-              size="small"
-              disabled={index === rows.length - 1 || updatingOrder}
-              icon={<ArrowDown className="h-3.5 w-3.5" />}
-              onClick={() => handleMoveDown(index)}
-              className="!p-0.5 !h-5 !w-5 flex items-center justify-center hover:bg-gray-200 rounded"
-              title="Move Down"
-            />
-          </div>
-        </div>
+      render: (_: number, r: any, index: number) => (
+        <OrderInputCell record={r} index={index} />
       ),
     },
     {
@@ -155,6 +159,23 @@ const Areas = () => {
       ),
     },
     {
+      title: "Note",
+      dataIndex: "note",
+      key: "note",
+      width: 240,
+      render: (note: string, r: any) => {
+        const text = note || r.noteBn || "";
+        if (!text) return <span className="text-secondary-400">—</span>;
+        return (
+          <Tooltip title={<div className="max-w-sm whitespace-pre-wrap text-xs">{text}</div>}>
+            <div className="line-clamp-2 text-xs text-secondary-700 leading-relaxed cursor-pointer">
+              {text}
+            </div>
+          </Tooltip>
+        );
+      },
+    },
+    {
       title: "Listings",
       dataIndex: "listings",
       key: "listings",
@@ -163,20 +184,18 @@ const Areas = () => {
       render: (n: number) => <Tag color={n ? "green" : "default"}>{n ?? 0}</Tag>,
     },
     {
-      title: "Median price",
-      dataIndex: "medianPrice",
-      key: "medianPrice",
-      width: 150,
-      align: "right" as const,
-      render: (v: number) => `৳ ${money(v)}`,
+      title: "Created at",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 140,
+      render: (v: string) => <DateTimeStacked value={v} />,
     },
     {
-      title: "Per sq ft",
-      dataIndex: "pricePerSqft",
-      key: "pricePerSqft",
-      width: 120,
-      align: "right" as const,
-      render: (v: number) => `৳ ${money(v)}`,
+      title: "Updated at",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      width: 140,
+      render: (v: string) => <DateTimeStacked value={v} />,
     },
     {
       title: "Status",

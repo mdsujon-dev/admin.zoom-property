@@ -48,7 +48,7 @@ export const translateToBanglaApi = async (text: string): Promise<string> => {
   return text;
 };
 
-export const BANGLA_REGEX = /^[\u0980-\u09FF\s0-9.,!()"'-]*$/;
+export const BANGLA_REGEX = /^[\u0980-\u09FF\u0964\u0965\u200C\u200D\s0-9.,!()"'\-/:;?%&+“”‘’—–]*$/;
 const ENGLISH_ONLY_REGEX = /^[^\u0980-\u09FF]*$/;
 
 export const BANGLA_RULE = {

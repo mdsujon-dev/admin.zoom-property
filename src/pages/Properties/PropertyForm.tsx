@@ -26,7 +26,6 @@ import {
   BADGES,
   FURNISHINGS,
   PROPERTY_TYPES,
-  PURPOSES,
   STATUSES,
 } from "./propertyMeta";
 
@@ -94,6 +93,7 @@ const PropertyForm = ({
   const handleFinish = async (values: any) => {
     const { coverImageUrl, imageUrls, ...rest } = values;
     await onSubmit({
+      purpose: "sale",
       ...rest,
       description: paragraphs(values.description),
       descriptionBn: paragraphs(values.descriptionBn),
@@ -153,17 +153,12 @@ const PropertyForm = ({
               </Form.Item>
             </Col>
 
-            <Col xs={12} md={6}>
-              <Form.Item label="Purpose" name="purpose" rules={[{ required: true }]}>
-                <Select options={PURPOSES} />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
+            <Col xs={24} md={8}>
               <Form.Item label="Type" name="type" rules={[{ required: true }]}>
                 <Select options={PROPERTY_TYPES} />
               </Form.Item>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={24} md={8}>
               <Form.Item
                 label="Status"
                 name="status"
@@ -172,7 +167,7 @@ const PropertyForm = ({
                 <Select options={STATUSES} />
               </Form.Item>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={24} md={8}>
               <Form.Item label="Badge" name="badge">
                 <Select allowClear options={BADGES} placeholder="None" />
               </Form.Item>

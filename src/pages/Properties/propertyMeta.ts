@@ -9,7 +9,6 @@ import type { ColumnsType } from "antd/es/table";
  */
 export const PURPOSES = [
   { value: "sale", label: "For sale" },
-  { value: "rent", label: "To rent" },
 ];
 
 export const PROPERTY_TYPES = [

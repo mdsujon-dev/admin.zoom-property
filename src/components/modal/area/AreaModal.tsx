@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Switch } from "antd";
+import { Button, Col, Form, Input, Modal, Row, Switch } from "antd";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -103,25 +103,8 @@ const AreaModal = ({ open, onClose, area }: Props) => {
             />
           </Col>
 
-          <Col xs={12} md={8}>
+          <Col xs={24}>
             <LangInput label="City" name="city" lang="en" placeholder="Dhaka" />
-          </Col>
-
-          <Col xs={12} md={8}>
-            <Form.Item label="Median price (৳)" name="medianPrice">
-              <InputNumber placeholder="35000000" className="!w-full" min={0} />
-            </Form.Item>
-          </Col>
-          <Col xs={12} md={8}>
-            <Form.Item label="Price per sq ft (৳)" name="pricePerSqft">
-              <InputNumber placeholder="18000" className="!w-full" min={0} />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12}>
-            <LangInput label="Security tier" name="securityTier" lang="en" placeholder="Diplomatic zone" />
-          </Col>
-          <Col xs={24} md={12}>
-            <LangInput label="Metro connectivity" name="metroConnectivity" lang="en" placeholder="MRT-6, 800m" />
           </Col>
 
           <Col xs={24}>
