@@ -163,7 +163,7 @@ const LandownerProjectModal = ({ open, onClose, project }: Props) => {
             <Form.Item label="Description" name="description">
               <RichTextEditor
                 placeholder="Write the passage in English..."
-                height={320}
+                height={500}
               />
             </Form.Item>
           </Col>
@@ -195,7 +195,7 @@ const LandownerProjectModal = ({ open, onClose, project }: Props) => {
               }
               name="descriptionBn"
             >
-              <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={320} />
+              <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={500} />
             </Form.Item>
           </Col>
         </Row>

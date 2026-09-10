@@ -168,15 +168,21 @@ const SectionForm = ({
       const defaultItem = repeatable.defaultItems?.[idx];
       for (const itemField of repeatable.itemFields) {
         const key = `${repeatable.itemPrefix}.${idx}.${itemField.suffix}`;
+        // A field's default comes from its own key and nowhere else.
+        //
+        // This used to fall back to `bodyEn`/`bodyBn` for any suffix that was
+        // not "title", which meant the icon field inherited the body text —
+        // and once "load defaults" wrote that into the box, saving stored a
+        // paragraph of Bangla as an icon name.
         const defEn =
-          defaultItem?.[`${itemField.suffix}En`] ||
-          (itemField.suffix === "title" ? defaultItem?.titleEn : defaultItem?.bodyEn) ||
-          itemField.defaultEn ||
-          "";
+          defaultItem?.[`${itemField.suffix}En`] || itemField.defaultEn || "";
+        // An icon name is the same in both languages, so a field with no
+        // Bangla default falls back to its English one rather than to some
+        // other field's text.
         const defBn =
           defaultItem?.[`${itemField.suffix}Bn`] ||
-          (itemField.suffix === "title" ? defaultItem?.titleBn : defaultItem?.bodyBn) ||
           itemField.defaultBn ||
+          defEn ||
           "";
         dynamicFields.push({
           key,
@@ -404,7 +410,7 @@ const SectionForm = ({
     const groups: { header?: string; fields: CmsField[] }[] = [];
     let currentGroup: { header?: string; fields: CmsField[] } | null = null;
 
-    for (const field of section.fields) {
+    for (const field of allEffectiveFields) {
       if (field.groupHeader) {
         if (currentGroup) groups.push(currentGroup);
         currentGroup = { header: field.groupHeader, fields: [field] };
