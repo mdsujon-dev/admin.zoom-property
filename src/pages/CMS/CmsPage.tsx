@@ -102,7 +102,7 @@ const storedValue = (
 ) => {
   const doc = stored[cmsStorageKey(key, lang)];
   const value = doc?.value ?? (doc as any)?.imageUrl;
-  return typeof value === "string" ? value : "";
+  return typeof value === "string" ? value : (Array.isArray(value) ? value : "");
 };
 
 const SectionForm = ({
@@ -229,9 +229,10 @@ const SectionForm = ({
   const onFillDefaults = () => {
     let count = 0;
     for (const field of allEffectiveFields) {
-      if (field.type === "image" || field.type === "url") {
+      if (field.type === "image" || field.type === "url" || field.type === "images") {
         if (field.en) {
-          form.setFieldValue([`${field.key}|en`], field.en);
+          const val = field.type === "images" ? (field.en === "[]" ? [] : field.en) : field.en;
+          form.setFieldValue([`${field.key}|en`], val);
           count++;
         }
       } else {
@@ -253,7 +254,7 @@ const SectionForm = ({
     let count = 0;
     try {
       for (const field of allEffectiveFields) {
-        if (field.type === "image" || field.type === "url") continue;
+        if (field.type === "image" || field.type === "url" || field.type === "images") continue;
         const enVal = (form.getFieldValue(`${field.key}|en`) || field.en || "").trim();
         if (enVal) {
           const bnText = await translateToBanglaApi(enVal);
@@ -280,22 +281,31 @@ const SectionForm = ({
     const clear: string[] = [];
 
     for (const field of allEffectiveFields) {
-      if (field.type === "image" || field.type === "url") {
+      if (field.type === "image" || field.type === "url" || field.type === "images") {
         const allValues = form.getFieldsValue(true);
         const rawVal =
           form.getFieldValue([`${field.key}|en`]) ??
           allValues[`${field.key}|en`] ??
           values[`${field.key}|en`];
-        const next = (typeof rawVal === "string" ? rawVal : "").trim();
+          
+        const next = field.type === "images" 
+          ? (Array.isArray(rawVal) ? rawVal : (typeof rawVal === "string" && rawVal.trim() ? [rawVal] : []))
+          : (typeof rawVal === "string" ? rawVal : "").trim();
+          
         for (const lang of ["en", "bn"] as const) {
           const key = cmsStorageKey(field.key, lang);
           const before = storedValue(stored, field.key, lang);
-          if (next) {
-            if (next !== before) {
+          
+          const hasChanged = field.type === "images"
+            ? JSON.stringify(next) !== JSON.stringify(Array.isArray(before) ? before : (before ? [before] : []))
+            : next !== before;
+            
+          if (hasChanged) {
+            if (field.type === "images" ? next.length > 0 : next) {
               contents.push({ key, value: next, group: pageId, type: "text" });
+            } else {
+              clear.push(key);
             }
-          } else if (before) {
-            clear.push(key);
           }
         }
         continue;
@@ -586,7 +596,7 @@ const FieldRow = ({
 }) => {
   const [translating, setTranslating] = useState(false);
 
-  if (field.type === "image") {
+  if (field.type === "image" || field.type === "images") {
     const hintText =
       field.hint || "Recommended: 1920 × 1080 px (16:9 Landscape) · High quality JPG / WebP (Max 2MB)";
 
@@ -613,6 +623,7 @@ const FieldRow = ({
         <UploadImage
           form={form}
           fieldPath={[`${field.key}|en`]}
+          mode={field.type === "images" ? "multiple" : "single"}
         />
       </div>
     );

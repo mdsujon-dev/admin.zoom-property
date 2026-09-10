@@ -19,6 +19,11 @@ OUT = r"C:\project\zoom-property\admin.zoom-property\src\pages\CMS\cmsSchema.ts"
 # they live in the Landowners module. The `landowners` group of section
 # headings is deliberately not listed - see the note in the response.
 #
+# `services` and `common` are deliberately absent: the services showcase and
+# the site-wide furniture (nav, footer, metadata, 404) are not page copy the
+# desk edits, and a CMS entry for them was one more screen to scroll past.
+# They render from the dictionary.
+#
 # `reviews` is deliberately absent. A review is a record with a photograph,
 # a rating and a film, not a heading — it belongs in the Reviews module,
 # which manages the reviews themselves. Listing it here put the same thing
@@ -35,7 +40,6 @@ PAGES = [
      ["areas"]),
     ("about", "About", "The about page and the explainer blocks it is built from.",
      ["about", "pages"]),
-    ("services", "Services", "The services showcase.", ["services"]),
     ("landowners", "Landowners", "The banner at the top of the landowners page.",
      ["landowner"]),
     ("blog", "Blog", "The blog index, an article, and everything around it.",
@@ -44,8 +48,6 @@ PAGES = [
      ["reviews"]),
     ("agents", "Agents", "The agents page.", ["agentsSection"]),
     ("contact", "Contact", "The contact page and its enquiry form.", ["contact"]),
-    ("common", "Site-wide", "Navigation, footer, metadata and the 404 page.",
-     ["meta", "nav", "footer", "notFound"]),
 ]
 
 TEXTAREA = re.compile(
@@ -76,6 +78,7 @@ BANNER_ONLY = {
     "reviews": "reviews",
     "blog": "blog",
     "contact": "contact",
+    "about": "about",
 }
 
 BANNER_KEYS = ["backgroundImage", "eyebrow", "title", "description"]
