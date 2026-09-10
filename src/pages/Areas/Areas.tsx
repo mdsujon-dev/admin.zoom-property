@@ -25,7 +25,7 @@ const Areas = () => {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any>(null);
   const [open, setOpen] = useState(false);
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [busyKey, setBusyKey] = useState<string | null>(null);
 
   const { data, isLoading } = useGetAreasQuery({
     page,
@@ -41,7 +41,7 @@ const Areas = () => {
     field: "isActive" | "isHome" | "featured",
     value: boolean
   ) => {
-    setBusyId(id);
+    setBusyKey(`${id}-${field}`);
     try {
       await updateArea({ id, data: { [field]: value } }).unwrap();
       const label =
@@ -54,7 +54,7 @@ const Areas = () => {
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update area");
     } finally {
-      setBusyId(null);
+      setBusyKey(null);
     }
   };
 
@@ -164,7 +164,7 @@ const Areas = () => {
           <Switch
             size="small"
             checked={!!isHome}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-isHome`}
             onChange={(checked) => onToggle(r._id, "isHome", checked)}
           />
         </PermissionGate>
@@ -189,7 +189,7 @@ const Areas = () => {
           <Switch
             size="small"
             checked={isActive !== false}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-isActive`}
             onChange={(checked) => onToggle(r._id, "isActive", checked)}
           />
         </PermissionGate>

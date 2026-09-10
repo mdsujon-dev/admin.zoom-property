@@ -43,7 +43,7 @@ const Properties = () => {
   const [purpose] = useState<string | undefined>();
   const [type, setType] = useState<string | undefined>();
   const [area, setArea] = useState<string | undefined>();
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [busyKey, setBusyKey] = useState<string | null>(null);
 
   const { data, isLoading } = useGetPropertiesQuery({
     page,
@@ -65,14 +65,14 @@ const Properties = () => {
   const total = data?.meta?.total ?? 0;
 
   const onStatus = async (id: string, next: string) => {
-    setBusyId(id);
+    setBusyKey(`${id}-status`);
     try {
       const res = await changeStatus({ id, status: next as any }).unwrap();
       toast.success(res?.message || "Status updated");
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update the status");
     } finally {
-      setBusyId(null);
+      setBusyKey(null);
     }
   };
 
@@ -81,7 +81,7 @@ const Properties = () => {
     field: "isHome" | "featured",
     value: boolean
   ) => {
-    setBusyId(id);
+    setBusyKey(`${id}-${field}`);
     try {
       await updateProperty({ id, data: { [field]: value } }).unwrap();
       toast.success(
@@ -90,7 +90,7 @@ const Properties = () => {
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update the listing");
     } finally {
-      setBusyId(null);
+      setBusyKey(null);
     }
   };
 
@@ -188,7 +188,7 @@ const Properties = () => {
             size="small"
             value={value}
             className="w-full"
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-status`}
             options={STATUSES}
             onChange={(next) => onStatus(r._id, next)}
           />
@@ -214,7 +214,7 @@ const Properties = () => {
           <Switch
             size="small"
             checked={!!isHome}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-isHome`}
             onChange={(checked) => onToggleField(r._id, "isHome", checked)}
           />
         </PermissionGate>
@@ -235,7 +235,7 @@ const Properties = () => {
           <Switch
             size="small"
             checked={!!featured}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-featured`}
             onChange={(checked) => onToggleField(r._id, "featured", checked)}
           />
         </PermissionGate>
@@ -301,56 +301,63 @@ const Properties = () => {
         }
       />
 
-      <div className="mb-6 flex flex-wrap gap-3">
-        <Input
-          allowClear
-          placeholder="Search by title, reference or address"
-          prefix={<Search className="h-4 w-4 text-gray-400" />}
-          value={search}
-          onChange={(e) => {
-            setPage(1);
-            setSearch(e.target.value);
-          }}
-          className="max-w-sm"
-        />
-        <Select
-          allowClear
-          placeholder="Status"
-          className="w-40"
-          value={status}
-          options={STATUSES}
-          onChange={(v) => {
-            setPage(1);
-            setStatus(v);
-          }}
-        />
-        <Select
-          allowClear
-          placeholder="Type"
-          className="w-40"
-          value={type}
-          options={PROPERTY_TYPES}
-          onChange={(v) => {
-            setPage(1);
-            setType(v);
-          }}
-        />
-        <Select
-          allowClear
-          showSearch
-          optionFilterProp="label"
-          placeholder="Area"
-          className="w-44"
-          value={area}
-          options={(areaData?.result || []).map((a: any) => ({
-            value: a._id,
-            label: a.name,
-          }))}
-          onChange={(v) => {
-            setPage(1);
-            setArea(v);
-          }}
-        />
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        {/* Left side: Search Input */}
+        <div className="w-full sm:w-auto">
+          <Input
+            allowClear
+            placeholder="Search by title, reference or address"
+            prefix={<Search className="h-4 w-4 text-gray-400" />}
+            value={search}
+            onChange={(e) => {
+              setPage(1);
+              setSearch(e.target.value);
+            }}
+            className="w-full sm:w-80 md:w-96"
+          />
+        </div>
+
+        {/* Right side: Filter dropdowns */}
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            allowClear
+            placeholder="Status"
+            className="w-36"
+            value={status}
+            options={STATUSES}
+            onChange={(v) => {
+              setPage(1);
+              setStatus(v);
+            }}
+          />
+          <Select
+            allowClear
+            placeholder="Type"
+            className="w-36"
+            value={type}
+            options={PROPERTY_TYPES}
+            onChange={(v) => {
+              setPage(1);
+              setType(v);
+            }}
+          />
+          <Select
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            placeholder="Area"
+            className="w-40"
+            value={area}
+            options={(areaData?.result || []).map((a: any) => ({
+              value: a._id,
+              label: a.name,
+            }))}
+            onChange={(v) => {
+              setPage(1);
+              setArea(v);
+            }}
+          />
+        </div>
       </div>
 
       <DataTable

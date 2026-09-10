@@ -13,6 +13,11 @@ FRONTEND = r"C:\project\zoom-property\frontend.zoom-property\src\i18n\messages"
 OUT = r"C:\project\zoom-property\admin.zoom-property\src\pages\CMS\cmsSchema.ts"
 
 # Which dictionary groups belong to which public page.
+#
+# `reviews` is deliberately absent. A review is a record with a photograph,
+# a rating and a film, not a heading — it belongs in the Reviews module,
+# which manages the reviews themselves. Listing it here put the same thing
+# in two places in the sidebar.
 PAGES = [
     ("home", "Home", "The landing page, top to bottom.",
      ["hero", "showcase", "features", "gallery", "faq", "rooms", "statsBanner",
@@ -30,8 +35,6 @@ PAGES = [
      ["landowner", "landowners"]),
     ("blog", "Blog", "The blog index, an article, and everything around it.",
      ["blog"]),
-    ("reviews", "Reviews", "Client reviews, on the home page and their own.",
-     ["reviews"]),
     ("agents", "Agents", "The agents page.", ["agentsSection"]),
     ("contact", "Contact", "The contact page and its enquiry form.", ["contact"]),
     ("common", "Site-wide", "Navigation, footer, metadata and the 404 page.",
@@ -42,6 +45,13 @@ TEXTAREA = re.compile(
     r"(description|lead|body|note|quote|subtitle|placeholder|tagline|successBody)$",
     re.IGNORECASE,
 )
+
+# A media field is named like one *and* holds an address. The key alone is not
+# enough: "playVideo" and "copyLink" are button labels, and typing them as a
+# URL would hand the desk an upload box where a word belongs.
+IMAGE_KEY = re.compile(r"(poster|image|photo|avatar|logo|banner|cover|thumbnail)$", re.I)
+URL_KEY = re.compile(r"(video|url|href|link)$", re.I)
+ADDRESS = re.compile(r"^(https?://|/)")
 
 
 def pretty(seg: str) -> str:
@@ -63,6 +73,11 @@ def scalars(node, prefix=""):
 
 def field_type(path: str, value: str) -> str:
     last = path.split(".")[-1]
+    if ADDRESS.match(value.strip()):
+        if IMAGE_KEY.search(last):
+            return "image"
+        if URL_KEY.search(last):
+            return "url"
     if TEXTAREA.search(last):
         return "textarea"
     return "textarea" if len(value) > 90 else "text"
@@ -151,7 +166,7 @@ def build():
  * `<path>.<lang>` in the Dynamic Content collection, grouped by page id.
  */
 
-export type CmsFieldType = "text" | "textarea";
+export type CmsFieldType = "text" | "textarea" | "url" | "image";
 
 export interface CmsField {
   /** Dictionary path, e.g. `hero.trust.rajuk`. */
@@ -161,7 +176,20 @@ export interface CmsField {
   /** What the site says today, in each language. Used as placeholder text. */
   en: string;
   bn: string;
+  /**
+   * Starts a titled block within the section. Set on the first field of the
+   * block; the editor groups everything after it until the next header.
+   */
+  groupHeader?: string;
+  /** Overrides the default guidance shown beside an `image` field. */
+  hint?: string;
 }
+
+/**
+ * `image` and `url` fields hold one address, not one string per language, so
+ * the editor shows a single control and stores the same value under both
+ * languages.
+ */
 
 export interface CmsSection {
   id: string;

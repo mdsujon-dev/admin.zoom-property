@@ -9,6 +9,7 @@ import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
 import OrderInputCell from "../../components/shared/OrderInputCell";
+import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
   useDeleteProjectMutation,
   useGetProjectsQuery,
@@ -22,15 +23,20 @@ const Projects = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [stage, setStage] = useState<string | undefined>();
+  const [area, setArea] = useState<string | undefined>();
+  const [busyKey, setBusyKey] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const { data, isLoading } = useGetProjectsQuery({
     page,
     limit,
     searchTerm: search || undefined,
+    stage,
+    area,
     sort: "order",
   });
+  const { data: areaData } = useGetAreasQuery({ limit: 200, activeOnly: true });
   const [deleteProject] = useDeleteProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
 
@@ -39,7 +45,7 @@ const Projects = () => {
     field: "isActive" | "isHome" | "featured",
     value: boolean
   ) => {
-    setBusyId(id);
+    setBusyKey(`${id}-${field}`);
     try {
       await updateProject({ id, data: { [field]: value } }).unwrap();
       const label =
@@ -52,19 +58,19 @@ const Projects = () => {
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update project");
     } finally {
-      setBusyId(null);
+      setBusyKey(null);
     }
   };
 
   const onStageChange = async (id: string, nextStage: string) => {
-    setBusyId(id);
+    setBusyKey(`${id}-stage`);
     try {
       await updateProject({ id, data: { stage: nextStage } }).unwrap();
       toast.success("Stage updated");
     } catch (e: any) {
       toast.error(e?.data?.message || "Could not update stage");
     } finally {
-      setBusyId(null);
+      setBusyKey(null);
     }
   };
 
@@ -74,9 +80,10 @@ const Projects = () => {
   const onDelete = (id: string, name: string) =>
     confirm({
       title: "Delete this project?",
-      content: `"${name}" will be removed. Listings inside it must be detached first.`,
+      content: `"${name}" will be removed from the book. Listings attached to it will keep their details, but will no longer point to a project.`,
       okText: "Yes, delete",
       okType: "danger",
+      cancelText: "Cancel",
       onOk: async () => {
         try {
           await deleteProject(id).unwrap();
@@ -109,18 +116,11 @@ const Projects = () => {
       dataIndex: "name",
       key: "name",
       render: (name: string, r: any) => (
-        <div className="min-w-0">
-          <p className="truncate font-medium text-secondary-800">
-            {name}
-            {r.isHome && (
-              <Tag color="blue" className="ml-2">
-                Home
-              </Tag>
-            )}
-          </p>
-          <p className="truncate text-xs text-secondary-500">
-            {r.developer ? `${r.developer} · ` : ""}
-            {r.area?.name || r.city}
+        <div>
+          <p className="font-medium text-secondary-800">{name}</p>
+          <p className="text-xs text-secondary-500">
+            {r.area?.name ? `${r.area.name} · ` : ""}
+            {r.developer}
           </p>
         </div>
       ),
@@ -129,7 +129,7 @@ const Projects = () => {
       title: "Stage",
       dataIndex: "stage",
       key: "stage",
-      width: 160,
+      width: 140,
       render: (stage: string, r: any) => (
         <PermissionGate
           module="Projects"
@@ -142,7 +142,7 @@ const Projects = () => {
             size="small"
             value={stage || "Planning"}
             className="w-full"
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-stage`}
             options={STAGES}
             onChange={(next) => onStageChange(r._id, next)}
           />
@@ -189,7 +189,7 @@ const Projects = () => {
           <Switch
             size="small"
             checked={!!isHome}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-isHome`}
             onChange={(checked) => onToggleProject(r._id, "isHome", checked)}
           />
         </PermissionGate>
@@ -214,7 +214,7 @@ const Projects = () => {
           <Switch
             size="small"
             checked={isActive !== false}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-isActive`}
             onChange={(checked) => onToggleProject(r._id, "isActive", checked)}
           />
         </PermissionGate>
@@ -239,7 +239,7 @@ const Projects = () => {
           <Switch
             size="small"
             checked={!!featured}
-            loading={busyId === r._id}
+            loading={busyKey === `${r._id}-featured`}
             onChange={(checked) => onToggleProject(r._id, "featured", checked)}
           />
         </PermissionGate>
@@ -305,18 +305,52 @@ const Projects = () => {
         }
       />
 
-      <div className="mb-6">
-        <Input
-          allowClear
-          placeholder="Search by name, developer or permit no."
-          prefix={<Search className="h-4 w-4 text-gray-400" />}
-          value={search}
-          onChange={(e) => {
-            setPage(1);
-            setSearch(e.target.value);
-          }}
-          className="max-w-sm"
-        />
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        {/* Left side: Search Input */}
+        <div className="w-full sm:w-auto">
+          <Input
+            allowClear
+            placeholder="Search by name, developer or permit no."
+            prefix={<Search className="h-4 w-4 text-gray-400" />}
+            value={search}
+            onChange={(e) => {
+              setPage(1);
+              setSearch(e.target.value);
+            }}
+            className="w-full sm:w-80 md:w-96"
+          />
+        </div>
+
+        {/* Right side: Filter dropdowns */}
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            allowClear
+            placeholder="Stage"
+            className="w-36"
+            value={stage}
+            options={STAGES}
+            onChange={(v) => {
+              setPage(1);
+              setStage(v);
+            }}
+          />
+          <Select
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            placeholder="Area"
+            className="w-40"
+            value={area}
+            options={(areaData?.result || []).map((a: any) => ({
+              value: a._id,
+              label: a.name,
+            }))}
+            onChange={(v) => {
+              setPage(1);
+              setArea(v);
+            }}
+          />
+        </div>
       </div>
 
       <DataTable

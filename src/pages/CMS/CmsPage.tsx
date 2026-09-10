@@ -1,5 +1,5 @@
-import { Button, Empty, Form, Input, Space, Spin, Tabs, Tag, Tooltip } from "antd";
-import { Languages, RotateCcw, Save } from "lucide-react";
+import { Button, Empty, Form, Input, Popconfirm, Space, Spin, Tabs, Tag, Tooltip } from "antd";
+import { FileText, Info, Languages, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { translateToBanglaApi } from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
+import UploadImage from "../../components/shared/UploadImage";
 import {
   useGetCmsContentQuery,
   useResetCmsContentMutation,
@@ -100,7 +101,7 @@ const storedValue = (
   lang: "en" | "bn"
 ) => {
   const doc = stored[cmsStorageKey(key, lang)];
-  const value = doc?.value;
+  const value = doc?.value ?? (doc as any)?.imageUrl;
   return typeof value === "string" ? value : "";
 };
 
@@ -118,29 +119,141 @@ const SectionForm = ({
   const [save, { isLoading: saving }] = useSaveCmsContentMutation();
   const [reset, { isLoading: resetting }] = useResetCmsContentMutation();
 
+  const repeatable = section.repeatable;
+  const [repeatableIndices, setRepeatableIndices] = useState<number[]>(() => {
+    if (!repeatable) return [];
+    const prefix = `${repeatable.itemPrefix}.`;
+    const foundIndices = new Set<number>();
+    for (const key of Object.keys(stored)) {
+      if (key.startsWith(prefix)) {
+        const rest = key.slice(prefix.length);
+        const match = rest.match(/^(\d+)\./);
+        if (match) {
+          foundIndices.add(parseInt(match[1], 10));
+        }
+      }
+    }
+    if (foundIndices.size > 0) {
+      return Array.from(foundIndices).sort((a, b) => a - b);
+    }
+    const initialCount = repeatable.initialCount ?? repeatable.defaultItems?.length ?? 1;
+    return Array.from({ length: initialCount }, (_, i) => i);
+  });
+
+  useEffect(() => {
+    if (!repeatable) {
+      setRepeatableIndices([]);
+      return;
+    }
+    const prefix = `${repeatable.itemPrefix}.`;
+    const foundIndices = new Set<number>();
+    for (const key of Object.keys(stored)) {
+      if (key.startsWith(prefix)) {
+        const rest = key.slice(prefix.length);
+        const match = rest.match(/^(\d+)\./);
+        if (match) {
+          foundIndices.add(parseInt(match[1], 10));
+        }
+      }
+    }
+    if (foundIndices.size > 0) {
+      setRepeatableIndices(Array.from(foundIndices).sort((a, b) => a - b));
+    }
+  }, [repeatable, stored]);
+
+  const allEffectiveFields = useMemo(() => {
+    if (!repeatable) return section.fields;
+    const dynamicFields: CmsField[] = [];
+    for (const idx of repeatableIndices) {
+      const defaultItem = repeatable.defaultItems?.[idx];
+      for (const itemField of repeatable.itemFields) {
+        const key = `${repeatable.itemPrefix}.${idx}.${itemField.suffix}`;
+        const defEn =
+          defaultItem?.[`${itemField.suffix}En`] ||
+          (itemField.suffix === "title" ? defaultItem?.titleEn : defaultItem?.bodyEn) ||
+          itemField.defaultEn ||
+          "";
+        const defBn =
+          defaultItem?.[`${itemField.suffix}Bn`] ||
+          (itemField.suffix === "title" ? defaultItem?.titleBn : defaultItem?.bodyBn) ||
+          itemField.defaultBn ||
+          "";
+        dynamicFields.push({
+          key,
+          label: itemField.label,
+          type: itemField.type,
+          en: defEn,
+          bn: defBn,
+        });
+      }
+    }
+    return [...section.fields, ...dynamicFields];
+  }, [section.fields, repeatable, repeatableIndices]);
+
   const initial = useMemo(() => {
     const values: Record<string, string> = {};
-    for (const field of section.fields) {
+    for (const field of allEffectiveFields) {
       values[`${field.key}|en`] = storedValue(stored, field.key, "en");
       values[`${field.key}|bn`] = storedValue(stored, field.key, "bn");
     }
     return values;
-  }, [section, stored]);
+  }, [allEffectiveFields, stored]);
 
   useEffect(() => {
     form.setFieldsValue(initial);
   }, [initial, form]);
 
-  const overridden = section.fields.filter(
+  const overridden = allEffectiveFields.filter(
     (f) =>
       storedValue(stored, f.key, "en") || storedValue(stored, f.key, "bn")
   ).length;
+
+  const handleAddProcess = () => {
+    if (!repeatable) return;
+    const nextIdx = repeatableIndices.length > 0 ? Math.max(...repeatableIndices) + 1 : 0;
+    setRepeatableIndices((prev) => [...prev, nextIdx]);
+    toast.success(`${repeatable.itemName || "Process"} #${nextIdx + 1} যোগ করা হয়েছে`);
+  };
+
+  const handleRemoveProcess = (idxToRemove: number) => {
+    if (!repeatable) return;
+    for (const itemField of repeatable.itemFields) {
+      const key = `${repeatable.itemPrefix}.${idxToRemove}.${itemField.suffix}`;
+      form.setFieldValue(`${key}|en`, "");
+      form.setFieldValue(`${key}|bn`, "");
+    }
+    setRepeatableIndices((prev) => prev.filter((i) => i !== idxToRemove));
+    toast.info(`ধাপ #${idxToRemove + 1} সরানো হয়েছে। পরিবর্তন সংরক্ষণ করতে Save section-এ ক্লিক করুন।`);
+  };
+
+  const onFillDefaults = () => {
+    let count = 0;
+    for (const field of allEffectiveFields) {
+      if (field.type === "image" || field.type === "url") {
+        if (field.en) {
+          form.setFieldValue([`${field.key}|en`], field.en);
+          count++;
+        }
+      } else {
+        if (field.en) {
+          form.setFieldValue(`${field.key}|en`, field.en);
+          count++;
+        }
+        if (field.bn) {
+          form.setFieldValue(`${field.key}|bn`, field.bn);
+          count++;
+        }
+      }
+    }
+    toast.success(`ফর্মে ${count}টি ফিল্ডে ডিফল্ট ডেটা লোড হয়েছে। Save section-এ ক্লিক করে সেভ করুন।`);
+  };
 
   const onTranslateAll = async () => {
     setTranslatingAll(true);
     let count = 0;
     try {
-      for (const field of section.fields) {
+      for (const field of allEffectiveFields) {
+        if (field.type === "image" || field.type === "url") continue;
         const enVal = (form.getFieldValue(`${field.key}|en`) || field.en || "").trim();
         if (enVal) {
           const bnText = await translateToBanglaApi(enVal);
@@ -166,19 +279,55 @@ const SectionForm = ({
     const contents: CmsUpsertItem[] = [];
     const clear: string[] = [];
 
-    for (const field of section.fields) {
+    for (const field of allEffectiveFields) {
+      if (field.type === "image" || field.type === "url") {
+        const allValues = form.getFieldsValue(true);
+        const rawVal =
+          form.getFieldValue([`${field.key}|en`]) ??
+          allValues[`${field.key}|en`] ??
+          values[`${field.key}|en`];
+        const next = (typeof rawVal === "string" ? rawVal : "").trim();
+        for (const lang of ["en", "bn"] as const) {
+          const key = cmsStorageKey(field.key, lang);
+          const before = storedValue(stored, field.key, lang);
+          if (next) {
+            if (next !== before) {
+              contents.push({ key, value: next, group: pageId, type: "text" });
+            }
+          } else if (before) {
+            clear.push(key);
+          }
+        }
+        continue;
+      }
+
       for (const lang of ["en", "bn"] as const) {
         const key = cmsStorageKey(field.key, lang);
         const next = (values[`${field.key}|${lang}`] ?? "").trim();
         const before = storedValue(stored, field.key, lang);
         if (next) {
-          // Only what actually changed — a section of forty fields should not
-          // write forty rows and forty history entries every time it is saved.
           if (next !== before) {
             contents.push({ key, value: next, group: pageId, type: "text" });
           }
         } else if (before) {
           clear.push(key);
+        }
+      }
+    }
+
+    // Also clear any stored keys for removed repeatable stages
+    if (repeatable) {
+      const prefix = `${repeatable.itemPrefix}.`;
+      for (const storedKey of Object.keys(stored)) {
+        if (storedKey.startsWith(prefix)) {
+          const rest = storedKey.slice(prefix.length);
+          const match = rest.match(/^(\d+)\./);
+          if (match) {
+            const idx = parseInt(match[1], 10);
+            if (!repeatableIndices.includes(idx)) {
+              clear.push(storedKey);
+            }
+          }
         }
       }
     }
@@ -198,7 +347,7 @@ const SectionForm = ({
   };
 
   const onResetSection = async () => {
-    const keys = section.fields.flatMap((f) =>
+    const keys = allEffectiveFields.flatMap((f) =>
       (["en", "bn"] as const)
         .filter((lang) => storedValue(stored, f.key, lang))
         .map((lang) => cmsStorageKey(f.key, lang))
@@ -216,6 +365,24 @@ const SectionForm = ({
     }
   };
 
+  const fieldGroups = useMemo(() => {
+    const groups: { header?: string; fields: CmsField[] }[] = [];
+    let currentGroup: { header?: string; fields: CmsField[] } | null = null;
+
+    for (const field of section.fields) {
+      if (field.groupHeader) {
+        if (currentGroup) groups.push(currentGroup);
+        currentGroup = { header: field.groupHeader, fields: [field] };
+      } else if (currentGroup) {
+        currentGroup.fields.push(field);
+      } else {
+        currentGroup = { fields: [field] };
+      }
+    }
+    if (currentGroup) groups.push(currentGroup);
+    return groups;
+  }, [section.fields]);
+
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -225,11 +392,20 @@ const SectionForm = ({
           </p>
           <Tag color={overridden ? "blue" : "default"}>
             {overridden
-              ? `${overridden} of ${section.fields.length} edited`
+              ? `${overridden} of ${allEffectiveFields.length} edited`
               : "Using built-in text"}
           </Tag>
         </Space>
         <Space>
+          <Tooltip title="ফর্মটিতে সাইটের ডিফল্ট টেক্সট ও ধাপগুলো লোড করুন">
+            <Button
+              icon={<FileText className="h-4 w-4 text-emerald-600" />}
+              onClick={onFillDefaults}
+              className="text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+            >
+              ডিফল্ট ডেটা লোড করুন
+            </Button>
+          </Tooltip>
           <Tooltip title="Translate all English fields in this section to Bangla">
             <Button
               icon={<Languages className="h-4 w-4 text-primary-600" />}
@@ -264,10 +440,133 @@ const SectionForm = ({
         </Space>
       </div>
 
-      <div className="space-y-1">
-        {section.fields.map((field) => (
-          <FieldRow key={field.key} field={field} form={form} />
+      <div className="space-y-4">
+        {fieldGroups.map((group, gIdx) => (
+          <div
+            key={gIdx}
+            className={
+              group.header
+                ? "rounded-xl border border-secondary-200 bg-secondary-50/30 p-4 shadow-sm"
+                : "space-y-1"
+            }
+          >
+            {group.header && (
+              <div className="mb-3 flex items-center gap-2 border-b border-secondary-200/80 pb-2.5">
+                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary-100 text-[11px] font-bold text-primary-700 border border-primary-200">
+                  {gIdx + 1}
+                </span>
+                <span className="text-xs font-bold uppercase tracking-wider text-secondary-800">
+                  {group.header}
+                </span>
+              </div>
+            )}
+            <div className="space-y-1">
+              {group.fields.map((field) => (
+                <FieldRow key={field.key} field={field} form={form} />
+              ))}
+            </div>
+          </div>
         ))}
+
+        {/* Dynamic Repeatable Process Stages */}
+        {repeatable && (
+          <div className="mt-6 space-y-4 pt-4 border-t border-secondary-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-semibold text-secondary-900">
+                  {repeatable.itemName} List ({repeatableIndices.length} টি ধাপ)
+                </h4>
+                <p className="text-xs text-secondary-500">
+                  যেকোনো ধাপের বিবরণ পরিবর্তন করুন বা নিচে থেকে নতুন ধাপ যোগ করুন
+                </p>
+              </div>
+              <Button
+                type="dashed"
+                onClick={handleAddProcess}
+                icon={<Plus className="h-4 w-4 text-primary-600" />}
+                className="border-primary-300 text-primary-700 bg-primary-50/50 hover:bg-primary-50 hover:border-primary-500 font-medium"
+              >
+                {repeatable.addButtonText || "+ Add Process"}
+              </Button>
+            </div>
+
+            <div className="space-y-3.5">
+              {repeatableIndices.map((idx, listPosition) => {
+                const defaultItem = repeatable.defaultItems?.[idx];
+                const stageNum = listPosition + 1;
+                return (
+                  <div
+                    key={`repeatable-${idx}`}
+                    className="rounded-xl border border-secondary-200/90 bg-secondary-50/40 p-4 shadow-xs transition-all hover:border-secondary-300"
+                  >
+                    <div className="mb-3 flex items-center justify-between border-b border-secondary-200/70 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary-600 text-[11px] font-bold text-white shadow-xs">
+                          {stageNum}
+                        </span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-secondary-800">
+                          Stage {String(stageNum).padStart(2, "0")} — {form.getFieldValue(`${repeatable.itemPrefix}.${idx}.title|en`) || defaultItem?.titleEn || `Process ${stageNum}`}
+                        </span>
+                      </div>
+                      <Popconfirm
+                        title="ধাপটি মুছে ফেলতে চান?"
+                        description="এই ধাপটি এবং এর টেক্সট মুছে ফেলা হবে।"
+                        onConfirm={() => handleRemoveProcess(idx)}
+                        okText="হ্যাঁ, মুছুন"
+                        cancelText="বাতিল"
+                        okButtonProps={{ danger: true }}
+                      >
+                        <Button
+                          type="text"
+                          danger
+                          size="small"
+                          icon={<Trash2 className="h-3.5 w-3.5" />}
+                          className="!flex items-center gap-1 text-xs text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          মুছে ফেলুন
+                        </Button>
+                      </Popconfirm>
+                    </div>
+
+                    <div className="space-y-1">
+                      {repeatable.itemFields.map((itemField) => {
+                        const key = `${repeatable.itemPrefix}.${idx}.${itemField.suffix}`;
+                        const defEn =
+                          defaultItem?.[`${itemField.suffix}En`] ||
+                          (itemField.suffix === "title" ? defaultItem?.titleEn : defaultItem?.bodyEn) ||
+                          itemField.defaultEn ||
+                          "";
+                        const defBn =
+                          defaultItem?.[`${itemField.suffix}Bn`] ||
+                          (itemField.suffix === "title" ? defaultItem?.titleBn : defaultItem?.bodyBn) ||
+                          itemField.defaultBn ||
+                          "";
+                        const field: CmsField = {
+                          key,
+                          label: itemField.label,
+                          type: itemField.type,
+                          en: defEn,
+                          bn: defBn,
+                        };
+                        return <FieldRow key={key} field={field} form={form} />;
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <Button
+              type="dashed"
+              block
+              onClick={handleAddProcess}
+              icon={<Plus className="h-4 w-4 text-primary-600" />}
+              className="py-5 border-dashed border-primary-300 text-primary-700 bg-primary-50/30 hover:bg-primary-50 hover:border-primary-500 font-semibold text-sm flex items-center justify-center gap-2"
+            >
+              {repeatable.addButtonText || "+ Add Process (নতুন ধাপ যোগ করুন)"}
+            </Button>
+          </div>
+        )}
       </div>
     </Form>
   );
@@ -286,6 +585,58 @@ const FieldRow = ({
   form: any;
 }) => {
   const [translating, setTranslating] = useState(false);
+
+  if (field.type === "image") {
+    const hintText =
+      field.hint || "Recommended: 1920 × 1080 px (16:9 Landscape) · High quality JPG / WebP (Max 2MB)";
+
+    return (
+      <div className="border-b border-secondary-50 py-3.5 last:border-0">
+        <div className="mb-2 flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-semibold text-secondary-800">
+              {field.label}
+            </span>
+            <Tooltip title={hintText}>
+              <Info className="h-3.5 w-3.5 cursor-pointer text-primary-600 hover:text-primary-700" />
+            </Tooltip>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-md bg-primary-50 border border-primary-200/60 px-2 py-0.5 text-[11px] font-medium text-primary-800">
+              📏 {hintText}
+            </span>
+          </div>
+        </div>
+        <Form.Item name={[`${field.key}|en`]} noStyle>
+          <Input type="hidden" />
+        </Form.Item>
+        <UploadImage
+          form={form}
+          fieldPath={[`${field.key}|en`]}
+        />
+      </div>
+    );
+  }
+
+  if (field.type === "url") {
+    return (
+      <div className="border-b border-secondary-50 py-3 last:border-0">
+        <Form.Item
+          label={
+            <span className="text-xs font-medium text-secondary-700">
+              {field.label}
+            </span>
+          }
+          name={`${field.key}|en`}
+          className="!mb-0"
+          tooltip={field.key}
+        >
+          <Input placeholder={field.en || "—"} />
+        </Form.Item>
+      </div>
+    );
+  }
+
   const Control = field.type === "textarea" ? Input.TextArea : Input;
 
   const handleTranslate = async () => {

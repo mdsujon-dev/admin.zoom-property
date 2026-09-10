@@ -15,7 +15,7 @@
  * `<path>.<lang>` in the Dynamic Content collection, grouped by page id.
  */
 
-export type CmsFieldType = "text" | "textarea";
+export type CmsFieldType = "text" | "textarea" | "url" | "image";
 
 export interface CmsField {
   /** Dictionary path, e.g. `hero.trust.rajuk`. */
@@ -25,12 +25,51 @@ export interface CmsField {
   /** What the site says today, in each language. Used as placeholder text. */
   en: string;
   bn: string;
+  /**
+   * Starts a titled block within the section. Set on the first field of the
+   * block; the editor groups everything after it until the next header.
+   */
+  groupHeader?: string;
+  /** Overrides the default guidance shown beside an `image` field. */
+  hint?: string;
+}
+
+/**
+ * `image` and `url` fields hold one address, not one string per language, so
+ * the editor shows a single control and stores the same value under both
+ * languages.
+ */
+
+export interface CmsRepeatableItemField {
+  suffix: string;
+  label: string;
+  type: CmsFieldType;
+  defaultEn?: string;
+  defaultBn?: string;
+}
+
+export interface CmsRepeatableDefaultItem {
+  titleEn?: string;
+  titleBn?: string;
+  bodyEn?: string;
+  bodyBn?: string;
+  [key: string]: string | undefined;
+}
+
+export interface CmsRepeatableConfig {
+  itemPrefix: string;
+  itemName: string;
+  addButtonText: string;
+  initialCount?: number;
+  itemFields: CmsRepeatableItemField[];
+  defaultItems?: CmsRepeatableDefaultItem[];
 }
 
 export interface CmsSection {
   id: string;
   label: string;
   fields: CmsField[];
+  repeatable?: CmsRepeatableConfig;
 }
 
 export interface CmsPageDef {
@@ -74,6 +113,8 @@ export const cmsPages: CmsPageDef[] = [
           { key: "showcase.description", label: "Description", type: "textarea", en: "Three minutes on one building — the pool deck, the sky lounge and the view that sells it. Shot by our team, not the developer.", bn: "একটি ভবন নিয়ে তিন মিনিট — পুল ডেক, স্কাই লাউঞ্জ আর যে দৃশ্য দেখে মানুষ রাজি হয়। ডেভেলপার নয়, আমাদের দলের তোলা।" },
           { key: "showcase.play", label: "Play", type: "text", en: "Play the film", bn: "চিত্রটি দেখুন" },
           { key: "showcase.duration", label: "Duration", type: "text", en: "3 min", bn: "৩ মিনিট" },
+          { key: "showcase.poster", label: "Poster", type: "image", en: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=80", bn: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=80" },
+          { key: "showcase.video", label: "Video", type: "url", en: "https://www.youtube.com/watch?v=ScMzIvxBSi4", bn: "https://www.youtube.com/watch?v=ScMzIvxBSi4" },
         ],
       },
       {
@@ -118,7 +159,19 @@ export const cmsPages: CmsPageDef[] = [
         id: "statsBanner",
         label: "Stats Banner",
         fields: [
-          { key: "statsBanner.watermark", label: "Watermark", type: "text", en: "SINGLE PROPERTY", bn: "SINGLE PROPERTY" },
+          { key: "statsBanner.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85", bn: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85" },
+          { key: "statsBanner.stat1Value", label: "Stat1 Value", type: "text", en: "8", bn: "8" },
+          { key: "statsBanner.stat1Suffix", label: "Stat1 Suffix", type: "text", en: "k+", bn: "k+" },
+          { key: "statsBanner.stat1Label", label: "Stat1 Label", type: "text", en: "Projects completed", bn: "সম্পূর্ণ প্রজেক্ট" },
+          { key: "statsBanner.stat2Value", label: "Stat2 Value", type: "text", en: "3", bn: "3" },
+          { key: "statsBanner.stat2Suffix", label: "Stat2 Suffix", type: "text", en: "k+", bn: "k+" },
+          { key: "statsBanner.stat2Label", label: "Stat2 Label", type: "text", en: "Global customers", bn: "গ্লোবাল গ্রাহক" },
+          { key: "statsBanner.stat3Value", label: "Stat3 Value", type: "text", en: "20", bn: "20" },
+          { key: "statsBanner.stat3Suffix", label: "Stat3 Suffix", type: "text", en: "+", bn: "+" },
+          { key: "statsBanner.stat3Label", label: "Stat3 Label", type: "text", en: "Years of experience", bn: "বছরের অভিজ্ঞতা" },
+          { key: "statsBanner.stat4Value", label: "Stat4 Value", type: "text", en: "95", bn: "95" },
+          { key: "statsBanner.stat4Suffix", label: "Stat4 Suffix", type: "text", en: "+", bn: "+" },
+          { key: "statsBanner.stat4Label", label: "Stat4 Label", type: "text", en: "Team engineers", bn: "টিম ইঞ্জিনিয়ার" },
         ],
       },
       {
@@ -152,100 +205,23 @@ export const cmsPages: CmsPageDef[] = [
   {
     id: "properties",
     label: "Properties",
-    description: "The listings index and a single listing.",
+    description: "The listings index banner and header settings.",
     sections: [
       {
         id: "listings",
-        label: "Listings",
+        label: "Banner (প্রপার্টি ব্যানার ও হেডার)",
         fields: [
-          { key: "listings.eyebrow", label: "Eyebrow", type: "text", en: "Curated portfolio", bn: "বাছাই করা তালিকা" },
-          { key: "listings.title", label: "Title", type: "text", en: "Verified residences and commercial floors", bn: "যাচাই করা ফ্ল্যাট ও বাণিজ্যিক ফ্লোর" },
-          { key: "listings.description", label: "Description", type: "textarea", en: "Every listing has been physically inspected by our survey team this month, with title deeds verified before it went online.", bn: "প্রতিটি লিস্টিং এ মাসে আমাদের সার্ভে দল সরেজমিনে দেখেছে, আর অনলাইনে ওঠার আগেই দলিল যাচাই করা হয়েছে।" },
-          { key: "listings.pageTitle", label: "Page Title", type: "text", en: "Properties for sale and rent", bn: "বিক্রয় ও ভাড়ার সম্পত্তি" },
-          { key: "listings.pageDescription", label: "Page Description", type: "textarea", en: "{count} listings, each physically inspected by our survey team and title-checked before upload. Filter by purpose, type and area below.", bn: "{count}টি লিস্টিং, প্রতিটি আমাদের সার্ভে দল সরেজমিনে দেখেছে এবং আপলোডের আগে দলিল যাচাই করেছে। নিচে উদ্দেশ্য, ধরন ও এলাকা দিয়ে ছেঁকে নিন।" },
-          { key: "listings.metaTitle", label: "Meta Title", type: "text", en: "Properties for sale and rent", bn: "বিক্রয় ও ভাড়ার সম্পত্তি" },
-          { key: "listings.metaDescription", label: "Meta Description", type: "textarea", en: "Verified apartments, duplexes, houses and commercial floors across Dhaka and Chattogram. Every listing inspected and title-checked before it goes live.", bn: "ঢাকা ও চট্টগ্রামজুড়ে যাচাই করা অ্যাপার্টমেন্ট, ডুপ্লেক্স, বাড়ি ও বাণিজ্যিক ফ্লোর। প্রতিটি লিস্টিং সরেজমিনে দেখা ও দলিল যাচাই করা।" },
-        ],
-      },
-      {
-        id: "property",
-        label: "Property",
-        fields: [
-          { key: "property.home", label: "Home", type: "text", en: "Home", bn: "হোম" },
-          { key: "property.all", label: "All", type: "text", en: "All properties", bn: "সব প্রপার্টি" },
-          { key: "property.overview", label: "Overview", type: "text", en: "Overview", bn: "এক নজরে" },
-          { key: "property.beds", label: "Beds", type: "text", en: "Bedrooms", bn: "বেডরুম" },
-          { key: "property.baths", label: "Baths", type: "text", en: "Bathrooms", bn: "বাথরুম" },
-          { key: "property.size", label: "Size", type: "text", en: "Covered area", bn: "কাভার্ড এরিয়া" },
-          { key: "property.land", label: "Land", type: "text", en: "Land", bn: "জমি" },
-          { key: "property.floor", label: "Floor", type: "text", en: "Floor", bn: "ফ্লোর" },
-          { key: "property.type", label: "Type", type: "text", en: "Property type", bn: "ধরন" },
-          { key: "property.furnishing", label: "Furnishing", type: "text", en: "Furnishing", bn: "ফার্নিশিং" },
-          { key: "property.handover", label: "Handover", type: "text", en: "Handover", bn: "হস্তান্তর" },
-          { key: "property.forSale", label: "For Sale", type: "text", en: "For sale", bn: "বিক্রয়ের জন্য" },
-          { key: "property.forRent", label: "For Rent", type: "text", en: "For rent", bn: "ভাড়ার জন্য" },
-          { key: "property.sold", label: "Sold", type: "text", en: "Sold", bn: "বিক্রি হয়ে গেছে" },
-          { key: "property.rajuk", label: "Rajuk", type: "text", en: "RAJUK approved", bn: "রাজউক অনুমোদিত" },
-          { key: "property.titleReview", label: "Title Review", type: "text", en: "Title in review", bn: "দলিল যাচাই চলছে" },
-          { key: "property.tour", label: "Tour", type: "text", en: "360° tour available", bn: "৩৬০° ট্যুর আছে" },
-          { key: "property.amenities", label: "Amenities", type: "text", en: "What is included", bn: "যা যা আছে" },
-          { key: "property.advisor", label: "Advisor", type: "text", en: "Your advisor", bn: "আপনার পরামর্শক" },
-          { key: "property.advisorNote", label: "Advisor Note", type: "textarea", en: "Ask for the papers, the last sale price on the floor, or a viewing this week.", bn: "কাগজপত্র, এই ফ্লোরে সর্বশেষ বিক্রির দাম, বা এই সপ্তাহে ভিজিটের কথা জিজ্ঞেস করুন।" },
-          { key: "property.call", label: "Call", type: "text", en: "Call", bn: "কল" },
-          { key: "property.whatsapp", label: "Whatsapp", type: "text", en: "WhatsApp", bn: "হোয়াটসঅ্যাপ" },
-          { key: "property.respondsIn", label: "Responds In", type: "text", en: "Replies in ~{minutes} min", bn: "প্রায় {minutes} মিনিটে উত্তর" },
-          { key: "property.deals", label: "Deals", type: "text", en: "{count} deals closed", bn: "{count}টি ডিল সম্পন্ন" },
-          { key: "property.about", label: "About", type: "text", en: "About this property", bn: "এই প্রপার্টি সম্পর্কে" },
-          { key: "property.neighbourhood", label: "Neighbourhood", type: "text", en: "The neighbourhood", bn: "এলাকা" },
-          { key: "property.papers", label: "Papers", type: "text", en: "Papers and handover", bn: "কাগজপত্র ও হস্তান্তর" },
-          { key: "property.pricePerSqft", label: "Price Per Sqft", type: "text", en: "Price per sq ft", bn: "প্রতি বর্গফুট দাম" },
-          { key: "property.rentalYield", label: "Rental Yield", type: "text", en: "Rental yield", bn: "ভাড়ার আয়" },
-          { key: "property.security", label: "Security", type: "text", en: "Security", bn: "নিরাপত্তা" },
-          { key: "property.metro", label: "Metro", type: "text", en: "Metro", bn: "মেট্রো" },
-          { key: "property.listingsHere", label: "Listings Here", type: "text", en: "Listings here", bn: "এখানে লিস্টিং" },
-          { key: "property.rajukYes", label: "Rajuk Yes", type: "text", en: "RAJUK-approved plan and title deed verified by our survey team.", bn: "রাজউক অনুমোদিত নকশা ও দলিল আমাদের সার্ভে টিম যাচাই করেছে।" },
-          { key: "property.rajukNo", label: "Rajuk No", type: "text", en: "Title documents are still under review — ask us before making an offer.", bn: "দলিল যাচাই এখনও চলছে — অফার করার আগে আমাদের সঙ্গে কথা বলুন।" },
-          { key: "property.similar", label: "Similar", type: "text", en: "Similar properties", bn: "কাছাকাছি আরও প্রপার্টি" },
-          { key: "property.gallery", label: "Gallery", type: "text", en: "Photos", bn: "ছবি" },
-          { key: "property.fullscreen", label: "Fullscreen", type: "text", en: "Fullscreen", bn: "ফুলস্ক্রিন" },
-          { key: "property.openGallery", label: "Open Gallery", type: "text", en: "Fullscreen photo gallery ({count})", bn: "সব ছবি দেখুন ({count})" },
-          { key: "property.priceLabel", label: "Price Label", type: "text", en: "Asking price", bn: "চাহিদা মূল্য" },
-          { key: "property.perMonth", label: "Per Month", type: "text", en: "per month", bn: "প্রতি মাসে" },
-          { key: "property.priceOnRequest", label: "Price On Request", type: "text", en: "Price on request", bn: "দাম জানতে যোগাযোগ করুন" },
-        ],
-      },
-      {
-        id: "search",
-        label: "Search",
-        fields: [
-          { key: "search.buy", label: "Buy", type: "text", en: "Buy", bn: "কিনুন" },
-          { key: "search.rent", label: "Rent", type: "text", en: "Rent", bn: "ভাড়া" },
-          { key: "search.projects", label: "Projects", type: "text", en: "Under construction", bn: "নির্মাণাধীন" },
-          { key: "search.commercial", label: "Commercial", type: "text", en: "Commercial", bn: "বাণিজ্যিক" },
-          { key: "search.location", label: "Location", type: "text", en: "Location", bn: "এলাকা" },
-          { key: "search.anyLocation", label: "Any Location", type: "text", en: "Any area", bn: "যেকোনো এলাকা" },
-          { key: "search.type", label: "Type", type: "text", en: "Property type", bn: "সম্পত্তির ধরন" },
-          { key: "search.anyType", label: "Any Type", type: "text", en: "Any type", bn: "যেকোনো ধরন" },
-          { key: "search.budget", label: "Budget", type: "text", en: "Budget", bn: "বাজেট" },
-          { key: "search.anyBudget", label: "Any Budget", type: "text", en: "Any budget", bn: "যেকোনো বাজেট" },
-          { key: "search.submit", label: "Submit", type: "text", en: "Search", bn: "খুঁজুন" },
-        ],
-      },
-      {
-        id: "calculator",
-        label: "Calculator",
-        fields: [
-          { key: "calculator.title", label: "Title", type: "text", en: "Property calculator", bn: "প্রপার্টি ক্যালকুলেটর" },
-          { key: "calculator.searchPlaceholder", label: "Search Placeholder", type: "textarea", en: "Search by location or property name", bn: "এলাকা বা প্রপার্টির নাম দিয়ে খুঁজুন" },
-          { key: "calculator.categoriesLabel", label: "Categories Label", type: "text", en: "Popular categories", bn: "জনপ্রিয় ক্যাটাগরি" },
-          { key: "calculator.areasLabel", label: "Areas Label", type: "text", en: "Popular areas", bn: "জনপ্রিয় এলাকা" },
-          { key: "calculator.propertiesLabel", label: "Properties Label", type: "text", en: "Properties", bn: "প্রপার্টি" },
-          { key: "calculator.type", label: "Type", type: "text", en: "Property type", bn: "প্রপার্টির ধরন" },
-          { key: "calculator.anyType", label: "Any Type", type: "text", en: "Any type", bn: "যেকোনো ধরন" },
-          { key: "calculator.priceRange", label: "Price Range", type: "text", en: "Price range", bn: "দামের সীমা" },
-          { key: "calculator.minimum", label: "Minimum", type: "text", en: "Minimum", bn: "সর্বনিম্ন" },
-          { key: "calculator.maximum", label: "Maximum", type: "text", en: "Maximum", bn: "সর্বোচ্চ" },
-          { key: "calculator.submit", label: "Submit", type: "text", en: "Search", bn: "খুঁজুন" },
+          {
+            key: "listings.backgroundImage",
+            label: "Background Image (ব্যানার ব্যাকগ্রাউন্ড ছবি)",
+            type: "image",
+            hint: "Recommended: 1920 × 600 px (Panoramic Landscape) · High quality JPG / WebP (Max 2MB)",
+            en: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80",
+            bn: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80",
+          },
+          { key: "listings.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "Curated portfolio", bn: "বাছাই করা তালিকা" },
+          { key: "listings.pageTitle", label: "Page Title (মূল শিরোনাম)", type: "text", en: "Properties for sale and rent", bn: "বিক্রয় ও ভাড়ার সম্পত্তি" },
+          { key: "listings.pageDescription", label: "Page Description (বিবরণ)", type: "textarea", en: "{count} listings, each physically inspected by our survey team and title-checked before upload. Filter by purpose, type and area below.", bn: "{count}টি লিস্টিং, প্রতিটি আমাদের সার্ভে দল সরেজমিনে দেখেছে এবং আপলোডের আগে দলিল যাচাই করেছে। নিচে উদ্দেশ্য, ধরন ও এলাকা দিয়ে ছেঁকে নিন।" },
         ],
       },
     ],
@@ -253,63 +229,75 @@ export const cmsPages: CmsPageDef[] = [
   {
     id: "projects",
     label: "Projects",
-    description: "Section copy for developments. The records themselves live under Listings.",
+    description: "Projects page banner, header, and construction stages process settings.",
     sections: [
       {
-        id: "projects",
-        label: "Projects",
+        id: "banner",
+        label: "Banner (প্রজেক্ট ব্যানার ও হেডার)",
         fields: [
-          { key: "projects.eyebrow", label: "Eyebrow", type: "text", en: "Under construction", bn: "নির্মাণাধীন" },
-          { key: "projects.title", label: "Title", type: "text", en: "Milestone progress you can audit", bn: "অগ্রগতি নিজে যাচাই করুন" },
-          { key: "projects.description", label: "Description", type: "textarea", en: "You pay in instalments for years before you get keys, so every project shows its audited structural stage and RAJUK permit — not a marketing render.", bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। তাই প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও রাজউক অনুমোদন দেখানো — বিজ্ঞাপনের ছবি নয়।" },
-          { key: "projects.pageTitle", label: "Page Title", type: "text", en: "Projects under construction", bn: "নির্মাণাধীন প্রকল্প" },
-          { key: "projects.pageDescription", label: "Page Description", type: "textarea", en: "You pay in instalments for years before you get keys. Every project here shows its audited structural stage and permit number, updated monthly.", bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। এখানে প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও অনুমোদন নম্বর আছে, প্রতি মাসে হালনাগাদ।" },
-          { key: "projects.metaTitle", label: "Meta Title", type: "text", en: "Projects under construction", bn: "নির্মাণাধীন প্রকল্প" },
-          { key: "projects.metaDescription", label: "Meta Description", type: "textarea", en: "Live construction progress on every Zoom Property development — audited structural stage, RAJUK permit and handover date, updated monthly from site photos.", bn: "জুম প্রপার্টির প্রতিটি প্রকল্পের নির্মাণ অগ্রগতি — নিরীক্ষিত কাঠামোগত পর্যায়, রাজউক অনুমোদন ও হস্তান্তরের তারিখ, সাইটের ছবি থেকে প্রতি মাসে হালনাগাদ।" },
+          {
+            key: "projects.backgroundImage",
+            label: "Background Image (ব্যানার ব্যাকগ্রাউন্ড ছবি)",
+            type: "image",
+            hint: "Recommended: 1920 × 600 px (Panoramic Landscape) · High quality JPG / WebP (Max 2MB)",
+            en: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80",
+            bn: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80",
+          },
+          { key: "projects.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "Under construction", bn: "নির্মাণাধীন" },
+          { key: "projects.pageTitle", label: "Page Title (মূল শিরোনাম)", type: "text", en: "Projects under construction", bn: "নির্মাণাধীন প্রকল্প" },
+          { key: "projects.pageDescription", label: "Page Description (বিবরণ)", type: "textarea", en: "You pay in instalments for years before you get keys. Every project here shows its audited structural stage and permit number, updated monthly.", bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। এখানে প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও অনুমোদন নম্বর আছে, প্রতি মাসে হালনাগাদ।" },
         ],
       },
       {
-        id: "projectDetail",
-        label: "Project Detail",
+        id: "process",
+        label: "Process (নির্মাণ ও যাচাই প্রক্রিয়া)",
         fields: [
-          { key: "projectDetail.home", label: "Home", type: "text", en: "Home", bn: "হোম" },
-          { key: "projectDetail.all", label: "All", type: "text", en: "All projects", bn: "সব প্রজেক্ট" },
-          { key: "projectDetail.overview", label: "Overview", type: "text", en: "At a glance", bn: "এক নজরে" },
-          { key: "projectDetail.startingFrom", label: "Starting From", type: "text", en: "Starting from", bn: "শুরু" },
-          { key: "projectDetail.sizes", label: "Sizes", type: "text", en: "Floor sizes", bn: "ফ্লোর সাইজ" },
-          { key: "projectDetail.units", label: "Units", type: "text", en: "Units", bn: "ইউনিট" },
-          { key: "projectDetail.unitsLeft", label: "Units Left", type: "text", en: "{left} of {total} left", bn: "{total}টির মধ্যে {left}টি বাকি" },
-          { key: "projectDetail.booked", label: "Booked", type: "text", en: "{percent}% booked", bn: "{percent}% বুকড" },
-          { key: "projectDetail.handover", label: "Handover", type: "text", en: "Handover", bn: "হস্তান্তর" },
-          { key: "projectDetail.status", label: "Status", type: "text", en: "Stage", bn: "পর্যায়" },
-          { key: "projectDetail.progressHeading", label: "Progress Heading", type: "text", en: "Where the building is", bn: "নির্মাণ কাজ কতদূর" },
-          { key: "projectDetail.progressLead", label: "Progress Lead", type: "textarea", en: "Percentages move when a surveyor has been on site, not when a sales target slips. The stage below is from the last inspection and the payment schedule is tied to it.", bn: "সার্ভেয়ার সাইটে গেলে তবেই শতাংশ বদলায়, বিক্রির টার্গেট মিস হলে নয়। নিচের পর্যায়টি সর্বশেষ পরিদর্শনের, আর পেমেন্ট সূচি এর সঙ্গেই বাঁধা।" },
-          { key: "projectDetail.complete", label: "Complete", type: "text", en: "complete", bn: "সম্পন্ন" },
-          { key: "projectDetail.lastInspected", label: "Last Inspected", type: "text", en: "Last inspected", bn: "সর্বশেষ পরিদর্শন" },
-          { key: "projectDetail.permit", label: "Permit", type: "text", en: "RAJUK permit", bn: "রাজউক পারমিট" },
-          { key: "projectDetail.liveCctv", label: "Live Cctv", type: "text", en: "Live CCTV", bn: "লাইভ সিসিটিভি" },
-          { key: "projectDetail.done", label: "Done", type: "text", en: "Done", bn: "শেষ" },
-          { key: "projectDetail.inProgress", label: "In Progress", type: "text", en: "In progress", bn: "চলছে" },
-          { key: "projectDetail.notStarted", label: "Not Started", type: "text", en: "Not started", bn: "শুরু হয়নি" },
-          { key: "projectDetail.about", label: "About", type: "text", en: "About this project", bn: "এই প্রজেক্ট সম্পর্কে" },
-          { key: "projectDetail.neighbourhood", label: "Neighbourhood", type: "text", en: "The neighbourhood", bn: "এলাকা" },
-          { key: "projectDetail.pricePerSqft", label: "Price Per Sqft", type: "text", en: "Price per sq ft", bn: "প্রতি বর্গফুট দাম" },
-          { key: "projectDetail.rentalYield", label: "Rental Yield", type: "text", en: "Rental yield", bn: "ভাড়ার আয়" },
-          { key: "projectDetail.security", label: "Security", type: "text", en: "Security", bn: "নিরাপত্তা" },
-          { key: "projectDetail.metro", label: "Metro", type: "text", en: "Metro", bn: "মেট্রো" },
-          { key: "projectDetail.listingsHere", label: "Listings Here", type: "text", en: "Listings here", bn: "এখানে লিস্টিং" },
-          { key: "projectDetail.advisor", label: "Advisor", type: "text", en: "Your advisor", bn: "আপনার পরামর্শক" },
-          { key: "projectDetail.advisorNote", label: "Advisor Note", type: "textarea", en: "Ask for the permit, the inspection photographs, or a site visit this week.", bn: "পারমিট, পরিদর্শনের ছবি, বা এই সপ্তাহে সাইট ভিজিটের কথা জিজ্ঞেস করুন।" },
-          { key: "projectDetail.call", label: "Call", type: "text", en: "Call", bn: "কল" },
-          { key: "projectDetail.whatsapp", label: "Whatsapp", type: "text", en: "WhatsApp", bn: "হোয়াটসঅ্যাপ" },
-          { key: "projectDetail.respondsIn", label: "Responds In", type: "text", en: "Replies in ~{minutes} min", bn: "প্রায় {minutes} মিনিটে উত্তর" },
-          { key: "projectDetail.deals", label: "Deals", type: "text", en: "{count} deals closed", bn: "{count}টি ডিল সম্পন্ন" },
-          { key: "projectDetail.others", label: "Others", type: "text", en: "Other projects", bn: "অন্যান্য প্রজেক্ট" },
-          { key: "projectDetail.fullscreen", label: "Fullscreen", type: "text", en: "Fullscreen", bn: "ফুলস্ক্রিন" },
-          { key: "projectDetail.priceLabel", label: "Price Label", type: "text", en: "Starting from", bn: "শুরু" },
-          { key: "projectDetail.videoLabel", label: "Video Label", type: "text", en: "Site walkthrough", bn: "সাইট ওয়াকথ্রু" },
-          { key: "projectDetail.videoLead", label: "Video Lead", type: "textarea", en: "Filmed on the same site visit as the inspection above. No commentary over a render — the camera walks the floors that exist today.", bn: "উপরের পরিদর্শনের দিনেই ধারণ করা। রেন্ডারের উপর ধারাবিবরণী নয় — ক্যামেরা আজকের বাস্তব ফ্লোরগুলোই ঘুরে দেখায়।" },
+          { key: "pages.construction.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "How we verify", bn: "যেভাবে যাচাই করি" },
+          { key: "pages.construction.title", label: "Title (মূল শিরোনাম)", type: "text", en: "What a completion percentage actually means", bn: "অগ্রগতির শতাংশ আসলে কী বোঝায়" },
+          { key: "pages.construction.description", label: "Description (বিবরণ)", type: "textarea", en: "Every project passes the same five audited stages. The number only moves after our engineer has signed that stage off on site.", bn: "প্রতিটি প্রকল্প একই পাঁচ ধাপ পেরোয়। আমাদের প্রকৌশলী সাইটে গিয়ে ধাপটি অনুমোদন না করা পর্যন্ত সংখ্যা বাড়ে না।" },
         ],
+        repeatable: {
+          itemPrefix: "pages.construction.stages",
+          itemName: "Process Stage",
+          addButtonText: "+ Add Process (নতুন প্রসেস ধাপ যোগ করুন)",
+          initialCount: 5,
+          itemFields: [
+            { suffix: "title", label: "Stage Title (ধাপ শিরোনাম)", type: "text" },
+            { suffix: "body", label: "Stage Details (ধাপের বিবরণ)", type: "textarea" },
+          ],
+          defaultItems: [
+            {
+              titleEn: "Piling",
+              titleBn: "পাইলিং",
+              bodyEn: "Soil test, pile load test, and the RAJUK permit posted on the boundary wall.",
+              bodyBn: "মাটি পরীক্ষা, পাইল লোড টেস্ট আর সীমানায় টাঙানো রাজউক অনুমোদন।",
+            },
+            {
+              titleEn: "Structure",
+              titleBn: "কাঠামো",
+              bodyEn: "Column and slab casting, with cube tests filed for every pour.",
+              bodyBn: "কলাম ও ছাদ ঢালাই, প্রতিটি ঢালাইয়ের কিউব টেস্ট নথিভুক্ত।",
+            },
+            {
+              titleEn: "MEP",
+              titleBn: "এমইপি",
+              bodyEn: "Electrical, plumbing and lift shafts, checked before plaster closes the walls.",
+              bodyBn: "প্লাস্টার দেয়াল ঢাকার আগে বিদ্যুৎ, পানি ও লিফট শ্যাফট।",
+            },
+            {
+              titleEn: "Finishing",
+              titleBn: "ফিনিশিং",
+              bodyEn: "Flooring, joinery, sanitary and paint. The stage where timelines usually slip.",
+              bodyBn: "মেঝে, কাঠের কাজ, স্যানিটারি ও রং। এই ধাপেই সাধারণত সময় পিছিয়ে যায়।",
+            },
+            {
+              titleEn: "Handover",
+              titleBn: "হস্তান্তর",
+              bodyEn: "Occupancy certificate, utility connections, snag list cleared with you present.",
+              bodyBn: "অকুপেন্সি সনদ, ইউটিলিটি সংযোগ, আপনার সামনে ত্রুটির তালিকা মিলিয়ে নেওয়া।",
+            },
+          ],
+        },
       },
     ],
   },
@@ -649,43 +637,6 @@ export const cmsPages: CmsPageDef[] = [
     ],
   },
   {
-    id: "reviews",
-    label: "Reviews",
-    description: "Client reviews, on the home page and their own.",
-    sections: [
-      {
-        id: "reviews",
-        label: "Reviews",
-        fields: [
-          { key: "reviews.eyebrow", label: "Eyebrow", type: "text", en: "Client testimonials", bn: "ক্রেতাদের মতামত" },
-          { key: "reviews.title", label: "Title", type: "text", en: "Real stories from people who bought here", bn: "যাঁরা এখান থেকে কিনেছেন, তাঁদের কথা" },
-          { key: "reviews.description", label: "Description", type: "textarea", en: "Every review names the property it came from, so you can check the claim against the listing.", bn: "প্রতিটি মতামতে কোন সম্পত্তি সেটি লেখা আছে, যাতে আপনি লিস্টিংয়ের সঙ্গে মিলিয়ে দেখতে পারেন।" },
-          { key: "reviews.homeTitle", label: "Home Title", type: "text", en: "What our clients say", bn: "আমাদের ক্লায়েন্টরা কী বলেন" },
-          { key: "reviews.homeDescription", label: "Home Description", type: "textarea", en: "Honest experiences from buyers and tenants who found their next place with us.", bn: "আমাদের সহায়তায় নতুন ঠিকানা খুঁজে পাওয়া ক্রেতা ও ভাড়াটিয়াদের সত্যিকারের অভিজ্ঞতা।" },
-          { key: "reviews.viewAll", label: "View All", type: "text", en: "View all reviews", bn: "সব মতামত দেখুন" },
-          { key: "reviews.pageTitle", label: "Page Title", type: "text", en: "Real stories from people who bought here", bn: "যাঁরা এখান থেকে কিনেছেন, তাঁদের কথা" },
-          { key: "reviews.pageDescription", label: "Page Description", type: "textarea", en: "Verified buyers, tenants and teams share what the process felt like, from the first shortlist to the signed handover.", bn: "প্রথম পছন্দ থেকে দলিল হস্তান্তর পর্যন্ত, যাচাই করা ক্রেতা, ভাড়াটিয়া ও ব্যবসার দল তাঁদের অভিজ্ঞতা জানিয়েছেন।" },
-          { key: "reviews.allReviewsTitle", label: "All Reviews Title", type: "text", en: "Reviews you can trace to a property", bn: "প্রতিটি মতামত একটি সম্পত্তির সঙ্গে যুক্ত" },
-          { key: "reviews.verified", label: "Verified", type: "text", en: "Verified client", bn: "যাচাই করা ক্লায়েন্ট" },
-          { key: "reviews.videoTitle", label: "Video Title", type: "text", en: "See the spaces before you visit", bn: "ভিজিটের আগে জায়গাগুলো দেখুন" },
-          { key: "reviews.videoDescription", label: "Video Description", type: "textarea", en: "Walk through real homes and live projects with the same candour our clients expect from us.", bn: "আমাদের ক্লায়েন্টরা যে স্বচ্ছতা আশা করেন, সেই একই স্বচ্ছতায় আসল বাড়ি ও নির্মাণাধীন প্রকল্প ঘুরে দেখুন।" },
-          { key: "reviews.ctaTitle", label: "Cta Title", type: "text", en: "Want an honest shortlist?", bn: "সৎ পরামর্শ চান?" },
-          { key: "reviews.ctaDescription", label: "Cta Description", type: "textarea", en: "Tell us what you are looking for and we will send only the properties that fit.", bn: "আপনি কী খুঁজছেন বলুন, আমরা শুধু আপনার উপযোগী সম্পত্তিগুলোই পাঠাব।" },
-          { key: "reviews.ctaAction", label: "Cta Action", type: "text", en: "Start a conversation", bn: "কথা শুরু করুন" },
-          { key: "reviews.metaTitle", label: "Meta Title", type: "text", en: "Client reviews and property walkthroughs", bn: "ক্লায়েন্ট মতামত ও সম্পত্তি ওয়াকথ্রু" },
-          { key: "reviews.metaDescription", label: "Meta Description", type: "textarea", en: "Read verified Zoom Property client reviews and watch real property walkthroughs across Dhaka.", bn: "ঢাকাজুড়ে জুম প্রপার্টির যাচাই করা ক্লায়েন্ট মতামত পড়ুন এবং আসল সম্পত্তির ওয়াকথ্রু দেখুন।" },
-          { key: "reviews.pill", label: "Pill", type: "text", en: "Client testimonials", bn: "ক্রেতাদের মতামত" },
-          { key: "reviews.ratingNote", label: "Rating Note", type: "textarea", en: "Average across verified buyers and tenants in the last twelve months.", bn: "গত বারো মাসে যাচাই করা ক্রেতা ও ভাড়াটিয়াদের গড়।" },
-          { key: "reviews.outOf", label: "Out Of", type: "text", en: "out of 5", bn: "৫-এ" },
-          { key: "reviews.statLabel", label: "Stat Label", type: "text", en: "Buyers who came back or referred us", bn: "যাঁরা ফিরে এসেছেন বা অন্যকে পাঠিয়েছেন" },
-          { key: "reviews.reviewCount", label: "Review Count", type: "text", en: "verified reviews", bn: "যাচাই করা মতামত" },
-          { key: "reviews.playVideo", label: "Play Video", type: "text", en: "Play video review", bn: "ভিডিও রিভিউ দেখুন" },
-          { key: "reviews.closeVideo", label: "Close Video", type: "text", en: "Close player", bn: "প্লেয়ার বন্ধ করুন" },
-        ],
-      },
-    ],
-  },
-  {
     id: "agents",
     label: "Agents",
     description: "The agents page.",
@@ -800,6 +751,7 @@ export const cmsPages: CmsPageDef[] = [
           { key: "nav.language", label: "Language", type: "text", en: "Language", bn: "ভাষা" },
           { key: "nav.landowners", label: "Landowners", type: "text", en: "Landowners", bn: "জমির মালিক" },
           { key: "nav.blog", label: "Blog", type: "text", en: "Blog", bn: "ব্লগ" },
+          { key: "nav.reviews", label: "Reviews", type: "text", en: "Reviews", bn: "রিভিউ" },
         ],
       },
       {

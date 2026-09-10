@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import UploadMedia from "../../components/shared/UploadMedia";
+import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
 import { useGetPropertiesQuery } from "../../redux/features/property/propertyApi";
 import {
   useCreateReviewMutation,
@@ -68,7 +69,13 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
     void videoPosterUrl;
     const body = {
       ...rest,
-      video: { ...(rest.video || {}), poster: videoPoster || null },
+      video: {
+        ...(rest.video || {}),
+        // Tidied the same way every other link on the panel is: a pasted embed
+        // is reduced to its src, a bare host gains its scheme, blank stays blank.
+        youtubeUrl: normalizeUrl(rest.video?.youtubeUrl),
+        poster: videoPoster || null,
+      },
     };
     try {
       const res: any = review
@@ -188,7 +195,12 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
           <Col xs={24} md={16}>
             <Row gutter={12}>
               <Col xs={24} md={16}>
-                <Form.Item label="Video URL" name={["video", "youtubeUrl"]}>
+                <Form.Item
+                  label="Video URL"
+                  name={["video", "youtubeUrl"]}
+                  tooltip="A YouTube or Vimeo link. The quote still shows before anybody presses play."
+                  rules={[urlRule]}
+                >
                   <Input placeholder="https://youtube.com/watch?v=…" />
                 </Form.Item>
               </Col>

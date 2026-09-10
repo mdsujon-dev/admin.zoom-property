@@ -20,6 +20,7 @@ import {
   Shield,
   Sparkles,
   Star,
+  Video,
   Trash2,
   UserRound,
   Users,
@@ -81,13 +82,21 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Blog",
         icon: FileText,
       },
-      {
-        label: "Reviews",
-        address: "/reviews",
-        module: "Reviews",
-        icon: Star,
-      },
     ],
+  },
+  {
+    label: "Reviews",
+    icon: Star,
+    address: "/reviews",
+    module: "Reviews",
+    section: "System",
+  },
+  {
+    label: "Showcase Videos",
+    icon: Video,
+    address: "/showcase-videos",
+    module: "Showcase Videos",
+    section: "System",
   },
   {
     label: "CMS",
@@ -123,12 +132,6 @@ const sidebarMenuRoutes: RouteItem[] = [
         icon: Handshake,
       },
       { label: "Blog", address: "/cms/blog", module: "Dynamic Content", icon: FileText },
-      {
-        label: "Reviews",
-        address: "/cms/reviews",
-        module: "Dynamic Content",
-        icon: Star,
-      },
       {
         label: "Agents",
         address: "/cms/agents",
