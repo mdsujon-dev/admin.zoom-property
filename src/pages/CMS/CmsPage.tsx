@@ -258,7 +258,7 @@ const SectionForm = ({
   const onFillDefaults = () => {
     let count = 0;
     for (const field of allEffectiveFields) {
-      if (field.type === "image" || field.type === "url" || field.type === "images") {
+      if (field.type === "image" || field.type === "url" || field.type === "images" || field.type === "icon") {
         if (field.en) {
           const val = field.type === "images" ? (field.en === "[]" ? [] : field.en) : field.en;
           form.setFieldValue([`${field.key}|en`], val);
@@ -283,7 +283,7 @@ const SectionForm = ({
     let count = 0;
     try {
       for (const field of allEffectiveFields) {
-        if (field.type === "image" || field.type === "url" || field.type === "images") continue;
+        if (field.type === "image" || field.type === "url" || field.type === "images" || field.type === "icon") continue;
         const enVal = (form.getFieldValue(`${field.key}|en`) || field.en || "").trim();
         if (enVal) {
           const bnText = await translateToBanglaApi(enVal);
@@ -310,7 +310,7 @@ const SectionForm = ({
     const clear: string[] = [];
 
     for (const field of allEffectiveFields) {
-      if (field.type === "image" || field.type === "url" || field.type === "images") {
+      if (field.type === "image" || field.type === "url" || field.type === "images" || field.type === "icon") {
         const allValues = form.getFieldsValue(true);
         const rawVal =
           form.getFieldValue([`${field.key}|en`]) ??
@@ -660,7 +660,7 @@ const FieldRow = ({
     );
   }
 
-  if (field.type === "url") {
+  if (field.type === "url" || field.type === "icon") {
     return (
       <div className="border-b border-secondary-50 py-3 last:border-0">
         <Form.Item

@@ -22,7 +22,8 @@ export type CmsFieldType =
   /** One uploaded image, stored as its URL. */
   | "image"
   /** A gallery: several images, stored as an array of URLs. */
-  | "images";
+  | "images"
+  | "icon";
 
 export interface CmsField {
   /** Dictionary path, e.g. `hero.trust.rajuk`. */
@@ -774,7 +775,7 @@ export const cmsPages: CmsPageDef[] = [
           addButtonText: "Add benefit",
           initialCount: 4,
           itemFields: [
-            { suffix: "icon", label: "Icon", type: "text" },
+            { suffix: "icon", label: "Icon", type: "icon" },
             { suffix: "title", label: "Title", type: "text" },
             { suffix: "body", label: "Body", type: "textarea" },
           ],
