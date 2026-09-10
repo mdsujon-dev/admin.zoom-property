@@ -168,9 +168,9 @@ const STAT_TONE: Record<StatTone, { value: string; chip: string; bg: string }> =
       bg: "bg-gradient-to-br from-white to-amber-50/60 border-amber-100/50 hover:to-amber-50",
     },
     blue: {
-      value: "text-blue-600",
-      chip: "bg-blue-50 text-blue-500",
-      bg: "bg-gradient-to-br from-white to-blue-50/60 border-blue-100/50 hover:to-blue-50",
+      value: "text-primary-600",
+      chip: "bg-primary-50 text-primary-500",
+      bg: "bg-gradient-to-br from-white to-primary-50/60 border-primary-100/50 hover:to-primary-50",
     },
   };
 
@@ -254,7 +254,7 @@ const PILL_TONE: Record<PillTone, string> = {
   green: "bg-primary-50 text-primary ring-1 ring-inset ring-primary/15",
   red: "bg-red-50 text-red-600 ring-1 ring-inset ring-red-500/15",
   amber: "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-500/20",
-  blue: "bg-blue-50 text-blue-600 ring-1 ring-inset ring-blue-500/15",
+  blue: "bg-primary-50 text-primary-600 ring-1 ring-inset ring-primary-500/15",
 };
 
 export const Pill = ({

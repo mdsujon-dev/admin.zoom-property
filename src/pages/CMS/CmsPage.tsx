@@ -399,9 +399,9 @@ const SectionForm = ({
         <Space>
           <Tooltip title="ফর্মটিতে সাইটের ডিফল্ট টেক্সট ও ধাপগুলো লোড করুন">
             <Button
-              icon={<FileText className="h-4 w-4 text-emerald-600" />}
+              icon={<FileText className="h-4 w-4 text-primary-600" />}
               onClick={onFillDefaults}
-              className="text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+              className="text-primary-700 border-primary-200 hover:bg-primary-50"
             >
               ডিফল্ট ডেটা লোড করুন
             </Button>

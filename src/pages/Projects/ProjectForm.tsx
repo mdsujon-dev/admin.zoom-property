@@ -24,6 +24,7 @@ import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import { normalizeUrl } from "../../utils/normalizeUrl";
+import { mediaSrc } from "../../utils/mediaSrc";
 import {
   isEmptyRichText,
   normalizeDescriptionForEditor,
@@ -81,9 +82,9 @@ const ProjectForm = ({
       ...initial,
       area: initial.area?._id ?? initial.area,
       coverImage: initial.coverImage?._id ?? initial.coverImage,
-      coverImageUrl: initial.coverImage?.key || initial.coverImage?.url,
+      coverImageUrl: mediaSrc(initial.coverImage),
       images: (initial.images || []).map((i: any) => i?._id ?? i),
-      imageUrls: (initial.images || []).map((i: any) => i?.key || i?.url).filter(Boolean),
+      imageUrls: (initial.images || []).map((i: any) => mediaSrc(i)).filter(Boolean),
       lastInspected: initial.lastInspected
         ? dayjs(initial.lastInspected)
         : undefined,
@@ -432,7 +433,7 @@ const ProjectForm = ({
                       <Button
                         type="link"
                         size="small"
-                        className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+                        className="!px-1 !h-auto !text-xs flex items-center gap-1 text-primary-600 hover:text-primary-700 shrink-0 whitespace-nowrap"
                         onClick={handleTranslateDescription}
                         loading={translatingDescBn}
                         icon={

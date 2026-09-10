@@ -90,7 +90,7 @@ const FinancialReport = ({
           render: (r: any) => (
             <span
               className={`text-xs font-semibold capitalize ${
-                r.type === "income" ? "text-emerald-600" : "text-rose-600"
+                r.type === "income" ? "text-primary-600" : "text-rose-600"
               }`}
             >
               {r.type}
@@ -113,7 +113,7 @@ const FinancialReport = ({
             return (
               <span
                 className={`font-semibold ${
-                  positive ? "text-emerald-600" : "text-rose-600"
+                  positive ? "text-primary-600" : "text-rose-600"
                 }`}
               >
                 {positive ? "+" : "−"} <Money value={r.amount} />

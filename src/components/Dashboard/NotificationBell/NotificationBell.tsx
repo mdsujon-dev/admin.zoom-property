@@ -113,7 +113,7 @@ const NotificationRow: FC<RowProps> = ({ item, onMarkRead, isMarking }) => {
             ) : (
               <Check
                 size={14}
-                className="flex-shrink-0 text-emerald-500 mt-1 transition-opacity duration-300"
+                className="flex-shrink-0 text-primary-500 mt-1 transition-opacity duration-300"
               />
             )}
           </div>

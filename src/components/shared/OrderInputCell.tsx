@@ -71,7 +71,7 @@ export const OrderInputCell = ({
           onClick={handleSaveOrder}
           className={`!p-1 !h-6 !w-6 flex items-center justify-center rounded transition-all ${
             isChanged
-              ? "!bg-green-600 hover:!bg-green-700 !text-white !border-green-600 shadow-sm cursor-pointer"
+              ? "!bg-primary-600 hover:!bg-primary-700 !text-white !border-primary-600 shadow-sm cursor-pointer"
               : "text-gray-300 border-gray-200"
           }`}
         />

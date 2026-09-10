@@ -33,6 +33,7 @@ import {
   STATUSES,
 } from "./propertyMeta";
 import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
+import { mediaSrc } from "../../utils/mediaSrc";
 import {
   isEmptyRichText,
   normalizeDescriptionForEditor,
@@ -96,9 +97,9 @@ const PropertyForm = ({
       project: initial.project?._id ?? initial.project,
       amenities: (initial.amenities || []).map((a: any) => a?._id ?? a),
       coverImage: initial.coverImage?._id ?? initial.coverImage,
-      coverImageUrl: initial.coverImage?.key || initial.coverImage?.url,
+      coverImageUrl: mediaSrc(initial.coverImage),
       images: (initial.images || []).map((i: any) => i?._id ?? i),
-      imageUrls: (initial.images || []).map((i: any) => i?.key || i?.url).filter(Boolean),
+      imageUrls: (initial.images || []).map((i: any) => mediaSrc(i)).filter(Boolean),
       expiresAt: initial.expiresAt ? dayjs(initial.expiresAt) : undefined,
       description: normalizeDescriptionForEditor(initial.description),
       descriptionBn: normalizeDescriptionForEditor(initial.descriptionBn),
@@ -158,8 +159,8 @@ const PropertyForm = ({
           baths: 0,
         }}
       >
-        <Card className="shadow-sm border border-border/80 rounded-2xl mb-6">
-          <div className="space-y-8 divide-y divide-border/60">
+        <Card className="border border-gray-300 rounded-lg bg-white shadow-xs mb-6">
+          <div className="space-y-8 divide-y divide-gray-200">
             {/* 1. The Basics */}
             <div className="space-y-4">
               <div>
@@ -471,7 +472,7 @@ const PropertyForm = ({
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
-                  <div className="rounded-xl border border-border/80 bg-muted/20 p-4">
+                  <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-foreground text-sm">Featured Listing</p>
@@ -512,7 +513,7 @@ const PropertyForm = ({
                       <Button
                         type="link"
                         size="small"
-                        className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+                        className="!px-1 !h-auto !text-xs flex items-center gap-1 text-primary-600 hover:text-primary-700 shrink-0 whitespace-nowrap"
                         onClick={handleTranslateDescription}
                         loading={translatingDescBn}
                         icon={
@@ -538,7 +539,7 @@ const PropertyForm = ({
         </Card>
 
         {/* Actions Bottom Bar */}
-        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
+        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-white/95 backdrop-blur-md p-4 rounded-lg border border-gray-300 shadow-md">
           <Button onClick={() => navigate("/properties")}>Cancel</Button>
           <Button type="primary" htmlType="submit" loading={saving} size="large">
             {submitLabel}

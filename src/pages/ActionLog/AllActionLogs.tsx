@@ -44,7 +44,7 @@ const AllActionLogs = () => {
   const getStatusBadge = (statusCode: number) => {
     if (statusCode >= 200 && statusCode < 300) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
           <CheckCircle className="w-3 h-3" />
           {statusCode}
         </span>
@@ -73,11 +73,11 @@ const AllActionLogs = () => {
 
   const getMethodBadge = (method: string) => {
     const colors = {
-      GET: "bg-blue-100 text-blue-800",
-      POST: "bg-green-100 text-green-800",
+      GET: "bg-primary-100 text-primary-800",
+      POST: "bg-primary-100 text-primary-800",
       PUT: "bg-yellow-100 text-yellow-800",
       DELETE: "bg-red-100 text-red-800",
-      PATCH: "bg-purple-100 text-purple-800",
+      PATCH: "bg-primary-100 text-primary-800",
     };
 
     return (
@@ -94,7 +94,7 @@ const AllActionLogs = () => {
   const getRoleBadge = (role: string) => {
     const colors = {
       admin: "bg-primary text-white",
-      user: "bg-blue-100 text-blue-800",
+      user: "bg-primary-100 text-primary-800",
       moderator: "bg-orange-100 text-orange-800",
     };
 

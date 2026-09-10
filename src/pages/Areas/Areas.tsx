@@ -97,14 +97,13 @@ const Areas = () => {
       dataIndex: "name",
       key: "name",
       render: (name: string, r: any) => {
-        const imgUrl = r.image?.key || (typeof r.image === "string" ? r.image : undefined);
+        const imgUrl = mediaSrc(r.image);
         return (
           <div className="flex items-center gap-3">
             {imgUrl ? (
               <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
                 <AntImage
                   src={imgUrl}
-                  accessurl={!imgUrl.startsWith("http")}
                   alt={name}
                   className="size-full object-cover"
                   preview={false}

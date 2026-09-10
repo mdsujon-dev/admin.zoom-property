@@ -48,7 +48,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Acknowledgment",
     description: "Confirm we received their request",
     icon: <Sparkles className="w-4 h-4" />,
-    accent: "bg-blue-50 text-blue-600 ring-blue-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "We received your request for {{service}}",
     body: `<p>Hi {{name}},</p>
 <p>Thank you for reaching out to Zoom Property about <strong>{{service}}</strong>. Your request has landed safely with our team and we appreciate you considering us for this work.</p>
@@ -60,7 +60,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Discovery call",
     description: "Invite to a scoping call before quoting",
     icon: <CalendarCheck className="w-4 h-4" />,
-    accent: "bg-indigo-50 text-indigo-600 ring-indigo-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "A 20-minute call about your {{service}} project?",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for your interest in our <strong>{{service}}</strong> services. To put together a quote that genuinely reflects your needs (rather than a generic price), we'd love to learn a bit more about your goals, audience and timeline.</p>
@@ -77,7 +77,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Initial quote",
     description: "Send a ballpark estimate with assumptions",
     icon: <FileText className="w-4 h-4" />,
-    accent: "bg-emerald-50 text-emerald-600 ring-emerald-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Your initial estimate for {{service}}",
     body: `<p>Hi {{name}},</p>
 <p>Thanks again for sharing the details of your <strong>{{service}}</strong> project. Based on what you described, here's an initial estimate to help you plan.</p>
@@ -97,7 +97,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Detailed proposal",
     description: "Share a full proposal document",
     icon: <ClipboardList className="w-4 h-4" />,
-    accent: "bg-violet-50 text-violet-600 ring-violet-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Your {{service}} proposal from Zoom Property",
     body: `<p>Hi {{name}},</p>
 <p>It was great learning about your project. Attached is our detailed proposal for <strong>{{service}}</strong>, prepared specifically for {{company}}.</p>
@@ -135,7 +135,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Revised proposal",
     description: "Updated quote after feedback",
     icon: <RefreshCw className="w-4 h-4" />,
-    accent: "bg-cyan-50 text-cyan-600 ring-cyan-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Revised proposal for {{service}} — incorporating your feedback",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for the candid feedback on our first proposal. We've taken your input on board and revised the plan for <strong>{{service}}</strong>. Here's a summary of what changed:</p>
@@ -152,7 +152,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Friendly follow-up",
     description: "Polite nudge after no reply",
     icon: <Send className="w-4 h-4" />,
-    accent: "bg-sky-50 text-sky-600 ring-sky-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Following up on your {{service}} request",
     body: `<p>Hi {{name}},</p>
 <p>Just floating this one back to the top of your inbox — I wanted to make sure my previous note about your <strong>{{service}}</strong> project didn't get buried.</p>

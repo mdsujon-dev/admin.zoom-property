@@ -77,7 +77,7 @@ const NotificationSounds = () => {
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             {enabled ? (
-              <Volume2 className="w-5 h-5 text-green-600" />
+              <Volume2 className="w-5 h-5 text-primary-600" />
             ) : (
               <VolumeX className="w-5 h-5 text-gray-400" />
             )}

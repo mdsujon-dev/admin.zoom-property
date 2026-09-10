@@ -48,12 +48,12 @@ const TYPE_META: Record<
   time_member_contact: {
     label: "Team Member Contact",
     icon: MessageCircle,
-    tone: "bg-violet-50 text-violet-600 ring-violet-200",
+    tone: "bg-primary-50 text-primary-600 ring-primary-200",
   },
   contact_message: {
     label: "Contact Message",
     icon: Mail,
-    tone: "bg-sky-50 text-sky-600 ring-sky-200",
+    tone: "bg-primary-50 text-primary-600 ring-primary-200",
   },
   quotation_request: {
     label: "Quotation Request",
@@ -478,7 +478,7 @@ const AllNotifications: FC = () => {
           </div>
         </div>
         <div className="rounded-xl border border-secondary-100 bg-white p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center">
             <CheckCheck size={18} />
           </div>
           <div>

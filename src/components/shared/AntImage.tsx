@@ -1,8 +1,8 @@
 import { Image } from "antd";
-import { config } from "../../config";
+import { mediaSrc } from "../../utils/mediaSrc";
 
 interface AntImageProps {
-  src: string;
+  src?: string | null;
   alt?: string;
   accessurl?: boolean;
   className?: string;
@@ -24,9 +24,9 @@ export default function AntImage({
   title,
   style,
   preview = true,
-  fallback = "/fallback.png",
+  fallback,
 }: AntImageProps) {
-  const finalSrc = accessurl ? `${config.image_access_url}/${src}` : src;
+  const finalSrc = src ? (accessurl ? mediaSrc(src) : (src.startsWith("http") ? src : mediaSrc(src))) : "";
 
   return (
     <Image

@@ -57,7 +57,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Acknowledgment",
     description: "Confirm we received their message",
     icon: <Sparkles className="w-4 h-4" />,
-    accent: "bg-blue-50 text-blue-600 ring-blue-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}}",
     body: `<p>Hi {{name}},</p>
 <p>Thank you for reaching out to Zoom Property — your message has landed safely with our team.</p>
@@ -68,7 +68,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Direct answer",
     description: "Provide the information they asked for",
     icon: <CircleCheck className="w-4 h-4" />,
-    accent: "bg-emerald-50 text-emerald-600 ring-emerald-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}}",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for your question about <strong>"{{subject}}"</strong>. Here's the information you asked for:</p>
@@ -96,7 +96,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Schedule a call",
     description: "Invite to a short call",
     icon: <CalendarCheck className="w-4 h-4" />,
-    accent: "bg-indigo-50 text-indigo-600 ring-indigo-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}} — quick call?",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for reaching out about <strong>"{{subject}}"</strong>. I think a short conversation would help us help you better than back-and-forth email.</p>
@@ -107,7 +107,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Partnership response",
     description: "Reply to a partnership / cooperation request",
     icon: <HeartHandshake className="w-4 h-4" />,
-    accent: "bg-violet-50 text-violet-600 ring-violet-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}}",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for reaching out about a potential partnership with Zoom Property. We genuinely appreciate you thinking of us.</p>
@@ -124,7 +124,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Routing to team",
     description: "Hand off to the right specialist",
     icon: <ChevronRight className="w-4 h-4" />,
-    accent: "bg-cyan-50 text-cyan-600 ring-cyan-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}} — looping in the right team",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for getting in touch about <strong>"{{subject}}"</strong>. To make sure you get the most useful response, I'm looping in our [team name — sales / careers / partnerships / support] team who handle this directly.</p>
@@ -135,7 +135,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Support reply",
     description: "Respond to a technical / support question",
     icon: <LifeBuoy className="w-4 h-4" />,
-    accent: "bg-sky-50 text-sky-600 ring-sky-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}}",
     body: `<p>Hi {{name}},</p>
 <p>Thanks for flagging this — sorry for any inconvenience caused. I've looked into your message about <strong>"{{subject}}"</strong>.</p>

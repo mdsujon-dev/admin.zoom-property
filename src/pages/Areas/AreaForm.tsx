@@ -7,6 +7,7 @@ import LangInput from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import UploadMedia from "../../components/shared/UploadMedia";
+import { mediaSrc } from "../../utils/mediaSrc";
 
 interface Props {
   /** Undefined when creating. */
@@ -39,10 +40,10 @@ const AreaForm = ({
 
     if (img && typeof img === "object") {
       imgId = img._id;
-      imgUrl = img.key || img.url;
+      imgUrl = mediaSrc(img);
     } else if (typeof img === "string") {
-      if (img.startsWith("http") || img.includes("/")) {
-        imgUrl = img;
+      if (img.startsWith("http") || img.includes("/") || img.includes(".")) {
+        imgUrl = mediaSrc(img);
       } else if (/^[0-9a-fA-F]{24}$/.test(img)) {
         imgId = img;
       }
@@ -128,8 +129,8 @@ const AreaForm = ({
           isHome: false,
         }}
       >
-        <Card className="shadow-sm border border-border/80 rounded-2xl mb-6">
-          <div className="space-y-8 divide-y divide-border/60">
+        <Card className="border border-gray-300 rounded-lg bg-white shadow-xs mb-6">
+          <div className="space-y-8 divide-y divide-gray-200">
             {/* 1. Basic Details */}
             <div className="space-y-4">
               <div>
@@ -368,7 +369,7 @@ const AreaForm = ({
                 </Col>
 
                 <Col xs={24} md={12}>
-                  <div className="space-y-4 rounded-xl border border-border/80 bg-muted/20 p-4">
+                  <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50/50 p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-foreground text-sm">Featured Area</p>
@@ -379,7 +380,7 @@ const AreaForm = ({
                       </Form.Item>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-3">
                       <div>
                         <p className="font-semibold text-foreground text-sm">Show on Home Page</p>
                         <p className="text-xs text-muted-foreground">Display this area card on the website home page</p>
@@ -389,7 +390,7 @@ const AreaForm = ({
                       </Form.Item>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-3">
                       <div>
                         <p className="font-semibold text-foreground text-sm">Active Status</p>
                         <p className="text-xs text-muted-foreground">Toggle visibility across the whole portal</p>
@@ -406,7 +407,7 @@ const AreaForm = ({
         </Card>
 
         {/* Actions Bottom Bar */}
-        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
+        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-white/95 backdrop-blur-md p-4 rounded-lg border border-gray-300 shadow-md">
           <Button onClick={() => navigate("/areas")}>Cancel</Button>
           <Button type="primary" htmlType="submit" loading={saving} size="large">
             {submitLabel}

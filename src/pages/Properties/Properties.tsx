@@ -9,6 +9,8 @@ import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
 import OrderInputCell from "../../components/shared/OrderInputCell";
+import AntImage from "../../components/shared/AntImage";
+import { mediaSrc } from "../../utils/mediaSrc";
 import {
   useChangePropertyStatusMutation,
   useDeletePropertyMutation,
@@ -146,17 +148,32 @@ const Properties = () => {
       title: "Listing",
       dataIndex: "title",
       key: "title",
-      render: (title: string, r: any) => (
-        <div className="min-w-0">
-          <p className="truncate font-medium text-secondary-800">{title}</p>
-          <p className="truncate text-xs text-secondary-500">
-            {typeLabel(r.type)}
-            {r.area?.name ? ` · ${r.area.name}` : ""}
-            {r.beds ? ` · ${r.beds} bed` : ""}
-            {r.size ? ` · ${money(r.size)} sq ft` : ""}
-          </p>
-        </div>
-      ),
+      render: (title: string, r: any) => {
+        const imgUrl = mediaSrc(r.coverImage);
+        return (
+          <div className="flex items-center gap-3">
+            {imgUrl ? (
+              <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                <AntImage
+                  src={imgUrl}
+                  alt={title}
+                  className="size-full object-cover"
+                  preview={false}
+                />
+              </div>
+            ) : null}
+            <div className="min-w-0">
+              <p className="truncate font-medium text-secondary-800">{title}</p>
+              <p className="truncate text-xs text-secondary-500">
+                {typeLabel(r.type)}
+                {r.area?.name ? ` · ${r.area.name}` : ""}
+                {r.beds ? ` · ${r.beds} bed` : ""}
+                {r.size ? ` · ${money(r.size)} sq ft` : ""}
+              </p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       title: "Price",

@@ -463,13 +463,13 @@ const AllMediaLibraryList = () => {
                   <Tooltip title="Copy URL" key="copy">
                     <CopyOutlined
                       onClick={() => handleCopy(img.url)}
-                      className="text-blue-500 hover:text-blue-700 cursor-pointer text-lg transition-colors duration-200"
+                      className="text-primary-500 hover:text-primary-700 cursor-pointer text-lg transition-colors duration-200"
                     />
                   </Tooltip>,
                   <Tooltip title="Usage Info" key="usage">
                     <InfoCircleOutlined
                       onClick={() => setUsageModal({ open: true, id: img.id })}
-                      className="text-green-500 hover:text-green-700 cursor-pointer text-lg transition-colors duration-200"
+                      className="text-primary-500 hover:text-primary-700 cursor-pointer text-lg transition-colors duration-200"
                     />
                   </Tooltip>,
                   <Tooltip title="Rename" key="rename">

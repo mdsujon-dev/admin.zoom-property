@@ -172,7 +172,7 @@ const ViewQuotationModal = ({
       {data && (
         <div className="space-y-5">
           {/* Hero — avatar, name, headline meta and submission time */}
-          <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-primary/5 via-white to-blue-50 p-5">
+          <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-primary/5 via-white to-primary-50 p-5">
             <div className="flex flex-wrap items-start gap-4">
               <Avatar
                 size={56}
@@ -201,7 +201,7 @@ const ViewQuotationModal = ({
                     <>
                       {" "}
                       ·{" "}
-                      <span className="font-medium text-emerald-700">
+                      <span className="font-medium text-primary-700">
                         {data.budget}
                       </span>
                     </>
@@ -231,16 +231,16 @@ const ViewQuotationModal = ({
             <SectionTitle icon={<FiBriefcase />} title="Project Details" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <StatTile
-                icon={<FiBriefcase className="text-blue-600" />}
+                icon={<FiBriefcase className="text-primary-600" />}
                 label="Service"
                 value={data.service}
-                accent="bg-blue-50"
+                accent="bg-primary-50"
               />
               <StatTile
-                icon={<FiDollarSign className="text-emerald-600" />}
+                icon={<FiDollarSign className="text-primary-600" />}
                 label="Budget"
                 value={data.budget}
-                accent="bg-emerald-50"
+                accent="bg-primary-50"
               />
               <StatTile
                 icon={<FiClock className="text-amber-600" />}
@@ -249,10 +249,10 @@ const ViewQuotationModal = ({
                 accent="bg-amber-50"
               />
               <StatTile
-                icon={<FiCalendar className="text-purple-600" />}
+                icon={<FiCalendar className="text-primary-600" />}
                 label="Start Date"
                 value={data.start_date}
-                accent="bg-purple-50"
+                accent="bg-primary-50"
               />
             </div>
           </div>
@@ -307,7 +307,7 @@ const ViewQuotationModal = ({
                 icon={<FiHelpCircle />}
                 title="Additional Help Required"
               />
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+              <div className="rounded-xl border border-primary-200 bg-primary-50 p-4">
                 <Text className="whitespace-pre-wrap text-gray-800 leading-relaxed">
                   {data.help}
                 </Text>

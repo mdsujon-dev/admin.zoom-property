@@ -9,6 +9,8 @@ import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
 import OrderInputCell from "../../components/shared/OrderInputCell";
+import AntImage from "../../components/shared/AntImage";
+import { mediaSrc } from "../../utils/mediaSrc";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
   useDeleteProjectMutation,
@@ -116,15 +118,30 @@ const Projects = () => {
       title: "Project",
       dataIndex: "name",
       key: "name",
-      render: (name: string, r: any) => (
-        <div>
-          <p className="font-medium text-secondary-800">{name}</p>
-          <p className="text-xs text-secondary-500">
-            {r.area?.name ? `${r.area.name} · ` : ""}
-            {r.developer}
-          </p>
-        </div>
-      ),
+      render: (name: string, r: any) => {
+        const imgUrl = mediaSrc(r.coverImage);
+        return (
+          <div className="flex items-center gap-3">
+            {imgUrl ? (
+              <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                <AntImage
+                  src={imgUrl}
+                  alt={name}
+                  className="size-full object-cover"
+                  preview={false}
+                />
+              </div>
+            ) : null}
+            <div>
+              <p className="font-medium text-secondary-800">{name}</p>
+              <p className="text-xs text-secondary-500">
+                {r.area?.name ? `${r.area.name} · ` : ""}
+                {r.developer}
+              </p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       title: "Stage",

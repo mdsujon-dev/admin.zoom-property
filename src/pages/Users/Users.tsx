@@ -141,7 +141,7 @@ const Users = () => {
           <Avatar
             src={record?.profilePhoto || "/assets/default_image.png"}
             size={34}
-            className="shrink-0 bg-blue-500 object-cover font-semibold text-white"
+            className="shrink-0 bg-primary-500 object-cover font-semibold text-white"
           >
             {name?.charAt(0)?.toUpperCase()}
           </Avatar>

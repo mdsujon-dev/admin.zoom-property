@@ -238,7 +238,7 @@ const MediaBin: React.FC = () => {
                     icon={<RedoOutlined />}
                     loading={isBulkRestoring}
                     onClick={handleBulkRestore}
-                    className="!bg-green-500 !border-green-500 hover:!bg-green-600 font-semibold"
+                    className="!bg-primary-500 !border-primary-500 hover:!bg-primary-600 font-semibold"
                   >
                     Restore {selectedKeys.length} Selected
                   </Button>
@@ -275,8 +275,8 @@ const MediaBin: React.FC = () => {
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 gap-3">
-          <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
-            <Trash2 className="w-8 h-8 text-green-400" />
+          <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center">
+            <Trash2 className="w-8 h-8 text-primary-400" />
           </div>
           <Empty
             description={
@@ -371,7 +371,7 @@ const MediaBin: React.FC = () => {
                               e.stopPropagation();
                               handleRestore(item.path, item.name);
                             }}
-                            className="!bg-green-500 !border-green-500 hover:!bg-green-600 shadow-lg"
+                            className="!bg-primary-500 !border-primary-500 hover:!bg-primary-600 shadow-lg"
                           >
                             Restore
                           </Button>
@@ -424,7 +424,7 @@ const MediaBin: React.FC = () => {
                       <button
                         disabled={restoringKey === item.path}
                         onClick={() => handleRestore(item.path, item.name)}
-                        className="flex-1 py-1.5 flex items-center justify-center gap-1 text-green-600 hover:bg-green-50 transition-colors text-xs font-semibold disabled:opacity-50"
+                        className="flex-1 py-1.5 flex items-center justify-center gap-1 text-primary-600 hover:bg-primary-50 transition-colors text-xs font-semibold disabled:opacity-50"
                       >
                         {restoringKey === item.path ? (
                           <Spin size="small" />

@@ -14,12 +14,12 @@ import { EmptyNote, Panel } from "../Details/DetailKit";
 
 const ACTION = {
   created: { label: "Created", icon: FilePlus2, tone: "text-primary bg-primary-50" },
-  updated: { label: "Edited profile", icon: PencilLine, tone: "text-blue-600 bg-blue-50" },
+  updated: { label: "Edited profile", icon: PencilLine, tone: "text-primary-600 bg-primary-50" },
   archived: { label: "Archived", icon: Archive, tone: "text-red-600 bg-red-50" },
   restored: { label: "Restored", icon: History, tone: "text-amber-600 bg-amber-50" },
-  published: { label: "Published", icon: Send, tone: "text-emerald-600 bg-emerald-50" },
-  "status-changed": { label: "Status changed", icon: ToggleLeft, tone: "text-indigo-600 bg-indigo-50" },
-  assigned: { label: "Assigned", icon: Users, tone: "text-teal-600 bg-teal-50" },
+  published: { label: "Published", icon: Send, tone: "text-primary-600 bg-primary-50" },
+  "status-changed": { label: "Status changed", icon: ToggleLeft, tone: "text-primary-600 bg-primary-50" },
+  assigned: { label: "Assigned", icon: Users, tone: "text-primary-600 bg-primary-50" },
 } as const;
 
 /** camelCase field names are how the database spells it, not how people read. */

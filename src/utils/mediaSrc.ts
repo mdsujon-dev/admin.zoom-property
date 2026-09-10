@@ -1,23 +1,27 @@
 import { config } from "../config";
 
-type MediaLike = { url?: string; key?: string } | null | undefined;
+type MediaLike = { url?: string; key?: string; _id?: string } | string | null | undefined;
+
+const R2_PUBLIC_FALLBACK = "https://pub-5b52277bf86041a0b4872bee7a979553.r2.dev";
 
 /**
  * Where a populated media document's file actually lives.
- *
- * The API hands back an absolute `url`, built on the storage bucket's public
- * base. `key` is only the object's path inside that bucket: on its own it
- * means nothing to a browser, and pointing it at the app's own origin asks for
- * a file that was never served from there. So take the url, and keep the key
- * join as a fallback for anything stored before the virtual existed.
  */
-export const mediaSrc = (media: MediaLike) => {
+export const mediaSrc = (media: MediaLike): string => {
   if (!media) return "";
-  if (media.url) return media.url;
+  if (typeof media === "string") {
+    if (!media.trim()) return "";
+    if (/^(https?:)?\/\//i.test(media)) return media;
+    const base = String(config.image_access_url || R2_PUBLIC_FALLBACK).replace(/\/+$/, "");
+    return `${base}/${media.replace(/^\/+/, "")}`;
+  }
+  if (media.url && typeof media.url === "string" && media.url.trim()) {
+    return media.url;
+  }
   const key = media.key;
   if (!key) return "";
   if (/^(https?:)?\/\//i.test(key)) return key;
-  const base = String(config.image_access_url ?? "").replace(/\/+$/, "");
+  const base = String(config.image_access_url || R2_PUBLIC_FALLBACK).replace(/\/+$/, "");
   return `${base}/${key.replace(/^\/+/, "")}`;
 };
 

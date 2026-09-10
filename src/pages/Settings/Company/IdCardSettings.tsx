@@ -214,8 +214,8 @@ const IdCardSettings = () => {
 
       <TabBar active={tab} onChange={(k) => setTab(k as Audience)} tabs={TABS} />
 
-      <div className="mb-4 flex items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3 text-sm text-secondary-700">
-        <CreditCard className="h-4 w-4 shrink-0 text-blue-500" />
+      <div className="mb-4 flex items-center gap-2 rounded-xl border border-primary-100 bg-primary-50/60 px-4 py-3 text-sm text-secondary-700">
+        <CreditCard className="h-4 w-4 shrink-0 text-primary-500" />
         <span>
           The card fills itself from the company's details and the person's
           record. Set the name, logo and address in{" "}

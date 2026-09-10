@@ -320,7 +320,7 @@ const EmployeeDetails = () => {
           <Avatar
             src={employee.profilePhoto || "/assets/default_image.png"}
             size={64}
-            className="shrink-0 bg-blue-500 text-xl font-semibold text-white"
+            className="shrink-0 bg-primary-500 text-xl font-semibold text-white"
           >
             {employee.name?.charAt(0)?.toUpperCase()}
           </Avatar>

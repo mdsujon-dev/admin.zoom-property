@@ -138,7 +138,7 @@ export const LangInput: React.FC<LangInputProps> = ({
           <Button
             type="link"
             size="small"
-            className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+            className="!px-1 !h-auto !text-xs flex items-center gap-1 text-primary-600 hover:text-primary-700 shrink-0 whitespace-nowrap"
             onClick={handleAutoTranslate}
             loading={translating}
             icon={
