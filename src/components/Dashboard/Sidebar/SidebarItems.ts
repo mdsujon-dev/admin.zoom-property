@@ -18,7 +18,6 @@ import {
   Phone,
   ScrollText,
   Shield,
-  Sparkles,
   Star,
   Video,
   Trash2,
@@ -127,12 +126,6 @@ const sidebarMenuRoutes: RouteItem[] = [
       { label: "Areas", address: "/cms/areas", module: "Dynamic Content", icon: MapPin },
       { label: "About", address: "/cms/about", module: "Dynamic Content", icon: Info },
       {
-        label: "Services",
-        address: "/cms/services",
-        module: "Dynamic Content",
-        icon: Sparkles,
-      },
-      {
         label: "Landowners",
         address: "/cms/landowners",
         module: "Dynamic Content",
@@ -156,12 +149,6 @@ const sidebarMenuRoutes: RouteItem[] = [
         address: "/cms/contact",
         module: "Dynamic Content",
         icon: Phone,
-      },
-      {
-        label: "Site-wide",
-        address: "/cms/common",
-        module: "Dynamic Content",
-        icon: Newspaper,
       },
     ],
   },
