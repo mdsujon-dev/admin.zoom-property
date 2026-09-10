@@ -22,10 +22,10 @@ initGlobalNumberInputHandler();
 const config = {
   token: {
     // Zoom Property brand — the same hex values the public site uses.
-    colorPrimary: "#133050",
+    colorPrimary: "#4b802d",
     // Links take the mid blue: navy on white reads as body text, not as a link.
-    colorLink: "#2867a0",
-    colorPrimaryBg: "#13305018",
+    colorLink: "#67ae3e",
+    colorPrimaryBg: "#4b802d18",
     colorError: "#c00918",
     // Match the Tailwind/global typeface so antd components don't fall back
     // to their own default sans stack.

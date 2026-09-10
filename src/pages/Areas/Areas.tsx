@@ -127,9 +127,25 @@ const Areas = () => {
       title: "Listings",
       dataIndex: "listings",
       key: "listings",
-      width: 110,
+      width: 90,
       align: "center" as const,
       render: (n: number) => <Tag color={n ? "green" : "default"}>{n ?? 0}</Tag>,
+    },
+    {
+      title: "Market Rate",
+      key: "marketRate",
+      width: 150,
+      render: (_: any, r: any) => (
+        <div className="text-xs">
+          <p className="font-semibold text-secondary-800">
+            {r.medianPrice ? `৳ ${(r.medianPrice / 10000000).toFixed(2)} Cr` : "—"}
+          </p>
+          <p className="text-secondary-500">
+            {r.pricePerSqft ? `৳ ${r.pricePerSqft.toLocaleString()}/sqft` : "—"}
+            {r.rentalYield ? ` · ${r.rentalYield}` : ""}
+          </p>
+        </div>
+      ),
     },
     {
       title: "Created at",

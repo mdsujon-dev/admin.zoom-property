@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-const BRAND = "#133050";
+const BRAND = "#4b802d";
 
 /**
  * Listings taken on per month, last six.

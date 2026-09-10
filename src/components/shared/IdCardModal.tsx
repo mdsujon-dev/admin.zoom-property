@@ -122,7 +122,7 @@ const IdCardModal = ({
       width: 320,
       // A denser payload needs more forgiving correction to survive a print.
       errorCorrectionLevel: payload.length > 120 ? "M" : "Q",
-      color: { dark: "#0a1b2d", light: "#ffffff" },
+      color: { dark: "#32541e", light: "#ffffff" },
     })
       .then(setQr)
       // A missing QR is a smaller problem than a card that will not print.

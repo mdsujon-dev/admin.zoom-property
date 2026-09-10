@@ -339,7 +339,7 @@
      Blockquotes - Enhanced
   --------------------------- */
 .text-editor blockquote {
-  border-left: 4px solid #133050;
+  border-left: 4px solid #4b802d;
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
   background-color: #f7fafc;
@@ -386,7 +386,7 @@
 }
 
 .text-editor img[data-mce-selected] {
-  outline: 3px solid #133050;
+  outline: 3px solid #4b802d;
   outline-offset: 2px;
 }
 
@@ -421,7 +421,7 @@
 .text-editor a:visited *,
 .text-editor a[style*='color:'],
 .text-editor a[data-mce-style*='color:'] {
-  color: #133050 !important;
+  color: #4b802d !important;
   text-decoration: underline;
   transition: color 0.2s ease;
 }

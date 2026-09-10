@@ -31,7 +31,7 @@ export const useColumnSearch = () => {
       </div>
     ),
     filterIcon: (filtered: any) => (
-      <SearchOutlined style={{ color: filtered ? "#133050" : undefined }} />
+      <SearchOutlined style={{ color: filtered ? "#4b802d" : undefined }} />
     ),
     onFilter: (value: any, record: any) => {
       const data = dataIndex

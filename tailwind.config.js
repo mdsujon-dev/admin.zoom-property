@@ -6,10 +6,10 @@ export default {
   theme: {
     extend: {
       boxShadow: {
-        primary: "0 4px 6px -1px rgba(19, 48, 80, 0.45)",
+        primary: "0 4px 6px -1px rgba(75, 128, 45, 0.45)",
         // Soft, layered elevation for cards — subtle at rest, richer on hover.
         card: "0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px -2px rgba(16, 24, 40, 0.08)",
-        "card-hover": "0 2px 4px rgba(16, 24, 40, 0.05), 0 12px 28px -4px rgba(19, 48, 80, 0.18)",
+        "card-hover": "0 2px 4px rgba(16, 24, 40, 0.05), 0 12px 28px -4px rgba(75, 128, 45, 0.18)",
       },
       maxWidth: {
         "8xl": "96rem", // 1536px
@@ -70,60 +70,65 @@ export default {
         // `globals.css` so the panel and the public site are literally the
         // same numbers.
         //
-        //   #133050  deep navy  (primary — buttons, sidebar active, headings)
-        //   #2867A0  mid blue   (links, focus rings, secondary emphasis)
-        //   #C00918  brand red  (the mark, destructive actions, alerts)
+        //   #4B802D  deep green (primary — buttons, sidebar active, headings)
+        //   #67AE3E  mid green  (fills, rules, hover washes)
+        //   #99FF99  light green(highlights on dark grounds only)
+        //   #495045  charcoal   (the guideline's secondary — body text, surfaces)
         //
-        // The scale is one hue (212deg) at different lightnesses, so `primary`,
+        // The scale is one hue at different lightnesses, so `primary`,
         // `primary-500` and `primary-950` all belong to the same family.
-        // White on `primary` (#133050) is 13.4:1 — safe for body text, which
-        // the old leaf green never was.
-        "web-primary": "#133050",
+        //
+        // Which step may carry text is a contrast question, not a taste one:
+        // white on `primary-800` (#4B802D) is 4.75:1 and passes AA, while
+        // `primary-500` (#67AE3E) is 2.73:1 and fails at any size — so 500 is
+        // for fills and rules, never for a label.
+        "web-primary": "#4b802d",
         primary: {
-          DEFAULT: "#133050",
-          50: "#eef3f8",
-          100: "#dae6f2",
-          200: "#b8cee3",
-          300: "#8db0d1",
-          400: "#5a8dbb",
-          500: "#2867a0",
-          600: "#21558a",
-          700: "#1a4570",
-          800: "#133050",
-          900: "#0f2740",
-          950: "#0a1b2d",
+          DEFAULT: "#4b802d",
+          50: "#f6faf3",
+          100: "#ebf4e6",
+          200: "#d7eacd",
+          300: "#bbdba8",
+          400: "#95c678",
+          500: "#67ae3e",
+          600: "#589535",
+          700: "#4f8730",
+          800: "#4b802d",
+          900: "#3e6925",
+          950: "#32541e",
         },
 
-        // Neutral surface shades — kept as dark grays for UI backgrounds/text.
+        // The guideline's charcoal secondary, rolled into a surface/text ramp.
+        // `secondary-800` (#495045) on white is 8.3:1, so it carries body copy.
         secondary: {
-          DEFAULT: "#1a1a1a",
-          50: "#f5f5f5",
-          100: "#e0e0e0",
-          200: "#c2c2c2",
-          300: "#a3a3a3",
-          400: "#858585",
-          500: "#666666",
-          600: "#4d4d4d",
-          700: "#333333",
-          800: "#1a1a1a",
-          900: "#101010",
+          DEFAULT: "#495045",
+          50: "#f6f6f6",
+          100: "#e9eae9",
+          200: "#d2d3d0",
+          300: "#b3b6b1",
+          400: "#8e928c",
+          500: "#6d736a",
+          600: "#6a7066",
+          700: "#565c52",
+          800: "#495045",
+          900: "#333830",
         },
 
-        // Secondary brand colour — the mid blue that partners the navy in
-        // gradients and link text. Use as `bg-accent`, `text-accent`, etc.
+        // The mid green that partners the deep green in gradients and fills.
+        // Use as `bg-accent`, `text-accent`, etc.
         accent: {
-          DEFAULT: "#2867a0",
-          50: "#eef3f8",
-          100: "#dae6f2",
-          200: "#b8cee3",
-          300: "#8db0d1",
-          400: "#5a8dbb",
-          500: "#2867a0",
-          600: "#21558a",
-          700: "#1a4570",
-          800: "#133050",
-          900: "#0f2740",
-          950: "#0a1b2d",
+          DEFAULT: "#67ae3e",
+          50: "#f6faf3",
+          100: "#ebf4e6",
+          200: "#d7eacd",
+          300: "#bbdba8",
+          400: "#95c678",
+          500: "#67ae3e",
+          600: "#589535",
+          700: "#4f8730",
+          800: "#4b802d",
+          900: "#3e6925",
+          950: "#32541e",
         },
 
         // The brand red off the logo mark. Small, deliberate emphasis only —

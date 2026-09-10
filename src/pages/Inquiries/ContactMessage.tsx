@@ -95,7 +95,7 @@ const ContactMessages: React.FC = () => {
       key: "type",
       render: (val: string) => {
         if (!val || val === "General") return <Text type="secondary">General</Text>;
-        return <Text className="text-[#2867a0] font-semibold">{val}</Text>;
+        return <Text className="text-[#67ae3e] font-semibold">{val}</Text>;
       },
     },
     {
@@ -204,7 +204,7 @@ const ContactMessages: React.FC = () => {
                 {format(new Date(selectedMessage.createdAt), "MMMM dd, yyyy 'at' HH:mm")}
               </Text>
               {selectedMessage.type && selectedMessage.type !== "General" && (
-                <div className="mt-2 text-xs font-semibold bg-[#2867a0]/10 text-[#2867a0] inline-block px-2 py-1 rounded">
+                <div className="mt-2 text-xs font-semibold bg-[#67ae3e]/10 text-[#67ae3e] inline-block px-2 py-1 rounded">
                   {selectedMessage.type}
                 </div>
               )}

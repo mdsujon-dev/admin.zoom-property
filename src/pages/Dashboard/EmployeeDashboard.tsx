@@ -70,7 +70,7 @@ const EmployeeDashboard: React.FC = () => {
                 listings?.draft ?? 0
               } draft`}
               icon={Home}
-              accent="#133050"
+              accent="#4b802d"
               loading={isFetching}
             />
           )}
@@ -82,7 +82,7 @@ const EmployeeDashboard: React.FC = () => {
                 listings?.rented ?? 0
               } let`}
               icon={Banknote}
-              accent="#2867a0"
+              accent="#67ae3e"
               loading={isFetching}
             />
           )}

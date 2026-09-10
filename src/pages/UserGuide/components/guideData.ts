@@ -53,7 +53,7 @@ export type GuideGroup = (typeof GUIDE_GROUPS)[number];
 
 /** One accent per band, not per topic. */
 export const GROUP_ACCENT: Record<GuideGroup, string> = {
-  "Getting started": "#133050",
+  "Getting started": "#4b802d",
   "Setting up": "#0ea5e9",
   "Clients & fees": "#7c3aed",
   "Every day": "#f59e0b",

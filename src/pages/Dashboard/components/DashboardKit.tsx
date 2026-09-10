@@ -107,7 +107,7 @@ export const Section = ({
   title,
   subtitle,
   icon: Icon,
-  accent = "#133050",
+  accent = "#4b802d",
   action,
   children,
   className,

@@ -155,7 +155,7 @@ const Projects = () => {
       key: "progress",
       width: 150,
       render: (p: number) => (
-        <Progress percent={p ?? 0} size="small" strokeColor="#133050" />
+        <Progress percent={p ?? 0} size="small" strokeColor="#4b802d" />
       ),
     },
     {

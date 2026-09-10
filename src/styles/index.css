@@ -13,12 +13,12 @@
 @tailwind utilities;
 
 :root {
-  --primary: #133050;
-  --primary-blue: #2867a0;
-  --secondary: #101010;
+  --primary: #4b802d;
+  --primary-blue: #67ae3e;
+  --secondary: #495045;
   --red: #c00918;
   --white: #fff;
-  --soft-primary: #13305018;
+  --soft-primary: #4b802d18;
   
   /* React Toastify overrides — it ships its own `sans-serif` default, so the
      brand face has to be handed to it explicitly. */
