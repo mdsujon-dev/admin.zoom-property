@@ -267,6 +267,8 @@ export interface CmsRepeatableField {
   type: CmsFieldType;
   defaultEn?: string;
   defaultBn?: string;
+  /** Overrides the default guidance shown beside an `image` item field. */
+  hint?: string;
 }
 
 /**

@@ -59,6 +59,8 @@ export interface CmsRepeatableField {
   type: CmsFieldType;
   defaultEn?: string;
   defaultBn?: string;
+  /** Overrides the default guidance shown beside an `image` item field. */
+  hint?: string;
 }
 
 /**
@@ -967,7 +969,18 @@ export const cmsPages: CmsPageDef[] = [
             en: "Click any photograph for the full-screen pinch-and-zoom viewer.",
             bn: "যেকোনো ছবিতে ক্লিক করলে পূর্ণ পর্দায় জুম করে দেখা যাবে।"
           }
-        ]
+        ],
+        repeatable: {
+          itemPrefix: "gallery.images",
+          itemName: "Image",
+          addButtonText: "Add image",
+          initialCount: 6,
+          itemFields: [
+            { suffix: "src", label: "Image URL", type: "image", hint: "Landscape photo recommended." },
+            { suffix: "alt", label: "Alt Text", type: "text", hint: "Short description for screen readers." },
+            { suffix: "caption", label: "Caption", type: "text", hint: "Text shown under the image." }
+          ]
+        }
       }
     ],
   },

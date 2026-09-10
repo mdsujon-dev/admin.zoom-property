@@ -64,14 +64,8 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
       category: initial.category?._id ?? initial.category,
       coverImage: initial.coverImage?._id ?? initial.coverImage,
       coverImageUrl: mediaSrc(initial.coverImage),
-      authorAvatar: initial.author?.avatar?._id ?? initial.author?.avatar,
-      authorAvatarUrl: mediaSrc(initial.author?.avatar),
-      author: {
-        name: initial.author?.name,
-        nameBn: initial.author?.nameBn,
-        role: initial.author?.role,
-        roleBn: initial.author?.roleBn,
-      },
+      thumbnail: initial.thumbnail?._id ?? initial.thumbnail,
+      thumbnailUrl: mediaSrc(initial.thumbnail),
     });
   }, [initial, form]);
 
@@ -93,13 +87,13 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
   };
 
   const handleFinish = async (values: any) => {
-    const { coverImageUrl, authorAvatarUrl, authorAvatar, ...rest } = values;
+    // The byline is not in this form. The API takes it from whoever is signed
+    // in, and records it as a copy — so an article keeps the name and the
+    // photograph of the person who wrote it, whatever happens to them later.
+    const { coverImageUrl, thumbnailUrl, ...rest } = values;
     void coverImageUrl;
-    void authorAvatarUrl;
-    await onSubmit({
-      ...rest,
-      author: { ...(rest.author || {}), avatar: authorAvatar || null },
-    });
+    void thumbnailUrl;
+    await onSubmit(rest);
   };
 
   return (
@@ -225,48 +219,20 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
           </Form.Item>
         </Card>
 
-        <Card title="The byline">
+        <Card title="Images">
+          <p className="mb-4 text-xs text-secondary-500">
+            Two different crops doing two different jobs. The cover is wide and
+            carries the headline over it on the article page; the thumbnail is
+            close and has to read at a couple of hundred pixels in the card.
+            Leave the thumbnail empty and the card falls back to the cover.
+          </p>
           <Row gutter={16}>
             <Col xs={24} md={12}>
               <Form.Item
-                label="Author"
-                name={["author", "name"]}
-                rules={[{ required: true, message: "Who wrote it?" }]}
-                tooltip="A byline, not a login. Guest contributors get one too."
+                label="Cover image"
+                name="coverImageUrl"
+                tooltip="The wide banner on the article page. Landscape, roughly 16:9."
               >
-                <Input placeholder="Tanvir Ahmed" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Author (Bangla)" name={["author", "nameBn"]}>
-                <Input placeholder="তানভীর আহমেদ" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Author role" name={["author", "role"]}>
-                <Input placeholder="Senior Market Analyst" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Author role (Bangla)" name={["author", "roleBn"]}>
-                <Input placeholder="সিনিয়র মার্কেট বিশ্লেষক" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Author photo" name="authorAvatarUrl">
-                <UploadMedia
-                  form={form}
-                  fieldPath="authorAvatarUrl"
-                  idFieldPath="authorAvatar"
-                  type="image"
-                />
-              </Form.Item>
-              <Form.Item name="authorAvatar" hidden>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Cover image" name="coverImageUrl">
                 <UploadMedia
                   form={form}
                   fieldPath="coverImageUrl"
@@ -275,6 +241,23 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
                 />
               </Form.Item>
               <Form.Item name="coverImage" hidden>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Thumbnail"
+                name="thumbnailUrl"
+                tooltip="The card image on the blog index. Squarer, and cropped closer."
+              >
+                <UploadMedia
+                  form={form}
+                  fieldPath="thumbnailUrl"
+                  idFieldPath="thumbnail"
+                  type="image"
+                />
+              </Form.Item>
+              <Form.Item name="thumbnail" hidden>
                 <Input />
               </Form.Item>
             </Col>
