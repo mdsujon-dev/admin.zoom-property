@@ -76,6 +76,11 @@ export interface CmsRepeatable {
   addButtonText?: string;
   /** How many blank items to show before anything has been saved. */
   initialCount?: number;
+  /**
+   * Which item field names the row in the editor's heading. Defaults to
+   * `title`; a list whose rows have no title says so here.
+   */
+  titleSuffix?: string;
   itemFields: CmsRepeatableField[];
   /** What the site ships today, so an untouched list still has its text. */
   defaultItems?: Record<string, string>[];
@@ -353,94 +358,126 @@ export const cmsPages: CmsPageDef[] = [
             key: "statsBanner.backgroundImage",
             label: "Background Image",
             type: "image",
+            groupHeader: "Background",
+            hint: "The photograph behind the numbers. Wide and dark-tolerant — a dark overlay sits on top so the white figures stay readable. About 2400px wide.",
             en: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
             bn: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
           },
           {
             key: "statsBanner.stat1Value",
-            label: "Stat1 Value",
+            label: "Number",
             type: "text",
+            groupHeader: "Stat 1",
+            hint: "Digits only — the site counts up to it. Put any + or k in the suffix box.",
             en: "8",
             bn: "8",
           },
           {
             key: "statsBanner.stat1Suffix",
-            label: "Stat1 Suffix",
+            label: "Suffix",
             type: "text",
+            hint: "What follows the number: k+, +, %. Leave empty for a bare figure.",
             en: "k+",
             bn: "k+",
           },
           {
             key: "statsBanner.stat1Label",
-            label: "Stat1 Label",
+            label: "Label",
             type: "text",
+            hint: "How many, and of what. Two or three words — it sits under the figure on one line.",
             en: "Projects completed",
             bn: "সম্পূর্ণ প্রজেক্ট",
           },
           {
             key: "statsBanner.stat2Value",
-            label: "Stat2 Value",
+            label: "Number",
             type: "text",
+            groupHeader: "Stat 2",
+            hint: "Digits only — the site counts up to it. Put any + or k in the suffix box.",
             en: "3",
             bn: "3",
           },
           {
             key: "statsBanner.stat2Suffix",
-            label: "Stat2 Suffix",
+            label: "Suffix",
             type: "text",
+            hint: "What follows the number: k+, +, %. Leave empty for a bare figure.",
             en: "k+",
             bn: "k+",
           },
           {
             key: "statsBanner.stat2Label",
-            label: "Stat2 Label",
+            label: "Label",
             type: "text",
+            hint: "How many, and of what.",
             en: "Global customers",
             bn: "গ্লোবাল গ্রাহক",
           },
           {
             key: "statsBanner.stat3Value",
-            label: "Stat3 Value",
+            label: "Number",
             type: "text",
+            groupHeader: "Stat 3",
+            hint: "Digits only — the site counts up to it. Put any + or k in the suffix box.",
             en: "20",
             bn: "20",
           },
           {
             key: "statsBanner.stat3Suffix",
-            label: "Stat3 Suffix",
+            label: "Suffix",
             type: "text",
+            hint: "What follows the number: k+, +, %. Leave empty for a bare figure.",
             en: "+",
             bn: "+",
           },
           {
             key: "statsBanner.stat3Label",
-            label: "Stat3 Label",
+            label: "Label",
             type: "text",
+            hint: "How many, and of what.",
             en: "Years of experience",
             bn: "বছরের অভিজ্ঞতা",
           },
           {
             key: "statsBanner.stat4Value",
-            label: "Stat4 Value",
+            label: "Number",
             type: "text",
+            groupHeader: "Stat 4",
+            hint: "Digits only — the site counts up to it. Put any + or k in the suffix box.",
             en: "95",
             bn: "95",
           },
           {
             key: "statsBanner.stat4Suffix",
-            label: "Stat4 Suffix",
+            label: "Suffix",
             type: "text",
+            hint: "What follows the number: k+, +, %. Leave empty for a bare figure.",
             en: "+",
             bn: "+",
           },
           {
             key: "statsBanner.stat4Label",
-            label: "Stat4 Label",
+            label: "Label",
             type: "text",
+            hint: "How many, and of what.",
             en: "Team engineers",
             bn: "টিম ইঞ্জিনিয়ার",
           },
         ],
+      },
+      {
+        id: "homeReviews",
+        label: "Client reviews",
+        fields: [
+          {
+            key: "reviews.homeTitle",
+            label: "Title",
+            type: "text",
+            hint: "The only text in this block — everything under it is the review videos themselves. Keep it to a few words: it is centred and sits on one line on desktop.",
+            en: "What our clients say",
+            bn: "আমাদের ক্লায়েন্টরা কী বলেন"
+          }
+        ]
       },
       {
         id: "videoSection",
@@ -517,6 +554,20 @@ export const cmsPages: CmsPageDef[] = [
             bn: "পরবর্তী ভিডিও",
           },
         ],
+      },
+      {
+        id: "homeBlog",
+        label: "Blog",
+        fields: [
+          {
+            key: "blog.homeTitle",
+            label: "Title",
+            type: "text",
+            hint: "The heading over the three article cards. Separate from the /blog page's own banner title, which is under CMS → Blog.",
+            en: "Explore News, Insights and Guides",
+            bn: "রিয়েল এস্টেট সংবাদ, বিশ্লেষণ ও গাইড"
+          }
+        ]
       },
       {
         id: "cta",
@@ -1274,6 +1325,165 @@ export const cmsPages: CmsPageDef[] = [
             bn: "এলাকা, বাজেট আর কবে উঠতে চান জানান। আমরা বাছাই তালিকা, কাগজপত্র আর সব খরচ এক পাতায় নিয়ে ফিরে আসব।",
           },
         ],
+      },
+      {
+        id: "contact-details",
+        label: "Contact details",
+        fields: [
+          {
+            key: "contact.channels.call",
+            label: "Card 1 — Label",
+            type: "text",
+            groupHeader: "Call the desk",
+            hint: "The small grey line above the number.",
+            en: "Call the desk",
+            bn: "সরাসরি ফোন"
+          },
+          {
+            key: "contact.details.phone",
+            label: "Phone number",
+            type: "text",
+            hint: "Written the way it is read: +880 1958 253301. The dialler strips the spaces itself.",
+            en: "+880 1958 253301",
+            bn: "+880 1958 253301"
+          },
+          {
+            key: "contact.channels.callNote",
+            label: "Card 1 — Note",
+            type: "text",
+            hint: "The line under the number. Opening hours, usually.",
+            en: "Sat–Thu, 9am – 8pm BST",
+            bn: "শনি–বৃহস্পতি, সকাল ৯টা – রাত ৮টা"
+          },
+          {
+            key: "contact.channels.whatsapp",
+            label: "Card 2 — Label",
+            type: "text",
+            groupHeader: "WhatsApp",
+            hint: "The small grey line above the number.",
+            en: "WhatsApp",
+            bn: "হোয়াটসঅ্যাপ"
+          },
+          {
+            key: "contact.details.whatsapp",
+            label: "WhatsApp number",
+            type: "text",
+            hint: "Can differ from the phone number if WhatsApp is on another line.",
+            en: "+880 1958 253301",
+            bn: "+880 1958 253301"
+          },
+          {
+            key: "contact.channels.whatsappNote",
+            label: "Card 2 — Note",
+            type: "text",
+            hint: "The line under the number.",
+            en: "Best for photos and documents",
+            bn: "ছবি ও কাগজপত্র পাঠাতে সবচেয়ে ভালো"
+          },
+          {
+            key: "contact.channels.email",
+            label: "Card 3 — Label",
+            type: "text",
+            groupHeader: "Email",
+            hint: "The small grey line above the address.",
+            en: "Email",
+            bn: "ইমেইল"
+          },
+          {
+            key: "contact.details.email",
+            label: "Email address",
+            type: "text",
+            hint: "Opens the visitor's mail app. One address only.",
+            en: "concierge@zoomproperty.com",
+            bn: "concierge@zoomproperty.com"
+          },
+          {
+            key: "contact.channels.emailNote",
+            label: "Card 3 — Note",
+            type: "text",
+            hint: "The line under the address.",
+            en: "Replies within one business hour",
+            bn: "এক কর্মঘণ্টার মধ্যে উত্তর"
+          },
+          {
+            key: "contact.offices",
+            label: "Offices heading",
+            type: "text",
+            groupHeader: "Offices",
+            hint: "The heading on the box under the three cards.",
+            en: "Offices",
+            bn: "অফিস"
+          },
+          {
+            key: "contact.dhaka",
+            label: "Office 1 — City",
+            type: "text",
+            en: "Dhaka",
+            bn: "ঢাকা"
+          },
+          {
+            key: "contact.details.dhakaAddress",
+            label: "Office 1 — Address",
+            type: "textarea",
+            hint: "Also shown in the footer.",
+            en: "House 42, Road 11, Block D, Banani & Gulshan Avenue, Dhaka",
+            bn: "হাউস ৪২, রোড ১১, ব্লক ডি, বনানী ও গুলশান অ্যাভিনিউ, ঢাকা"
+          },
+          {
+            key: "contact.chattogram",
+            label: "Office 2 — City",
+            type: "text",
+            en: "Chattogram",
+            bn: "চট্টগ্রাম"
+          },
+          {
+            key: "contact.details.chattogramAddress",
+            label: "Office 2 — Address",
+            type: "textarea",
+            en: "CDA Avenue, GEC Circle & Khulshi",
+            bn: "সিডিএ অ্যাভিনিউ, জিইসি মোড় ও খুলশী"
+          }
+        ]
+      },
+      {
+        id: "contact-social",
+        label: "Social links",
+        fields: [],
+        repeatable: {
+          itemPrefix: "contact.social",
+          itemName: "Social link",
+          addButtonText: "+ Add social link",
+          initialCount: 6,
+          titleSuffix: "label",
+          itemFields: [
+            {
+              suffix: "icon",
+              label: "Icon",
+              type: "icon",
+              hint: "A Font Awesome class, e.g. fa-brands fa-facebook-f. Any free icon works \u2014 search fontawesome.com and copy the class.",
+            },
+            {
+              suffix: "href",
+              label: "Link",
+              type: "url",
+              hint: "The full address, starting with https://",
+            },
+            {
+              suffix: "label",
+              label: "Name",
+              type: "text",
+              hint: "Read out by screen readers and shown on hover. Left blank, the site uses the site's own address.",
+            },
+          ],
+          defaultItems: [
+            { labelEn: "Facebook", labelBn: "Facebook", iconEn: "fa-brands fa-facebook-f", hrefEn: "https://facebook.com" },
+            { labelEn: "Instagram", labelBn: "Instagram", iconEn: "fa-brands fa-instagram", hrefEn: "https://instagram.com" },
+            { labelEn: "X", labelBn: "X", iconEn: "fa-brands fa-x-twitter", hrefEn: "https://x.com" },
+            { labelEn: "LinkedIn", labelBn: "LinkedIn", iconEn: "fa-brands fa-linkedin-in", hrefEn: "https://linkedin.com" },
+            { labelEn: "YouTube", labelBn: "YouTube", iconEn: "fa-brands fa-youtube", hrefEn: "https://youtube.com" },
+            { labelEn: "WhatsApp", labelBn: "WhatsApp", iconEn: "fa-brands fa-whatsapp", hrefEn: "https://wa.me/8801958253301" },
+          ],
+        },
       },
     ],
   },

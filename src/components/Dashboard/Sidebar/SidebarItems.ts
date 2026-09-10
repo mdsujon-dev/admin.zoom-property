@@ -81,6 +81,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Blog",
         icon: FileText,
       },
+      {
+        label: "Blog Categories",
+        address: "/blog/categories",
+        module: "Blog",
+        icon: FileText,
+      },
     ],
   },
   {

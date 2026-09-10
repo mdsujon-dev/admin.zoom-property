@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Space, Tag, Tooltip } from "antd";
+import { Button, Input, Modal, Select, Space, Switch, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { Edit, FileText, Plus, Search, Tags, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import {
   useDeletePostMutation,
   useGetBlogCategoriesQuery,
   useGetPostsQuery,
+  useUpdatePostMutation,
 } from "../../redux/features/blog/blogApi";
 import { mediaSrc } from "../../utils/mediaSrc";
 import BlogCategoriesModal from "./BlogCategoriesModal";
@@ -36,7 +37,9 @@ const Blog = () => {
     category,
   });
   const { data: categories = [] } = useGetBlogCategoriesQuery({});
+  const [updatePost] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
@@ -56,6 +59,19 @@ const Blog = () => {
         }
       },
     });
+
+  const onToggleStatus = async (id: string, currentStatus: string) => {
+    setBusyId(id);
+    const newStatus = currentStatus === "published" ? "draft" : "published";
+    try {
+      await updatePost({ id, data: { status: newStatus } }).unwrap();
+      toast.success(`Article ${newStatus === "published" ? "published" : "unpublished"}`);
+    } catch (e: any) {
+      toast.error(e?.data?.message || "Could not update status");
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const columns = [
     {
@@ -96,11 +112,20 @@ const Blog = () => {
       },
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
+      title: "Categories",
+      dataIndex: "categories",
+      key: "categories",
       width: 150,
-      render: (c: any) => (c?.name ? <Tag>{c.name}</Tag> : "—"),
+      render: (cats: any[]) =>
+        cats && cats.length > 0 ? (
+          <Space size={2} wrap>
+            {cats.map((c: any) => (
+              <Tag key={c._id}>{c.name}</Tag>
+            ))}
+          </Space>
+        ) : (
+          "—"
+        ),
     },
     {
       title: "Home",
@@ -121,8 +146,14 @@ const Blog = () => {
       key: "status",
       width: 150,
       render: (s: string, r: any) => (
-        <Space size={4}>
-          <Tag color={s === "published" ? "green" : "default"}>{s}</Tag>
+        <Space size={8}>
+          <Switch
+            checked={s === "published"}
+            onChange={() => onToggleStatus(r._id, s)}
+            loading={busyId === r._id}
+            checkedChildren="Pub"
+            unCheckedChildren="Draft"
+          />
           {r.featured && <Tag color="gold">Featured</Tag>}
         </Space>
       ),
@@ -183,14 +214,6 @@ const Blog = () => {
         breadcrumbs={[{ title: "Dashboard", path: "/" }, { title: "Blog" }]}
         extra={
           <Space>
-            <PermissionGate module="Blog" action="Update">
-              <Button
-                icon={<Tags className="h-4 w-4" />}
-                onClick={() => setCatsOpen(true)}
-              >
-                Categories
-              </Button>
-            </PermissionGate>
             <PermissionGate module="Blog" action="Create">
               <Button
                 type="primary"

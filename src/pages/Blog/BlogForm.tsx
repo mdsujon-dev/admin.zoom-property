@@ -61,7 +61,7 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
     if (!initial) return;
     form.setFieldsValue({
       ...initial,
-      category: initial.category?._id ?? initial.category,
+      categories: initial.categories?.map((c: any) => c._id ?? c) || [],
       coverImage: initial.coverImage?._id ?? initial.coverImage,
       coverImageUrl: mediaSrc(initial.coverImage),
       thumbnail: initial.thumbnail?._id ?? initial.thumbnail,
@@ -142,11 +142,12 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
             </Col>
             <Col xs={24} md={8}>
               <Form.Item
-                label="Category"
-                name="category"
-                rules={[{ required: true, message: "Pick a category" }]}
+                label="Categories"
+                name="categories"
+                rules={[{ required: true, message: "Pick at least one category" }]}
               >
                 <Select
+                  mode="multiple"
                   showSearch
                   optionFilterProp="label"
                   placeholder="Select a category"

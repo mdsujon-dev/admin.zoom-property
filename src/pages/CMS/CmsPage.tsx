@@ -407,7 +407,7 @@ const SectionForm = ({
   };
 
   const fieldGroups = useMemo(() => {
-    const groups: { header?: string; fields: CmsField[] }[] = [];
+    const groups: { header?: string; fields: CmsField[]; n?: number }[] = [];
     let currentGroup: { header?: string; fields: CmsField[] } | null = null;
 
     for (const field of section.fields) {
@@ -421,6 +421,13 @@ const SectionForm = ({
       }
     }
     if (currentGroup) groups.push(currentGroup);
+
+    // Number the titled cards 1, 2, 3 in their own sequence. Using the array
+    // index numbered a section that opens with a few loose fields from 2, and
+    // a card badge that does not match the card above it is worse than none.
+    let n = 0;
+    for (const group of groups) if (group.header) group.n = ++n;
+
     return groups;
   }, [section.fields]);
 
@@ -494,7 +501,7 @@ const SectionForm = ({
             {group.header && (
               <div className="mb-3 flex items-center gap-2 border-b border-secondary-200/80 pb-2.5">
                 <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary-100 text-[11px] font-bold text-primary-700 border border-primary-200">
-                  {gIdx + 1}
+                  {group.n}
                 </span>
                 <span className="text-xs font-bold uppercase tracking-wider text-secondary-800">
                   {group.header}
@@ -515,10 +522,10 @@ const SectionForm = ({
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-semibold text-secondary-900">
-                  {repeatable.itemName} List ({repeatableIndices.length} টি ধাপ)
+                  {repeatable.itemName} List ({repeatableIndices.length} টি)
                 </h4>
                 <p className="text-xs text-secondary-500">
-                  যেকোনো ধাপের বিবরণ পরিবর্তন করুন বা নিচে থেকে নতুন ধাপ যোগ করুন
+                  যেকোনো আইটেম পরিবর্তন করুন, নতুন যোগ করুন বা মুছে ফেলুন
                 </p>
               </div>
               <Button
@@ -546,7 +553,11 @@ const SectionForm = ({
                           {stageNum}
                         </span>
                         <span className="text-xs font-bold uppercase tracking-wider text-secondary-800">
-                          Stage {String(stageNum).padStart(2, "0")} — {form.getFieldValue(`${repeatable.itemPrefix}.${idx}.title|en`) || defaultItem?.titleEn || `Process ${stageNum}`}
+                          {/* Named by whichever item field carries the row's
+                              name — "title" for a process, "label" for a
+                              social link — so the heading reads as the list
+                              it belongs to rather than always as a stage. */}
+                          {repeatable.itemName} {String(stageNum).padStart(2, "0")} — {form.getFieldValue(`${repeatable.itemPrefix}.${idx}.${repeatable.titleSuffix || "title"}|en`) || defaultItem?.[`${repeatable.titleSuffix || "title"}En`] || `${repeatable.itemName} ${stageNum}`}
                         </span>
                       </div>
                       <Popconfirm
