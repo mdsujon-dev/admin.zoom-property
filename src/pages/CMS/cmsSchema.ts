@@ -814,6 +814,12 @@ export const cmsPages: CmsPageDef[] = [
           itemName: "Stat",
           addButtonText: "Add stat",
           initialCount: 4,
+          defaultItems: [
+            { valueEn: "4850", suffixEn: " Cr+", compactEn: "true", labelEn: "Portfolio value vetted", valueBn: "৪৮৫০", suffixBn: " কোটি+", compactBn: "true", labelBn: "পোর্টফোলিও মূল্য পরীক্ষিত" },
+            { valueEn: "13312", suffixEn: "+", compactEn: "true", labelEn: "RAJUK-cleared listings", valueBn: "১৩৩১২", suffixBn: "+", compactBn: "true", labelBn: "রাজউক-অনুমোদিত লিস্টিং" },
+            { valueEn: "99.4", suffixEn: "%", compactEn: "false", labelEn: "On-time handover rate", valueBn: "৯৯.৪", suffixBn: "%", compactBn: "false", labelBn: "সময়মতো হস্তান্তরের হার" },
+            { valueEn: "32", suffixEn: "", compactEn: "false", labelEn: "Median days to close", valueBn: "৩২", suffixBn: "", compactBn: "false", labelBn: "ক্লোজ করার গড় দিন" }
+          ],
           itemFields: [
             { suffix: "value", label: "Number Value", type: "text", hint: "Just the number (e.g. 4850 or 99)" },
             { suffix: "suffix", label: "Suffix", type: "text", hint: "e.g. Cr+ or %" },
@@ -827,84 +833,76 @@ export const cmsPages: CmsPageDef[] = [
         label: "Vetting",
         fields: [
           {
-            key: "pages.vetting.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            hint: "Short eyebrow text (e.g., 'Our standard').",
-            en: "Our standard",
-            bn: "আমাদের মান"
-          },
-          {
             key: "pages.vetting.title",
             label: "Title",
             type: "text",
-            hint: "Main heading.",
+            hint: "Main heading. It sits alone above the photograph, so keep it to one line.",
             en: "What a listing has to pass",
-            bn: "লিস্টিং হতে যা পাস করতে হয়"
+            bn: "একটি লিস্টিংকে যা যা পেরোতে হয়"
           },
           {
-            key: "pages.vetting.description",
-            label: "Description",
-            type: "textarea",
-            hint: "Short paragraph describing the process.",
-            en: "Seven checks. If one fails, the listing does not go online — which is why you find fewer results here than on the big portals.",
-            bn: "সাতটি চেক। একটি ব্যর্থ হলে, লিস্টিং অনলাইনে যায় না — যে কারণে আপনি বড় পোর্টালগুলোর চেয়ে এখানে কম ফলাফল পাবেন।"
+            key: "pages.vetting.image",
+            label: "Image",
+            type: "image",
+            hint: "Sits under the title, beside the checks. Landscape 4:3, about 1200x900px. Shown on desktop only.",
+            en: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+            bn: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
           },
           {
             key: "pages.vetting.checks.0",
             label: "Check 1",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "RAJUK approved plan, matched against what is actually built",
-            bn: "রাজউক অনুমোদিত প্ল্যান, যা আসলে তৈরি হয়েছে তার সাথে মেলানো হয়"
+            bn: "রাজউক অনুমোদিত নকশা, বাস্তবে যা নির্মিত তার সঙ্গে মিলিয়ে দেখা"
           },
           {
             key: "pages.vetting.checks.1",
             label: "Check 2",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Title deed traced through the CS, SA, RS and BS records",
-            bn: "CS, SA, RS এবং BS রেকর্ডের মাধ্যমে টাইটেল ডিড ট্রেস করা হয়"
+            bn: "সিএস, এসএ, আরএস ও বিএস রেকর্ড ধরে দলিলের ধারাবাহিকতা"
           },
           {
             key: "pages.vetting.checks.2",
             label: "Check 3",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Mutation in the current owner name",
             bn: "বর্তমান মালিকের নামে নামজারি"
           },
           {
             key: "pages.vetting.checks.3",
             label: "Check 4",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Non-encumbrance certificate from the sub-registry",
-            bn: "সাব-রেজিস্ট্রি থেকে নন-এনকামব্রেন্স সার্টিফিকেট"
+            bn: "সাব-রেজিস্ট্রি থেকে নির্দায় সনদ"
           },
           {
             key: "pages.vetting.checks.4",
             label: "Check 5",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Physical inspection by our surveyor, dated",
-            bn: "আমাদের সার্ভেয়ার দ্বারা তারিখসহ ফিজিক্যাল ইন্সপেকশন"
+            bn: "আমাদের সার্ভেয়ারের সরেজমিন পরিদর্শন, তারিখসহ"
           },
           {
             key: "pages.vetting.checks.5",
             label: "Check 6",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Our own photography, taken the same month",
-            bn: "আমাদের নিজেদের তোলা ছবি, একই মাসে তোলা"
+            bn: "আমাদের নিজেদের তোলা ছবি, একই মাসের"
           },
           {
             key: "pages.vetting.checks.6",
             label: "Check 7",
-            type: "textarea",
-            hint: "Keep it under 15 words so it fits in a single or double line.",
+            type: "text",
+            hint: "Keep it under 15 words: each check is one row, one or two lines.",
             en: "Asking price confirmed by the owner in writing",
-            bn: "মালিকের দ্বারা লিখিতভাবে নিশ্চিতকৃত দাম"
+            bn: "মালিকের চাওয়া দাম লিখিতভাবে নিশ্চিত"
           }
         ]
       },
@@ -934,6 +932,13 @@ export const cmsPages: CmsPageDef[] = [
           itemName: "Milestone",
           addButtonText: "Add milestone",
           initialCount: 5,
+          defaultItems: [
+            { yearEn: "2018", titleEn: "Started as two agents", bodyEn: "A Gulshan desk and one promise: no listing without the deed.", yearBn: "২০১৮", titleBn: "দুজন এজেন্ট হিসেবে শুরু", bodyBn: "গুলশানে একটি ডেস্ক এবং একটি প্রতিশ্রুতি: দলিল ছাড়া কোনো লিস্টিং নয়।" },
+            { yearEn: "2020", titleEn: "First legal team", bodyEn: "Brought a Bar Council lawyer in-house rather than outsourcing verification.", yearBn: "২০২০", titleBn: "প্রথম লিগ্যাল টিম", bodyBn: "ভেরিফিকেশন আউটসোর্স করার বদলে একজন বার কাউন্সিল আইনজীবীকে ইন-হাউস নিয়োগ।" },
+            { yearEn: "2022", titleEn: "Construction audits", bodyEn: "Began monthly site inspections so progress figures came from us, not from developers.", yearBn: "২০২২", titleBn: "কনস্ট্রাকশন অডিট", bodyBn: "মাসিক সাইট পরিদর্শন শুরু, যাতে অগ্রগতির তথ্য ডেভেলপারদের নয়, আমাদের থেকে আসে।" },
+            { yearEn: "2024", titleEn: "Non-resident desk", bodyEn: "Consular power of attorney handling for buyers who could not fly back.", yearBn: "২০২৪", titleBn: "নন-রেসিডেন্ট ডেস্ক", bodyBn: "যে ক্রেতারা দেশে ফিরতে পারেন না তাদের জন্য কনস্যুলার পাওয়ার অব অ্যাটর্নি পরিচালনা।" },
+            { yearEn: "2026", titleEn: "Chattogram office", bodyEn: "Khulshi and CDA Avenue, run exactly the way Dhaka is.", yearBn: "২০২৬", titleBn: "চট্টগ্রাম অফিস", bodyBn: "খুলশী এবং সিডিএ অ্যাভিনিউ, ঠিক ঢাকার মতোই পরিচালিত।" }
+          ],
           itemFields: [
             { suffix: "year", label: "Year", type: "text", hint: "4-digit year (e.g., 2024)." },
             { suffix: "title", label: "Title", type: "text", hint: "Short milestone title (e.g., 3-5 words)." },
