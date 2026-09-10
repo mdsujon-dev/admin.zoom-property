@@ -117,6 +117,14 @@ export const cmsPages: CmsPageDef[] = [
         label: "Hero",
         fields: [
           {
+            key: "hero.backgroundImages",
+            label: "Background images",
+            type: "images",
+            hint: "The photographs that fade one into the next behind the hero. Landscape, about 2000px wide. Add as many as you like \u2014 one is a still background.",
+            en: "[]",
+            bn: "[]"
+          },
+          {
             key: "hero.badge",
             label: "Badge",
             type: "text",
@@ -140,38 +148,18 @@ export const cmsPages: CmsPageDef[] = [
         ],
       },
       {
-        id: "hero.trust",
-        label: "Hero · Trust",
+        id: "listings",
+        label: "Listings",
         fields: [
           {
-            key: "hero.trust.rajuk",
-            label: "Rajuk",
+            key: "listings.title",
+            label: "Title",
             type: "text",
-            en: "RAJUK plan verified",
-            bn: "রাজউক নকশা যাচাই করা",
-          },
-          {
-            key: "hero.trust.reply",
-            label: "Reply",
-            type: "text",
-            en: "Advisors reply in ~11 min",
-            bn: "উত্তর আসে ~১১ মিনিটে",
-          },
-          {
-            key: "hero.trust.photos",
-            label: "Photos",
-            type: "text",
-            en: "Photos dated this month",
-            bn: "এ মাসেই তোলা ছবি",
-          },
-          {
-            key: "hero.trust.fees",
-            label: "Fees",
-            type: "text",
-            en: "Stamp duty itemised",
-            bn: "স্ট্যাম্প ডিউটি আলাদা করে লেখা",
-          },
-        ],
+            hint: "The heading over the six property cards. The \"All Properties\" button beside it is fixed.",
+            en: "Verified residences and commercial floors",
+            bn: "যাচাই করা ফ্ল্যাট ও বাণিজ্যিক ফ্লোর"
+          }
+        ]
       },
       {
         id: "showcase",
@@ -229,126 +217,64 @@ export const cmsPages: CmsPageDef[] = [
         ],
       },
       {
-        id: "features",
-        label: "Features",
+        id: "areasSection",
+        label: "Areas",
         fields: [
           {
-            key: "features.eyebrow",
-            label: "Eyebrow",
+            key: "areas.service.titleLead",
+            label: "Title \u2014 before the accent",
             type: "text",
-            en: "Institutional integrity",
-            bn: "প্রাতিষ্ঠানিক সততা",
+            hint: "The heading is three boxes so the green words can sit anywhere in the sentence \u2014 English and Bangla do not put them in the same place. Keep the trailing space.",
+            en: "We Serve Across ",
+            bn: "আমরা আছি "
           },
           {
-            key: "features.title",
-            label: "Title",
+            key: "areas.service.titleAccent",
+            label: "Title \u2014 the green words",
             type: "text",
-            en: "The quality and legal safeguard",
-            bn: "মান ও আইনি সুরক্ষা",
+            hint: "Printed in brand green.",
+            en: "Dhaka & Nearby Areas",
+            bn: "ঢাকা ও আশপাশের এলাকাজুড়ে"
           },
           {
-            key: "features.description",
-            label: "Description",
-            type: "textarea",
-            en: "The vetting that separates us from an unmoderated classifieds portal. None of it is clever — it is the work most portals skip because nobody checks.",
-            bn: "যে যাচাই আমাদের সাধারণ বিজ্ঞাপন পোর্টাল থেকে আলাদা করে। এর কোনোটাই কঠিন কাজ নয় — শুধু বেশিরভাগ পোর্টাল এড়িয়ে যায়, কারণ কেউ দেখতে আসে না।",
-          },
-        ],
+            key: "areas.service.titleTail",
+            label: "Title \u2014 after the accent",
+            type: "text",
+            hint: "Often empty. Used when the sentence continues past the green words.",
+            en: "",
+            bn: ""
+          }
+        ]
       },
       {
-        id: "gallery",
-        label: "Gallery",
+        id: "projectsSection",
+        label: "Projects",
         fields: [
           {
-            key: "gallery.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Architectural photography",
-            bn: "স্থাপত্য আলোকচিত্র",
-          },
-          {
-            key: "gallery.title",
+            key: "projects.homeTitle",
             label: "Title",
             type: "text",
-            en: "Our photographs, not CGI renders",
-            bn: "আমাদের তোলা ছবি, কম্পিউটারের নকশা নয়",
+            hint: "The only text in this block — the cards under it carry the stage, the permit and the handover date. Separate from the /projects page's own banner title, which is under CMS → Projects.",
+            en: "Milestone progress you can audit",
+            bn: "অগ্রগতি নিজে যাচাই করুন"
           },
           {
-            key: "gallery.description",
-            label: "Description",
-            type: "textarea",
-            en: "Click any photograph for the full-screen pinch-and-zoom viewer.",
-            bn: "যেকোনো ছবিতে ক্লিক করলে পূর্ণ পর্দায় জুম করে দেখা যাবে।",
-          },
-        ],
-      },
-      {
-        id: "faq",
-        label: "Faq",
-        fields: [
-          {
-            key: "faq.eyebrow",
-            label: "Eyebrow",
+            key: "projects.allProjects",
+            label: "Button text",
             type: "text",
-            en: "FAQ",
-            bn: "সাধারণ প্রশ্ন",
+            hint: "The link at the top right of the block.",
+            en: "View All Projects",
+            bn: "সবগুলো প্রজেক্ট দেখুন"
           },
           {
-            key: "faq.title",
-            label: "Title",
-            type: "text",
-            en: "Legal, financial and handover questions",
-            bn: "আইনি, আর্থিক ও হস্তান্তর সংক্রান্ত প্রশ্ন",
-          },
-          {
-            key: "faq.description",
-            label: "Description",
-            type: "textarea",
-            en: "Something specific about deed mutation or consular power of attorney? Call the desk — someone picks up.",
-            bn: "নামজারি বা কনস্যুলার আমমোক্তারনামা নিয়ে নির্দিষ্ট কিছু জানার আছে? ফোন করুন — কেউ না কেউ ধরবেন।",
-          },
-        ],
-      },
-      {
-        id: "rooms",
-        label: "Rooms",
-        fields: [
-          {
-            key: "rooms.pill",
-            label: "Pill",
-            type: "text",
-            en: "Room details",
-            bn: "ঘরের বিবরণ",
-          },
-          {
-            key: "rooms.title",
-            label: "Title",
-            type: "text",
-            en: "Comfortable rooms",
-            bn: "আরামদায়ক ঘর",
-          },
-          {
-            key: "rooms.description",
-            label: "Description",
-            type: "textarea",
-            en: "A walkthrough of a representative three-bedroom home in Gulshan — what each room actually measures, and what comes with it.",
-            bn: "গুলশানের একটি তিন-বেডরুম ফ্ল্যাট ঘুরে দেখা — কোন ঘর আসলে কত বড়, আর সাথে কী কী থাকছে।",
-          },
-          {
-            key: "rooms.readMore",
-            label: "Read More",
-            type: "text",
-            en: "Read more",
-            bn: "বিস্তারিত",
-          },
-          {
-            key: "rooms.expand",
-            label: "Expand",
-            type: "text",
-            en: "Show details for",
-            bn: "বিস্তারিত দেখুন:",
-          },
-        ],
+            key: "projects.actionLink",
+            label: "Button link",
+            type: "url",
+            hint: "Where that button goes. A path on this site, e.g. /projects",
+            en: "/projects",
+            bn: "/projects"
+          }
+        ]
       },
       {
         id: "statsBanner",
@@ -484,76 +410,14 @@ export const cmsPages: CmsPageDef[] = [
         label: "Video Section",
         fields: [
           {
-            key: "videoSection.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Virtual Property Tours",
-            bn: "ভার্চুয়াল প্রপার্টি ট্যুর",
-          },
-          {
             key: "videoSection.title",
             label: "Title",
             type: "text",
+            hint: "The only text in this block \u2014 everything under it is the videos themselves. It sits on the dark backdrop, centred.",
             en: "Experience Luxury Living in Motion",
-            bn: "ভিডিওতে দেখুন আমাদের লাক্সারি প্রপার্টি",
-          },
-          {
-            key: "videoSection.description",
-            label: "Description",
-            type: "textarea",
-            en: "Immerse yourself in cinematic walkthroughs, architectural inspections, and exclusive project showcases verified by Zoom Property & Zoom IT.",
-            bn: "জুম প্রপার্টি ও জুম আইটি দ্বারা ভেরিফাইড সিনেমাটিক প্রপার্টি ওয়াকথ্রু, আর্কিটেকচারাল ডিজাইন এবং লাইভ কনস্ট্রাকশন আপডেট দেখুন।",
-          },
-          {
-            key: "videoSection.channelBadge",
-            label: "Channel Badge",
-            type: "text",
-            en: "Official Zoom IT Channel",
-            bn: "অফিসিয়াল জুম আইটি চ্যানেল",
-          },
-          {
-            key: "videoSection.channelAction",
-            label: "Channel Action",
-            type: "text",
-            en: "YouTube Channel",
-            bn: "ইউটিউব চ্যানেল",
-          },
-          {
-            key: "videoSection.play",
-            label: "Play",
-            type: "text",
-            en: "Play Video",
-            bn: "ভিডিও দেখুন",
-          },
-          {
-            key: "videoSection.close",
-            label: "Close",
-            type: "text",
-            en: "Close Player",
-            bn: "ভিডিও বন্ধ করুন",
-          },
-          {
-            key: "videoSection.verified",
-            label: "Verified",
-            type: "text",
-            en: "Verified Walkthrough",
-            bn: "ভেরিফাইড ওয়াকথ্রু",
-          },
-          {
-            key: "videoSection.prev",
-            label: "Prev",
-            type: "text",
-            en: "Previous video",
-            bn: "পূর্ববর্তী ভিডিও",
-          },
-          {
-            key: "videoSection.next",
-            label: "Next",
-            type: "text",
-            en: "Next video",
-            bn: "পরবর্তী ভিডিও",
-          },
-        ],
+            bn: "ভিডিওতে দেখুন আমাদের লাক্সারি প্রপার্টি"
+          }
+        ]
       },
       {
         id: "homeBlog",
@@ -568,40 +432,6 @@ export const cmsPages: CmsPageDef[] = [
             bn: "রিয়েল এস্টেট সংবাদ, বিশ্লেষণ ও গাইড"
           }
         ]
-      },
-      {
-        id: "cta",
-        label: "Cta",
-        fields: [
-          {
-            key: "cta.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Uncompromising transparency",
-            bn: "সম্পূর্ণ স্বচ্ছতা",
-          },
-          {
-            key: "cta.title",
-            label: "Title",
-            type: "text",
-            en: "Ready to see the shortlist?",
-            bn: "বাছাই তালিকা দেখতে প্রস্তুত?",
-          },
-          {
-            key: "cta.description",
-            label: "Description",
-            type: "textarea",
-            en: "Send us your criteria. We compile the title deed records, schedule the visits and put every statutory cost on one page before you decide.",
-            bn: "আপনার চাহিদা পাঠান। আমরা দলিলপত্র জোগাড় করব, ভিজিটের সময় ঠিক করব, আর সিদ্ধান্তের আগে সব সরকারি খরচ এক পাতায় দেব।",
-          },
-          {
-            key: "cta.contact",
-            label: "Contact",
-            type: "text",
-            en: "Contact the team",
-            bn: "আমাদের সঙ্গে যোগাযোগ",
-          },
-        ],
       },
     ],
   },
@@ -629,17 +459,18 @@ export const cmsPages: CmsPageDef[] = [
             bn: "বাছাই করা তালিকা",
           },
           {
-            key: "listings.title",
+            key: "listings.pageTitle",
             label: "Title",
             type: "text",
-            en: "Verified residences and commercial floors",
+            en: "Properties for sale and rent",
             bn: "যাচাই করা ফ্ল্যাট ও বাণিজ্যিক ফ্লোর",
           },
           {
-            key: "listings.description",
+            key: "listings.pageDescription",
             label: "Description",
+            hint: "Write {count} where the number of listings should go — the site fills it in.",
             type: "textarea",
-            en: "Every listing has been physically inspected by our survey team this month, with title deeds verified before it went online.",
+            en: "{count} listings, each physically inspected by our survey team and title-checked before upload. Filter by purpose, type and area below.",
             bn: "প্রতিটি লিস্টিং এ মাসে আমাদের সার্ভে দল সরেজমিনে দেখেছে, আর অনলাইনে ওঠার আগেই দলিল যাচাই করা হয়েছে।",
           },
         ],
@@ -671,17 +502,17 @@ export const cmsPages: CmsPageDef[] = [
             bn: "নির্মাণাধীন",
           },
           {
-            key: "projects.title",
+            key: "projects.pageTitle",
             label: "Title",
             type: "text",
-            en: "Milestone progress you can audit",
+            en: "Projects under construction",
             bn: "অগ্রগতি নিজে যাচাই করুন",
           },
           {
-            key: "projects.description",
+            key: "projects.pageDescription",
             label: "Description",
             type: "textarea",
-            en: "You pay in instalments for years before you get keys, so every project shows its audited structural stage and RAJUK permit — not a marketing render.",
+            en: "You pay in instalments for years before you get keys. Every project here shows its audited structural stage and permit number, updated monthly.",
             bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। তাই প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও রাজউক অনুমোদন দেখানো — বিজ্ঞাপনের ছবি নয়।",
           },
         ],
@@ -713,17 +544,17 @@ export const cmsPages: CmsPageDef[] = [
             bn: "আমাদের সার্ভিস এরিয়া ও লোকেশন",
           },
           {
-            key: "areas.title",
+            key: "areas.pageTitle",
             label: "Title",
             type: "text",
-            en: "Prime Service Areas Where We Sell Luxury Flats & Units",
+            en: "Service Areas for Luxury Flats",
             bn: "যেসব প্রাইম এরিয়ায় আমরা ফ্ল্যাট ও ইউনিট বিক্রি করি",
           },
           {
-            key: "areas.description",
+            key: "areas.pageDescription",
             label: "Description",
             type: "textarea",
-            en: "Discover Dhaka & Chattogram's most prestigious neighbourhoods where Zoom Property offers verified luxury apartments, duplexes, and residential units for sale.",
+            en: "Browse verified luxury apartments, duplexes, and commercial floors across Dhaka & Chattogram's most requested addresses.",
             bn: "ঢাকা ও চট্টগ্রামের শীর্ষ অভিজাত এলাকাগুলোতে জুম প্রপার্টির ভেরিফাইড লাক্সারি ফ্ল্যাট, ডুপ্লেক্স ও অ্যাপার্টমেন্ট বিক্রয় ও সার্ভিস লোকেশনসমূহ।",
           },
         ],
