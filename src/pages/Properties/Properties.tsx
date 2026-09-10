@@ -45,7 +45,7 @@ const Properties = () => {
   const [area, setArea] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  const { data, isFetching } = useGetPropertiesQuery({
+  const { data, isLoading } = useGetPropertiesQuery({
     page,
     limit,
     searchTerm: search || undefined,
@@ -362,7 +362,7 @@ const Properties = () => {
         setLimit={setLimit}
         total={total}
         isPaginate={total > limit}
-        loading={isFetching}
+        loading={isLoading}
         rowKey="_id"
       />
     </div>

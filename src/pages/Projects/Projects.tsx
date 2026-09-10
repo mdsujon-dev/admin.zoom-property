@@ -25,7 +25,7 @@ const Projects = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const { data, isFetching } = useGetProjectsQuery({
+  const { data, isLoading } = useGetProjectsQuery({
     page,
     limit,
     searchTerm: search || undefined,
@@ -328,7 +328,7 @@ const Projects = () => {
         setLimit={setLimit}
         total={total}
         isPaginate={total > limit}
-        loading={isFetching}
+        loading={isLoading}
         rowKey="_id"
       />
     </div>

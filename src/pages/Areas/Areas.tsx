@@ -27,7 +27,7 @@ const Areas = () => {
   const [open, setOpen] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  const { data, isFetching } = useGetAreasQuery({
+  const { data, isLoading } = useGetAreasQuery({
     page,
     limit,
     searchTerm: search || undefined,
@@ -278,7 +278,7 @@ const Areas = () => {
         setLimit={setLimit}
         total={total}
         isPaginate={total > limit}
-        loading={isFetching}
+        loading={isLoading}
         rowKey="_id"
       />
 
