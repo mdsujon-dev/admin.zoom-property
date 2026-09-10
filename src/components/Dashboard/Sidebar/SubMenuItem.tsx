@@ -33,50 +33,51 @@ export const SubMenuItem: FC<SubMenuItemProps> = ({
     <NavLink
       to={address}
       onClick={onClick}
-      className={({ isActive: navActive }) =>
-        `flex items-center gap-2 font-display py-2 px-3 rounded-[7px] transition-all duration-300 group min-w-0 ${
-          (active ?? navActive)
-            ? "bg-primary-100 text-primary-800 font-semibold"
-            : "text-secondary-500 hover:text-primary hover:bg-primary-50"
-        }`
-      }
+      className={({ isActive: navActive }) => {
+        const on = active ?? navActive;
+        return `flex items-center gap-2 font-display py-2 px-3 rounded-[7px] transition-all duration-200 group min-w-0 ${
+          on
+            ? "bg-primary/10 text-primary font-semibold"
+            : "text-secondary-600 hover:text-primary hover:bg-primary-50"
+        }`;
+      }}
     >
       {({ isActive: navActive }) => {
         const on = active ?? navActive;
         return (
-        <>
-          {Icon ? (
-            <Icon
-              size={16}
-              className={`shrink-0 transition-transform duration-300 group-hover:scale-110 ${
-                on ? "text-primary" : ""
-              }`}
-            />
-          ) : (
-            <Dot
-              size={20}
-              className={`shrink-0 transition-all duration-300 group-hover:scale-125 ${
-                on ? "text-primary fill-primary" : ""
-              }`}
-            />
-          )}
-          <Tooltip title={label} placement="right">
-            <span className="text-sm truncate whitespace-nowrap flex-1 min-w-0">
-              {label}
-            </span>
-          </Tooltip>
-          {/* Same pill as the top level, a step smaller to sit under it: this
+          <>
+            {Icon ? (
+              <Icon
+                size={16}
+                className={`shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                  on ? "text-primary" : "text-secondary-500 group-hover:text-primary"
+                }`}
+              />
+            ) : (
+              <Dot
+                size={20}
+                className={`shrink-0 transition-all duration-200 group-hover:scale-125 ${
+                  on ? "text-primary fill-primary" : "text-secondary-400 group-hover:text-primary group-hover:fill-primary"
+                }`}
+              />
+            )}
+            <Tooltip title={label} placement="right">
+              <span className={`text-sm truncate whitespace-nowrap flex-1 min-w-0 ${on ? "text-primary font-semibold" : ""}`}>
+                {label}
+              </span>
+            </Tooltip>
+            {/* Same pill as the top level, a step smaller to sit under it: this
               is the count of what is waiting, and amber because it is work to
               get to rather than something gone wrong. */}
-          {badge > 0 && (
-            <span
-              className="ml-auto shrink-0 rounded-full bg-amber-100 px-1.5 py-[1px] text-[10px] font-semibold leading-[1.4] text-amber-800 tabular-nums"
-              aria-label={`${badge} waiting`}
-            >
-              {badge > 99 ? "99+" : badge}
-            </span>
-          )}
-        </>
+            {badge > 0 && (
+              <span
+                className="ml-auto shrink-0 rounded-full bg-amber-100 px-1.5 py-[1px] text-[10px] font-semibold leading-[1.4] text-amber-800 tabular-nums"
+                aria-label={`${badge} waiting`}
+              >
+                {badge > 99 ? "99+" : badge}
+              </span>
+            )}
+          </>
         );
       }}
     </NavLink>

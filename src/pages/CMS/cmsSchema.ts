@@ -40,7 +40,12 @@ export interface CmsField {
  * languages.
  */
 
-export interface CmsRepeatableItemField {
+/**
+ * A field inside a repeatable item - the "title" or "body" of one step, one
+ * benefit, one stat. `suffix` is what goes after the index, so
+ * `pages.buying.steps.2.title` addresses the third step's title.
+ */
+export interface CmsRepeatableField {
   suffix: string;
   label: string;
   type: CmsFieldType;
@@ -48,28 +53,35 @@ export interface CmsRepeatableItemField {
   defaultBn?: string;
 }
 
-export interface CmsRepeatableDefaultItem {
-  titleEn?: string;
-  titleBn?: string;
-  bodyEn?: string;
-  bodyBn?: string;
-  [key: string]: string | undefined;
-}
-
-export interface CmsRepeatableConfig {
+/**
+ * A section whose content is a list rather than a fixed set of fields - the
+ * buying steps, the stats band, the FAQ. The editor renders add / remove
+ * controls and numbers each item as it goes.
+ */
+export interface CmsRepeatable {
+  /** Key prefix the index is appended to, e.g. `pages.buying.steps`. */
   itemPrefix: string;
+  /** Singular noun for the add button and the item headings: "Step". */
   itemName: string;
-  addButtonText: string;
+  addButtonText?: string;
+  /** How many blank items to show before anything has been saved. */
   initialCount?: number;
-  itemFields: CmsRepeatableItemField[];
-  defaultItems?: CmsRepeatableDefaultItem[];
+  itemFields: CmsRepeatableField[];
+  /** What the site ships today, so an untouched list still has its text. */
+  defaultItems?: Record<string, string>[];
 }
 
 export interface CmsSection {
   id: string;
   label: string;
   fields: CmsField[];
-  repeatable?: CmsRepeatableConfig;
+  /**
+   * Present when the section is a list. Set by hand in this file rather than
+   * generated: the dictionary stores these as JSON arrays, and which of their
+   * keys are editable is an editorial decision, not something the shape can
+   * be read off.
+   */
+  repeatable?: CmsRepeatable;
 }
 
 export interface CmsPageDef {
@@ -205,23 +217,16 @@ export const cmsPages: CmsPageDef[] = [
   {
     id: "properties",
     label: "Properties",
-    description: "The listings index banner and header settings.",
+    description: "The listings index and a single listing.",
     sections: [
       {
         id: "listings",
-        label: "Banner (প্রপার্টি ব্যানার ও হেডার)",
+        label: "Banner",
         fields: [
-          {
-            key: "listings.backgroundImage",
-            label: "Background Image (ব্যানার ব্যাকগ্রাউন্ড ছবি)",
-            type: "image",
-            hint: "Recommended: 1920 × 600 px (Panoramic Landscape) · High quality JPG / WebP (Max 2MB)",
-            en: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80",
-            bn: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80",
-          },
-          { key: "listings.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "Curated portfolio", bn: "বাছাই করা তালিকা" },
-          { key: "listings.pageTitle", label: "Page Title (মূল শিরোনাম)", type: "text", en: "Properties for sale and rent", bn: "বিক্রয় ও ভাড়ার সম্পত্তি" },
-          { key: "listings.pageDescription", label: "Page Description (বিবরণ)", type: "textarea", en: "{count} listings, each physically inspected by our survey team and title-checked before upload. Filter by purpose, type and area below.", bn: "{count}টি লিস্টিং, প্রতিটি আমাদের সার্ভে দল সরেজমিনে দেখেছে এবং আপলোডের আগে দলিল যাচাই করেছে। নিচে উদ্দেশ্য, ধরন ও এলাকা দিয়ে ছেঁকে নিন।" },
+          { key: "listings.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80", bn: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=80" },
+          { key: "listings.eyebrow", label: "Eyebrow", type: "text", en: "Curated portfolio", bn: "বাছাই করা তালিকা" },
+          { key: "listings.title", label: "Title", type: "text", en: "Verified residences and commercial floors", bn: "যাচাই করা ফ্ল্যাট ও বাণিজ্যিক ফ্লোর" },
+          { key: "listings.description", label: "Description", type: "textarea", en: "Every listing has been physically inspected by our survey team this month, with title deeds verified before it went online.", bn: "প্রতিটি লিস্টিং এ মাসে আমাদের সার্ভে দল সরেজমিনে দেখেছে, আর অনলাইনে ওঠার আগেই দলিল যাচাই করা হয়েছে।" },
         ],
       },
     ],
@@ -229,75 +234,17 @@ export const cmsPages: CmsPageDef[] = [
   {
     id: "projects",
     label: "Projects",
-    description: "Projects page banner, header, and construction stages process settings.",
+    description: "Section copy for developments. The records themselves live under Listings.",
     sections: [
       {
-        id: "banner",
-        label: "Banner (প্রজেক্ট ব্যানার ও হেডার)",
+        id: "projects",
+        label: "Banner",
         fields: [
-          {
-            key: "projects.backgroundImage",
-            label: "Background Image (ব্যানার ব্যাকগ্রাউন্ড ছবি)",
-            type: "image",
-            hint: "Recommended: 1920 × 600 px (Panoramic Landscape) · High quality JPG / WebP (Max 2MB)",
-            en: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80",
-            bn: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80",
-          },
-          { key: "projects.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "Under construction", bn: "নির্মাণাধীন" },
-          { key: "projects.pageTitle", label: "Page Title (মূল শিরোনাম)", type: "text", en: "Projects under construction", bn: "নির্মাণাধীন প্রকল্প" },
-          { key: "projects.pageDescription", label: "Page Description (বিবরণ)", type: "textarea", en: "You pay in instalments for years before you get keys. Every project here shows its audited structural stage and permit number, updated monthly.", bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। এখানে প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও অনুমোদন নম্বর আছে, প্রতি মাসে হালনাগাদ।" },
+          { key: "projects.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80", bn: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80" },
+          { key: "projects.eyebrow", label: "Eyebrow", type: "text", en: "Under construction", bn: "নির্মাণাধীন" },
+          { key: "projects.title", label: "Title", type: "text", en: "Milestone progress you can audit", bn: "অগ্রগতি নিজে যাচাই করুন" },
+          { key: "projects.description", label: "Description", type: "textarea", en: "You pay in instalments for years before you get keys, so every project shows its audited structural stage and RAJUK permit — not a marketing render.", bn: "চাবি পাওয়ার আগে বছরের পর বছর কিস্তি দিতে হয়। তাই প্রতিটি প্রকল্পে নিরীক্ষিত কাঠামোগত পর্যায় ও রাজউক অনুমোদন দেখানো — বিজ্ঞাপনের ছবি নয়।" },
         ],
-      },
-      {
-        id: "process",
-        label: "Process (নির্মাণ ও যাচাই প্রক্রিয়া)",
-        fields: [
-          { key: "pages.construction.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "How we verify", bn: "যেভাবে যাচাই করি" },
-          { key: "pages.construction.title", label: "Title (মূল শিরোনাম)", type: "text", en: "What a completion percentage actually means", bn: "অগ্রগতির শতাংশ আসলে কী বোঝায়" },
-          { key: "pages.construction.description", label: "Description (বিবরণ)", type: "textarea", en: "Every project passes the same five audited stages. The number only moves after our engineer has signed that stage off on site.", bn: "প্রতিটি প্রকল্প একই পাঁচ ধাপ পেরোয়। আমাদের প্রকৌশলী সাইটে গিয়ে ধাপটি অনুমোদন না করা পর্যন্ত সংখ্যা বাড়ে না।" },
-        ],
-        repeatable: {
-          itemPrefix: "pages.construction.stages",
-          itemName: "Process Stage",
-          addButtonText: "+ Add Process (নতুন প্রসেস ধাপ যোগ করুন)",
-          initialCount: 5,
-          itemFields: [
-            { suffix: "title", label: "Stage Title (ধাপ শিরোনাম)", type: "text" },
-            { suffix: "body", label: "Stage Details (ধাপের বিবরণ)", type: "textarea" },
-          ],
-          defaultItems: [
-            {
-              titleEn: "Piling",
-              titleBn: "পাইলিং",
-              bodyEn: "Soil test, pile load test, and the RAJUK permit posted on the boundary wall.",
-              bodyBn: "মাটি পরীক্ষা, পাইল লোড টেস্ট আর সীমানায় টাঙানো রাজউক অনুমোদন।",
-            },
-            {
-              titleEn: "Structure",
-              titleBn: "কাঠামো",
-              bodyEn: "Column and slab casting, with cube tests filed for every pour.",
-              bodyBn: "কলাম ও ছাদ ঢালাই, প্রতিটি ঢালাইয়ের কিউব টেস্ট নথিভুক্ত।",
-            },
-            {
-              titleEn: "MEP",
-              titleBn: "এমইপি",
-              bodyEn: "Electrical, plumbing and lift shafts, checked before plaster closes the walls.",
-              bodyBn: "প্লাস্টার দেয়াল ঢাকার আগে বিদ্যুৎ, পানি ও লিফট শ্যাফট।",
-            },
-            {
-              titleEn: "Finishing",
-              titleBn: "ফিনিশিং",
-              bodyEn: "Flooring, joinery, sanitary and paint. The stage where timelines usually slip.",
-              bodyBn: "মেঝে, কাঠের কাজ, স্যানিটারি ও রং। এই ধাপেই সাধারণত সময় পিছিয়ে যায়।",
-            },
-            {
-              titleEn: "Handover",
-              titleBn: "হস্তান্তর",
-              bodyEn: "Occupancy certificate, utility connections, snag list cleared with you present.",
-              bodyBn: "অকুপেন্সি সনদ, ইউটিলিটি সংযোগ, আপনার সামনে ত্রুটির তালিকা মিলিয়ে নেওয়া।",
-            },
-          ],
-        },
       },
     ],
   },
@@ -308,19 +255,12 @@ export const cmsPages: CmsPageDef[] = [
     sections: [
       {
         id: "areas",
-        label: "Banner (এরিয়া ব্যানার ও হেডার)",
+        label: "Banner",
         fields: [
-          {
-            key: "areas.backgroundImage",
-            label: "Background Image (ব্যানার ব্যাকগ্রাউন্ড ছবি)",
-            type: "image",
-            hint: "Recommended: 1920 × 600 px (Panoramic Landscape) · High quality JPG / WebP (Max 2MB)",
-            en: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=2000&q=80",
-            bn: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=2000&q=80",
-          },
-          { key: "areas.eyebrow", label: "Eyebrow (টপ ট্যাগ)", type: "text", en: "Our Service Areas & Locations", bn: "আমাদের সার্ভিস এরিয়া ও লোকেশন" },
-          { key: "areas.pageTitle", label: "Page Title (মূল শিরোনাম)", type: "text", en: "Service Areas for Luxury Flats", bn: "আমাদের সার্ভিস এরিয়া ও এলাকাসমূহ" },
-          { key: "areas.pageDescription", label: "Page Description (বিবরণ)", type: "textarea", en: "Browse verified luxury apartments, duplexes, and commercial floors across Dhaka & Chattogram's most requested addresses.", bn: "জুম প্রপার্টি যেসব প্রাইম এলাকায় ফ্ল্যাট ও অ্যাপার্টমেন্ট সেল করে তার বিস্তারিত তালিকা, ফ্ল্যাটের সংখ্যা, প্রতি বর্গফুটের রেট ও সম্ভাব্য ভাড়ার আয়ের হিসাব।" },
+          { key: "areas.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=2000&q=80", bn: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=2000&q=80" },
+          { key: "areas.eyebrow", label: "Eyebrow", type: "text", en: "Our Service Areas & Locations", bn: "আমাদের সার্ভিস এরিয়া ও লোকেশন" },
+          { key: "areas.title", label: "Title", type: "text", en: "Prime Service Areas Where We Sell Luxury Flats & Units", bn: "যেসব প্রাইম এরিয়ায় আমরা ফ্ল্যাট ও ইউনিট বিক্রি করি" },
+          { key: "areas.description", label: "Description", type: "textarea", en: "Discover Dhaka & Chattogram's most prestigious neighbourhoods where Zoom Property offers verified luxury apartments, duplexes, and residential units for sale.", bn: "ঢাকা ও চট্টগ্রামের শীর্ষ অভিজাত এলাকাগুলোতে জুম প্রপার্টির ভেরিফাইড লাক্সারি ফ্ল্যাট, ডুপ্লেক্স ও অ্যাপার্টমেন্ট বিক্রয় ও সার্ভিস লোকেশনসমূহ।" },
         ],
       },
     ],
@@ -426,60 +366,16 @@ export const cmsPages: CmsPageDef[] = [
   {
     id: "landowners",
     label: "Landowners",
-    description: "The landowner proposition and its case study.",
+    description: "The banner at the top of the landowners page.",
     sections: [
       {
         id: "landowner",
-        label: "Landowner",
+        label: "Banner",
         fields: [
+          { key: "landowner.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=2000&q=80", bn: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=2000&q=80" },
           { key: "landowner.eyebrow", label: "Eyebrow", type: "text", en: "Landowner joint ventures", bn: "জমির মালিকদের যৌথ উদ্যোগ" },
           { key: "landowner.title", label: "Title", type: "text", en: "Put your land into a development", bn: "আপনার জমি উন্নয়নে দিন" },
           { key: "landowner.description", label: "Description", type: "textarea", en: "Guaranteed owner share, bank-secured signing advance, BNBC 2020 seismic compliance and a delivery pledge in the contract.", bn: "নিশ্চিত মালিকানা অংশ, ব্যাংক-নিশ্চিত সাইনিং অগ্রিম, বিএনবিসি ২০২০ ভূমিকম্প মান এবং চুক্তিতে হস্তান্তরের অঙ্গীকার।" },
-        ],
-      },
-      {
-        id: "landowners",
-        label: "Landowners",
-        fields: [
-          { key: "landowners.eyebrow", label: "Eyebrow", type: "text", en: "Landowners", bn: "জমির মালিক" },
-          { key: "landowners.title", label: "Title", type: "text", en: "Put your land into a development", bn: "আপনার জমি উন্নয়নে দিন" },
-          { key: "landowners.description", label: "Description", type: "textarea", en: "You keep the land in your name until the deed is signed, the owner share is fixed in writing, and the delivery date is a contract term rather than a promise.", bn: "দলিল সই না হওয়া পর্যন্ত জমি আপনার নামেই থাকে, মালিকের অংশ লিখিতভাবে নির্ধারিত, আর হস্তান্তরের তারিখ প্রতিশ্রুতি নয় — চুক্তির শর্ত।" },
-          { key: "landowners.metaTitle", label: "Meta Title", type: "text", en: "Landowner joint ventures", bn: "জমির মালিকদের যৌথ উদ্যোগ" },
-          { key: "landowners.metaDescription", label: "Meta Description", type: "textarea", en: "Joint-venture development for landowners in Dhaka and Chattogram. Fixed owner share, bank-secured signing advance, BNBC 2020 seismic compliance and a contractual delivery date.", bn: "ঢাকা ও চট্টগ্রামে জমির মালিকদের জন্য যৌথ উদ্যোগে নির্মাণ। নির্ধারিত মালিকানা অংশ, ব্যাংক-নিশ্চিত সাইনিং অগ্রিম, বিএনবিসি ২০২০ ভূমিকম্প মান ও চুক্তিবদ্ধ হস্তান্তরের তারিখ।" },
-          { key: "landowners.benefitsTitle", label: "Benefits Title", type: "text", en: "What the agreement gives you", bn: "চুক্তিতে আপনি যা পাবেন" },
-          { key: "landowners.benefitsLead", label: "Benefits Lead", type: "textarea", en: "The four terms landowners ask about first, answered before you send us the deed.", bn: "জমির মালিকরা যে চারটি শর্ত সবার আগে জানতে চান, দলিল পাঠানোর আগেই তার উত্তর।" },
-          { key: "landowners.builtTitle", label: "Built Title", type: "text", en: "Built with landowners", bn: "জমির মালিকদের সঙ্গে গড়া" },
-          { key: "landowners.builtLead", label: "Built Lead", type: "textarea", en: "Completed joint ventures, with the share the owner actually received.", bn: "সম্পন্ন যৌথ উদ্যোগ, মালিক যতটুকু অংশ পেয়েছেন সহ।" },
-          { key: "landowners.stepsTitle", label: "Steps Title", type: "text", en: "How a joint venture runs", bn: "যৌথ উদ্যোগ কীভাবে চলে" },
-        ],
-      },
-      {
-        id: "landowners.columns",
-        label: "Landowners · Columns",
-        fields: [
-          { key: "landowners.columns.project", label: "Project", type: "text", en: "Project", bn: "প্রকল্প" },
-          { key: "landowners.columns.land", label: "Land", type: "text", en: "Land", bn: "জমি" },
-          { key: "landowners.columns.floors", label: "Floors", type: "text", en: "Floors", bn: "তলা" },
-          { key: "landowners.columns.share", label: "Share", type: "text", en: "Owner share", bn: "মালিকের অংশ" },
-          { key: "landowners.columns.completed", label: "Completed", type: "text", en: "Completed", bn: "সমাপ্ত" },
-        ],
-      },
-      {
-        id: "landowners.story",
-        label: "Landowners · Story",
-        fields: [
-          { key: "landowners.story.quoteLabel", label: "Quote Label", type: "text", en: "Landowners speak for us", bn: "জমির মালিকরাই বলুন" },
-          { key: "landowners.story.quote", label: "Quote", type: "textarea", en: "After counting my peers, I found that they had a record of handing over on time. That is what convinced me to give them my land.", bn: "পরিচিতদের কাছে খোঁজ নিয়ে দেখলাম, এরা সময়মতো বুঝিয়ে দেওয়ার রেকর্ড রেখেছে। এই কারণেই জমিটা তাঁদের হাতে দিয়েছি।" },
-          { key: "landowners.story.quoteName", label: "Quote Name", type: "text", en: "Air Vice Marshal A. O. Mahmud (Retd.)", bn: "এয়ার ভাইস মার্শাল এ. ও. মাহমুদ (অব.)" },
-          { key: "landowners.story.quoteRole", label: "Quote Role", type: "text", en: "Joint venture landowner, Banani", bn: "যৌথ উদ্যোগের জমির মালিক, বনানী" },
-          { key: "landowners.story.whyTitle", label: "Why Title", type: "text", en: "Why choose us as a partner for your land?", bn: "আপনার জমির জন্য আমাদের কেন বেছে নেবেন?" },
-          { key: "landowners.story.whyBody", label: "Why Body", type: "textarea", en: "Dealing with a developer in Dhaka is hard to judge from the outside — the joint venture process is bureaucratic, and the promises all sound alike. We put the terms in the deed instead of the brochure: the owner share, the signing advance held in bank escrow, and a handover date you can enforce. Read what our landowners say, then look at what we finished.", bn: "ঢাকায় ডেভেলপার যাচাই করা বাইরে থেকে কঠিন — যৌথ উদ্যোগের প্রক্রিয়া জটিল, আর প্রতিশ্রুতি সবারই এক রকম শোনায়। আমরা শর্তগুলো ব্রোশিউরে নয়, চুক্তিপত্রে লিখি: মালিকের অংশ, ব্যাংক এসক্রোতে রাখা সাইনিং অগ্রিম, আর এমন হস্তান্তরের তারিখ যা আপনি আদায় করতে পারবেন।" },
-          { key: "landowners.story.differentTitle", label: "Different Title", type: "text", en: "How we are different", bn: "আমরা কেন আলাদা" },
-          { key: "landowners.story.differentBody", label: "Different Body", type: "textarea", en: "We took the legal work in-house rather than subcontracting it, so the title search that decides whether a joint venture is safe is done by people who answer to you. Our engineers inspect every active site each month, and the completion figure you see is the one they signed off. If a timeline is slipping we tell you before you hear it from a neighbour.", bn: "আইনি কাজ বাইরে না দিয়ে নিজেদের দলে রেখেছি, তাই যে মালিকানা যাচাই যৌথ উদ্যোগটি নিরাপদ কিনা ঠিক করে, সেটি এমন মানুষ করেন যাঁরা আপনার কাছে জবাবদিহি। আমাদের প্রকৌশলীরা প্রতি মাসে প্রতিটি সাইট দেখেন, আর আপনি যে অগ্রগতির সংখ্যা দেখেন সেটি তাঁদেরই অনুমোদিত। সময় পিছালে পাশের বাড়ি থেকে শোনার আগেই আমরা জানাই।" },
-          { key: "landowners.story.videoCaption", label: "Video Caption", type: "text", en: "A landowner walks through a finished joint venture", bn: "একজন জমির মালিক সম্পন্ন প্রকল্প ঘুরে দেখাচ্ছেন" },
-          { key: "landowners.story.moreTitle", label: "More Title", type: "text", en: "Want to know more?", bn: "আরও জানতে চান?" },
-          { key: "landowners.story.moreBody", label: "More Body", type: "textarea", en: "Send us the plot address and the deed. Within two weeks you get a feasibility report — what can legally be built there, how many units, and the share we can offer, in writing. No obligation, and the papers stay yours.", bn: "জমির ঠিকানা আর দলিল পাঠান। দুই সপ্তাহের মধ্যে সম্ভাব্যতা প্রতিবেদন পাবেন — ওই জমিতে আইনত কী গড়া যায়, কতটি ইউনিট, আর কত অংশ দিতে পারি — সব লিখিতভাবে। কোনো বাধ্যবাধকতা নেই, কাগজপত্র আপনারই থাকবে।" },
-          { key: "landowners.story.moreCta", label: "More Cta", type: "text", en: "Talk to the land team", bn: "জমি ডেস্কে কথা বলুন" },
         ],
       },
     ],
@@ -616,6 +512,23 @@ export const cmsPages: CmsPageDef[] = [
           { key: "blog.newsletter.placeholder", label: "Placeholder", type: "textarea", en: "Enter your email address", bn: "আপনার ইমেইল ঠিকানা লিখুন" },
           { key: "blog.newsletter.button", label: "Button", type: "text", en: "Subscribe", bn: "যুক্ত হোন" },
           { key: "blog.newsletter.note", label: "Note", type: "textarea", en: "Zero spam. Only actionable property insights and market data.", bn: "কোনো স্প্যাম নয়। কেবল রিয়েল এস্টেটের প্রয়োজনীয় তথ্য ও বাজার বিশ্লেষণ।" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "reviews",
+    label: "Reviews",
+    description: "The banner at the top of the reviews page.",
+    sections: [
+      {
+        id: "reviews",
+        label: "Banner",
+        fields: [
+          { key: "reviews.backgroundImage", label: "Background Image", type: "image", en: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2000&q=80", bn: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2000&q=80" },
+          { key: "reviews.eyebrow", label: "Eyebrow", type: "text", en: "Client testimonials", bn: "ক্রেতাদের মতামত" },
+          { key: "reviews.title", label: "Title", type: "text", en: "Real stories from people who bought here", bn: "যাঁরা এখান থেকে কিনেছেন, তাঁদের কথা" },
+          { key: "reviews.description", label: "Description", type: "textarea", en: "Every review names the property it came from, so you can check the claim against the listing.", bn: "প্রতিটি মতামতে কোন সম্পত্তি সেটি লেখা আছে, যাতে আপনি লিস্টিংয়ের সঙ্গে মিলিয়ে দেখতে পারেন।" },
         ],
       },
     ],

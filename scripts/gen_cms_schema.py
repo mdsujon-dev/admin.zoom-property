@@ -14,6 +14,11 @@ OUT = r"C:\project\zoom-property\admin.zoom-property\src\pages\CMS\cmsSchema.ts"
 
 # Which dictionary groups belong to which public page.
 #
+# `landowners` carries only the page banner (`landowner`): the case studies
+# themselves are records with a photograph, a share and a handover year, and
+# they live in the Landowners module. The `landowners` group of section
+# headings is deliberately not listed - see the note in the response.
+#
 # `reviews` is deliberately absent. A review is a record with a photograph,
 # a rating and a film, not a heading — it belongs in the Reviews module,
 # which manages the reviews themselves. Listing it here put the same thing
@@ -31,10 +36,12 @@ PAGES = [
     ("about", "About", "The about page and the explainer blocks it is built from.",
      ["about", "pages"]),
     ("services", "Services", "The services showcase.", ["services"]),
-    ("landowners", "Landowners", "The landowner proposition and its case study.",
-     ["landowner", "landowners"]),
+    ("landowners", "Landowners", "The banner at the top of the landowners page.",
+     ["landowner"]),
     ("blog", "Blog", "The blog index, an article, and everything around it.",
      ["blog"]),
+    ("reviews", "Reviews", "The banner at the top of the reviews page.",
+     ["reviews"]),
     ("agents", "Agents", "The agents page.", ["agentsSection"]),
     ("contact", "Contact", "The contact page and its enquiry form.", ["contact"]),
     ("common", "Site-wide", "Navigation, footer, metadata and the 404 page.",
@@ -52,6 +59,31 @@ TEXTAREA = re.compile(
 IMAGE_KEY = re.compile(r"(poster|image|photo|avatar|logo|banner|cover|thumbnail)$", re.I)
 URL_KEY = re.compile(r"(video|url|href|link)$", re.I)
 ADDRESS = re.compile(r"^(https?://|/)")
+
+
+# Pages whose CMS entry is the banner and nothing else: the photograph and the
+# three lines over it. Everything else on these pages is a record managed in
+# its own module - a listing, a development, an area, a case study, a review -
+# so the only thing left for the CMS to own is the top of the page.
+#
+# The value is the dictionary group the banner lives in, and the four keys are
+# taken in this order so the editor reads top-down the way the page does.
+BANNER_ONLY = {
+    "properties": "listings",
+    "projects": "projects",
+    "areas": "areas",
+    "landowners": "landowner",
+    "reviews": "reviews",
+}
+
+BANNER_KEYS = ["backgroundImage", "eyebrow", "title", "description"]
+
+
+# A tab is named for what it is on the page, not for the dictionary group it
+# happens to come from. Keyed by section id.
+SECTION_LABELS = {
+    "landowner": "Banner",
+}
 
 
 def pretty(seg: str) -> str:
@@ -103,31 +135,11 @@ def build():
     out = []
     total_fields = 0
 
-    for page_id, page_label, page_desc, groups in PAGES:
-        sections = []
-        for group in groups:
-            node = en.get(group)
-            if not isinstance(node, dict):
-                continue
-
-            # Scalars sitting directly on the group, plus any that live under a
-            # nested dict which is itself too small to deserve its own tab.
-            own = [(p, v) for p, v in scalars(node, group)
-                   if p.count(".") == group.count(".") + 1]
-            children = [k for k, v in node.items() if isinstance(v, dict)]
-
-            if own:
-                sections.append((group, pretty(group), own))
-
-            for child in children:
-                sub = list(scalars(node[child], f"{group}.{child}"))
-                if not sub:
-                    continue
-                label = f"{pretty(group)} · {pretty(child)}"
-                sections.append((f"{group}.{child}", label, sub))
-
+    def emit(page_id, page_label, page_desc, sections):
+        """Writes one page block. Shared by the banner-only and general paths."""
+        nonlocal total_fields
         if not sections:
-            continue
+            return
 
         out.append(f"  {{\n    id: {ts(page_id)},\n    label: {ts(page_label)},")
         out.append(f"    description: {ts(page_desc)},")
@@ -148,6 +160,47 @@ def build():
                 )
             out.append("        ],\n      },")
         out.append("    ],\n  },")
+
+    for page_id, page_label, page_desc, groups in PAGES:
+        sections = []
+
+        if page_id in BANNER_ONLY:
+            group = BANNER_ONLY[page_id]
+            node = en.get(group) or {}
+            fields = [
+                (f"{group}.{k}", node[k])
+                for k in BANNER_KEYS
+                if isinstance(node.get(k), str)
+            ]
+            if fields:
+                sections.append((group, "Banner", fields))
+            emit(page_id, page_label, page_desc, sections)
+            continue
+
+        for group in groups:
+            node = en.get(group)
+            if not isinstance(node, dict):
+                continue
+
+            # Scalars sitting directly on the group, plus any that live under a
+            # nested dict which is itself too small to deserve its own tab.
+            own = [(p, v) for p, v in scalars(node, group)
+                   if p.count(".") == group.count(".") + 1]
+            children = [k for k, v in node.items() if isinstance(v, dict)]
+
+            if own:
+                sections.append(
+                    (group, SECTION_LABELS.get(group, pretty(group)), own)
+                )
+
+            for child in children:
+                sub = list(scalars(node[child], f"{group}.{child}"))
+                if not sub:
+                    continue
+                label = f"{pretty(group)} · {pretty(child)}"
+                sections.append((f"{group}.{child}", label, sub))
+
+        emit(page_id, page_label, page_desc, sections)
 
     header = '''/**
  * What the CMS can edit, page by page.
@@ -191,10 +244,48 @@ export interface CmsField {
  * languages.
  */
 
+/**
+ * A field inside a repeatable item - the "title" or "body" of one step, one
+ * benefit, one stat. `suffix` is what goes after the index, so
+ * `pages.buying.steps.2.title` addresses the third step's title.
+ */
+export interface CmsRepeatableField {
+  suffix: string;
+  label: string;
+  type: CmsFieldType;
+  defaultEn?: string;
+  defaultBn?: string;
+}
+
+/**
+ * A section whose content is a list rather than a fixed set of fields - the
+ * buying steps, the stats band, the FAQ. The editor renders add / remove
+ * controls and numbers each item as it goes.
+ */
+export interface CmsRepeatable {
+  /** Key prefix the index is appended to, e.g. `pages.buying.steps`. */
+  itemPrefix: string;
+  /** Singular noun for the add button and the item headings: "Step". */
+  itemName: string;
+  addButtonText?: string;
+  /** How many blank items to show before anything has been saved. */
+  initialCount?: number;
+  itemFields: CmsRepeatableField[];
+  /** What the site ships today, so an untouched list still has its text. */
+  defaultItems?: Record<string, string>[];
+}
+
 export interface CmsSection {
   id: string;
   label: string;
   fields: CmsField[];
+  /**
+   * Present when the section is a list. Set by hand in this file rather than
+   * generated: the dictionary stores these as JSON arrays, and which of their
+   * keys are editable is an editorial decision, not something the shape can
+   * be read off.
+   */
+  repeatable?: CmsRepeatable;
 }
 
 export interface CmsPageDef {

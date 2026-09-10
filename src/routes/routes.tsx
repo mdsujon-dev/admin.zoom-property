@@ -20,6 +20,7 @@ import AllMediaLibraryList from "../pages/media-library/AllMediaLibraryList";
 import AllNotifications from "../pages/Notifications/AllNotifications";
 import Profile from "../pages/Profile/Profile";
 import CmsPage from "../pages/CMS/CmsPage";
+import Landowners from "../pages/Landowners/Landowners";
 import ShowcaseVideos from "../pages/ShowcaseVideos/ShowcaseVideos";
 import CreateProject from "../pages/Projects/CreateProject";
 import Projects from "../pages/Projects/Projects";
@@ -81,6 +82,7 @@ const routes = [
       },
       { path: "cms/:pageId", element: <CmsPage /> },
       { path: "showcase-videos", element: <ShowcaseVideos /> },
+      { path: "landowners", element: <Landowners /> },
 
       /* ── Content ─────────────────────────────────────────────────────── */
       { path: "blog", element: <Blog /> },

@@ -42,7 +42,9 @@ export const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
   const exact = address === "/";
   const isActive =
     active ??
-    (exact ? location.pathname === address : isUnder(location.pathname, address));
+    (exact
+      ? location.pathname === address
+      : isUnder(location.pathname, address));
   const isCollapsed = useSelector((state: any) => state.sidebar.isCollapsed);
 
   const handleClick = () => {
@@ -56,24 +58,21 @@ export const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
       end={exact}
       onClick={handleClick}
       className={() =>
-        `flex items-center gap-3 font-display rounded-[7px] transition-all duration-300 transform relative min-w-0 ${
+        `flex items-center gap-3 font-display rounded-[7px] transition-all duration-200 transform relative min-w-0 ${
           isCollapsed ? "justify-center px-3 py-2" : "px-4 py-2"
         } ${
           isActive
-            // A solid brand bar, not a tint. `primary-100` is a 3%-saturation
-            // wash: it is the brand hue, but at this size it is indistinguishable
-            // from grey, so the panel looked unbranded even after the palette
-            // changed. White on `primary` measures 4.75:1 and passes AA, so the
-            // active item can carry the colour outright.
-            ? "bg-primary text-white font-semibold shadow-sm"
-            : "text-secondary-600 hover:bg-primary-50 hover:text-primary hover:shadow-sm"
+            ? "bg-primary/10 text-primary font-semibold"
+            : "text-secondary-600 hover:bg-primary-50 hover:text-primary hover:shadow-xs"
         }`
       }
     >
       {Icon && (
         <Icon
           size={18}
-          className="shrink-0 transition-transform duration-300 group-hover:scale-110"
+          className={`shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+            isActive ? "text-primary" : ""
+          }`}
         />
       )}
       {!isCollapsed && (
@@ -109,7 +108,7 @@ export const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
       )}
 
       {isActive && !isCollapsed && badge === 0 && (
-        <span className="absolute right-3 w-1.5 h-1.5 bg-white rounded-full"></span>
+        <span className="absolute right-3 w-1.5 h-1.5 bg-primary rounded-full"></span>
       )}
     </NavLink>
   );

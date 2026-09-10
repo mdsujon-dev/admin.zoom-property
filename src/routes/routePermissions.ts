@@ -17,6 +17,7 @@ export const routePermissions: Record<string, RoutePermission> = {
   "/areas": { module: "Areas", action: "View" },
   "/cms/:pageId": { module: "Dynamic Content", action: "View" },
   "/showcase-videos": { module: "Showcase Videos", action: "View" },
+  "/landowners": { module: "Landowners", action: "View" },
 
   "/blog": { module: "Blog", action: "View" },
   "/reviews": { module: "Reviews", action: "View" },

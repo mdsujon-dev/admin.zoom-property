@@ -92,6 +92,13 @@ const sidebarMenuRoutes: RouteItem[] = [
     section: "System",
   },
   {
+    label: "Landowners",
+    icon: Handshake,
+    address: "/landowners",
+    module: "Landowners",
+    section: "System",
+  },
+  {
     label: "Showcase Videos",
     icon: Video,
     address: "/showcase-videos",
@@ -132,6 +139,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         icon: Handshake,
       },
       { label: "Blog", address: "/cms/blog", module: "Dynamic Content", icon: FileText },
+      {
+        label: "Reviews",
+        address: "/cms/reviews",
+        module: "Dynamic Content",
+        icon: Star,
+      },
       {
         label: "Agents",
         address: "/cms/agents",
