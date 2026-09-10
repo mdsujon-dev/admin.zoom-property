@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "antd";
 import dayjs from "dayjs";
-import { Languages, Loader2, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Languages, Loader2, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -42,16 +42,7 @@ interface Props {
 }
 
 /**
- * A development, and the programme behind it.
- *
- * There is no "progress" field. The percentage on the site is the sum of the
- * milestones ticked here, computed on the server — a page that lets somebody
- * type 85% beside a list adding to 40% is a page that has stopped meaning
- * anything.
- *
- * One form for creating and editing, for the same reason the listing form is
- * one: two would be two places to add a field, and the second one is always
- * the one that gets forgotten.
+ * One form for creating and editing a project development.
  */
 const ProjectForm = ({
   initial,
@@ -90,9 +81,9 @@ const ProjectForm = ({
       ...initial,
       area: initial.area?._id ?? initial.area,
       coverImage: initial.coverImage?._id ?? initial.coverImage,
-      coverImageUrl: initial.coverImage?.key,
+      coverImageUrl: initial.coverImage?.key || initial.coverImage?.url,
       images: (initial.images || []).map((i: any) => i?._id ?? i),
-      imageUrls: (initial.images || []).map((i: any) => i?.key).filter(Boolean),
+      imageUrls: (initial.images || []).map((i: any) => i?.key || i?.url).filter(Boolean),
       lastInspected: initial.lastInspected
         ? dayjs(initial.lastInspected)
         : undefined,
@@ -119,7 +110,7 @@ const ProjectForm = ({
   };
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageMeta title={`${heading} · Zoom Property Admin`} noindex />
       <PageHeader
         title={heading}
@@ -129,6 +120,14 @@ const ProjectForm = ({
           { title: "Projects", path: "/projects" },
           { title: heading },
         ]}
+        extra={
+          <Button
+            icon={<ArrowLeft className="size-4" />}
+            onClick={() => navigate("/projects")}
+          >
+            Back to projects
+          </Button>
+        }
       />
 
       <Form
@@ -145,309 +144,377 @@ const ProjectForm = ({
           units: 0,
           unitsLeft: 0,
         }}
-        className="space-y-4"
       >
-        <Card title="The basics">
-          <Row gutter={16}>
-            <Col xs={24} md={12}>
-              <LangInput
-                label="Name"
-                name="name"
-                lang="en"
-                required
-                placeholder="e.g. Navana Platinum"
-              />
-            </Col>
-            <Col xs={24} md={12}>
-              <LangInput
-                label="Name (Bangla)"
-                name="nameBn"
-                lang="bn"
-                sourceFieldName="name"
-                form={form}
-                placeholder="প্রজেক্টের নাম"
-              />
-            </Col>
+        <Card className="shadow-sm border border-border/80 rounded-2xl mb-6">
+          <div className="space-y-8 divide-y divide-border/60">
+            {/* 1. The Basics */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  The Basics (মৌলিক তথ্য)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Project name, developer profile, area and city location
+                </p>
+              </div>
 
-            <Col xs={24} md={8}>
-              <Form.Item label="Developer" name="developer">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
+              <Row gutter={16}>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Name"
+                    name="name"
+                    lang="en"
+                    required
+                    placeholder="e.g. Navana Platinum"
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Name (Bangla)"
+                    name="nameBn"
+                    lang="bn"
+                    sourceFieldName="name"
+                    form={form}
+                    placeholder="প্রজেক্টের নাম"
+                  />
+                </Col>
+
+                <Col xs={24} md={8}>
+                  <Form.Item label="Developer" name="developer">
+                    <Input placeholder="Developer company name" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Form.Item
+                    label="Area"
+                    name="area"
+                    rules={[{ required: true, message: "Pick the area" }]}
+                  >
+                    <Select
+                      showSearch
+                      optionFilterProp="label"
+                      placeholder="Select an area"
+                      options={(areaData?.result || []).map((a: any) => ({
+                        value: a._id,
+                        label: a.name,
+                      }))}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Form.Item label="City" name="city">
+                    <Input placeholder="Dhaka" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+
+            {/* 2. The Build & Milestones */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  The Build & Specifications (নির্মাণ অগ্রগতি ও স্পেসিফিকেশন)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Construction stage, timeline, units, pricing and milestone progress
+                </p>
+              </div>
+
+              <Row gutter={16}>
+                <Col xs={12} md={6}>
+                  <Form.Item label="Stage" name="stage">
+                    <Select options={STAGES} />
+                  </Form.Item>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Item label="Handover" name="handover">
+                    <Input placeholder="Q4 2027" />
+                  </Form.Item>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Item label="Units" name="units">
+                    <InputNumber className="!w-full" min={0} />
+                  </Form.Item>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Item label="Units left" name="unitsLeft">
+                    <InputNumber className="!w-full" min={0} />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} md={8}>
+                  <Form.Item label="Size range" name="sizeRange">
+                    <Input placeholder="1,450 – 2,300 sq ft" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Form.Item label="Starting price (৳)" name="startingPrice">
+                    <InputNumber className="!w-full" min={0} />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Form.Item label="RAJUK permit no." name="rajukPermitNo">
+                    <Input placeholder="RAJUK permit or clearance number" />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} md={8}>
+                  <Form.Item
+                    label="Last inspected"
+                    name="lastInspected"
+                    tooltip="The day somebody from the agency last walked the site."
+                  >
+                    <DatePicker className="w-full" format="DD-MM-YYYY" />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              {/* The build programme. Each line carries its share of the whole, and
+                  the ticked ones add up to what the site reports. */}
+              <div className="pt-2">
+                <Form.List name="milestones">
+                  {(fields, { add, remove }) => (
+                    <div className="rounded-xl border border-border/80 bg-muted/20 p-4">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            Build Programme & Milestones
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Progress % is automatically calculated from completed milestones
+                          </p>
+                        </div>
+                        <Button
+                          size="small"
+                          type="dashed"
+                          icon={<Plus className="h-3.5 w-3.5" />}
+                          onClick={() => add({ percent: 10, completed: false })}
+                        >
+                          Add milestone
+                        </Button>
+                      </div>
+
+                      {fields.length === 0 && (
+                        <p className="py-2 text-xs text-muted-foreground">
+                          No milestones yet — progress stays at 0%.
+                        </p>
+                      )}
+
+                      {fields.map((field) => (
+                        <Row
+                          key={field.key}
+                          gutter={8}
+                          align="middle"
+                          className="mb-2"
+                        >
+                          <Col xs={24} md={11}>
+                            <Form.Item
+                              {...field}
+                              key={`${field.key}-label`}
+                              name={[field.name, "label"]}
+                              rules={[{ required: true, message: "Name it" }]}
+                              className="!mb-1"
+                            >
+                              <Input placeholder="Foundation complete" />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={12} md={7}>
+                            <Form.Item
+                              key={`${field.key}-labelBn`}
+                              name={[field.name, "labelBn"]}
+                              className="!mb-1"
+                            >
+                              <Input placeholder="বাংলা" />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={6} md={3}>
+                            <Form.Item
+                              key={`${field.key}-percent`}
+                              name={[field.name, "percent"]}
+                              className="!mb-1"
+                            >
+                              <InputNumber
+                                className="!w-full"
+                                min={0}
+                                max={100}
+                                addonAfter="%"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={4} md={2}>
+                            <Form.Item
+                              key={`${field.key}-completed`}
+                              name={[field.name, "completed"]}
+                              valuePropName="checked"
+                              className="!mb-1"
+                            >
+                              <Switch size="small" />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={2} md={1}>
+                            <Button
+                              type="text"
+                              danger
+                              icon={<Trash2 className="h-4 w-4" />}
+                              onClick={() => remove(field.name)}
+                            />
+                          </Col>
+                        </Row>
+                      ))}
+                    </div>
+                  )}
+                </Form.List>
+              </div>
+            </div>
+
+            {/* 3. Media & Attachments */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Media & Visuals (ছবি ও গ্যালারি)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Upload project hero cover image and architectural gallery photos
+                </p>
+              </div>
+
+              <Row gutter={16}>
+                <Col xs={24} md={8}>
+                  <Form.Item label="Cover image">
+                    <UploadMedia
+                      form={form}
+                      fieldPath="coverImageUrl"
+                      idFieldPath="coverImage"
+                      type="image"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={16}>
+                  <Form.Item label="Gallery">
+                    <UploadMedia
+                      form={form}
+                      fieldPath="imageUrls"
+                      idFieldPath="images"
+                      mode="multiple"
+                      type="image"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+
+            {/* 4. Description */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Detailed Description (বিস্তারিত বিবরণ)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Comprehensive development overview in English and Bangla
+                </p>
+              </div>
+
               <Form.Item
-                label="Area"
-                name="area"
-                rules={[{ required: true, message: "Pick the area" }]}
+                label="Description (English)"
+                name="description"
+                tooltip="Detailed project description with rich formatting."
               >
-                <Select
-                  showSearch
-                  optionFilterProp="label"
-                  options={(areaData?.result || []).map((a: any) => ({
-                    value: a._id,
-                    label: a.name,
-                  }))}
+                <RichTextEditor
+                  placeholder="Enter description in English..."
+                  height={400}
                 />
               </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="City" name="city">
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Card>
-
-        <Card title="The build">
-          <Row gutter={16}>
-            <Col xs={12} md={6}>
-              <Form.Item label="Stage" name="stage">
-                <Select options={STAGES} />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
-              <Form.Item label="Handover" name="handover">
-                <Input placeholder="Q4 2027" />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
-              <Form.Item label="Units" name="units">
-                <InputNumber className="!w-full" min={0} />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
-              <Form.Item label="Units left" name="unitsLeft">
-                <InputNumber className="!w-full" min={0} />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} md={8}>
-              <Form.Item label="Size range" name="sizeRange">
-                <Input placeholder="1,450 – 2,300 sq ft" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="Starting price (৳)" name="startingPrice">
-                <InputNumber className="!w-full" min={0} />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="RAJUK permit no." name="rajukPermitNo">
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} md={8}>
               <Form.Item
-                label="Last inspected"
-                name="lastInspected"
-                tooltip="The day somebody from the agency last walked the site."
+                label={
+                  <div className="flex items-center justify-between w-full gap-2">
+                    <span>Description (Bangla)</span>
+                    <Tooltip title="ইংরেজিতে লেখা বিবরণ থেকে বাংলায় রূপান্তর করুন">
+                      <Button
+                        type="link"
+                        size="small"
+                        className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
+                        onClick={handleTranslateDescription}
+                        loading={translatingDescBn}
+                        icon={
+                          translatingDescBn ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Languages className="w-3.5 h-3.5" />
+                          )
+                        }
+                      >
+                        {translatingDescBn ? "রূপান্তর হচ্ছে..." : "বাংলা করুন"}
+                      </Button>
+                    </Tooltip>
+                  </div>
+                }
+                name="descriptionBn"
+                tooltip="বাংলায় বিস্তারিত বিবরণ"
               >
-                <DatePicker className="w-full" format="DD-MM-YYYY" />
+                <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={400} />
               </Form.Item>
-            </Col>
-            <Col xs={12} md={5}>
-              <Form.Item
-                label="CCTV live"
-                name="cctvStreamActive"
-                valuePropName="checked"
-              >
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={5}>
-              <Form.Item
-                label="Featured"
-                name="featured"
-                valuePropName="checked"
-              >
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
-              <Form.Item label="Active" name="isActive" valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            </Col>
-            <Col xs={12} md={6}>
-              <Form.Item
-                label="On home page"
-                name="isHome"
-                valuePropName="checked"
-                tooltip="Projects ticked here are the ones the home page shows."
-              >
-                <Switch />
-              </Form.Item>
-            </Col>
-          </Row>
+            </div>
 
-          {/* The build programme. Each line carries its share of the whole, and
-              the ticked ones add up to what the site reports. */}
-          <Form.List name="milestones">
-            {(fields, { add, remove }) => (
-              <div className="rounded-lg border border-secondary-100 p-3">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm font-medium text-secondary-700">
-                    Build programme
-                  </p>
-                  <Button
-                    size="small"
-                    icon={<Plus className="h-3.5 w-3.5" />}
-                    onClick={() => add({ percent: 10, completed: false })}
-                  >
-                    Add milestone
-                  </Button>
+            {/* 5. Publishing & Settings */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Publishing & Visibility Settings (প্রচার ও সেটিংস)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Configure featured badges, homepage exposure, live CCTV and active status
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">Active</p>
+                    <p className="text-xs text-muted-foreground">Show in portal</p>
+                  </div>
+                  <Form.Item name="isActive" valuePropName="checked" noStyle>
+                    <Switch />
+                  </Form.Item>
                 </div>
 
-                {fields.length === 0 && (
-                  <p className="py-2 text-xs text-secondary-400">
-                    No milestones yet — progress stays at 0%.
-                  </p>
-                )}
+                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">Featured</p>
+                    <p className="text-xs text-muted-foreground">Highlight badge</p>
+                  </div>
+                  <Form.Item name="featured" valuePropName="checked" noStyle>
+                    <Switch />
+                  </Form.Item>
+                </div>
 
-                {fields.map((field) => (
-                  <Row
-                    key={field.key}
-                    gutter={8}
-                    align="middle"
-                    className="mb-1"
-                  >
-                    <Col xs={24} md={11}>
-                      <Form.Item
-                        {...field}
-                        key={`${field.key}-label`}
-                        name={[field.name, "label"]}
-                        rules={[{ required: true, message: "Name it" }]}
-                        className="!mb-1"
-                      >
-                        <Input placeholder="Foundation complete" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={12} md={7}>
-                      <Form.Item
-                        key={`${field.key}-labelBn`}
-                        name={[field.name, "labelBn"]}
-                        className="!mb-1"
-                      >
-                        <Input placeholder="বাংলা" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={6} md={3}>
-                      <Form.Item
-                        key={`${field.key}-percent`}
-                        name={[field.name, "percent"]}
-                        className="!mb-1"
-                      >
-                        <InputNumber
-                          className="!w-full"
-                          min={0}
-                          max={100}
-                          addonAfter="%"
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={4} md={2}>
-                      <Form.Item
-                        key={`${field.key}-completed`}
-                        name={[field.name, "completed"]}
-                        valuePropName="checked"
-                        className="!mb-1"
-                      >
-                        <Switch size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={2} md={1}>
-                      <Button
-                        type="text"
-                        danger
-                        icon={<Trash2 className="h-4 w-4" />}
-                        onClick={() => remove(field.name)}
-                      />
-                    </Col>
-                  </Row>
-                ))}
+                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">On Home Page</p>
+                    <p className="text-xs text-muted-foreground">Home showcase</p>
+                  </div>
+                  <Form.Item name="isHome" valuePropName="checked" noStyle>
+                    <Switch />
+                  </Form.Item>
+                </div>
+
+                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">CCTV Live</p>
+                    <p className="text-xs text-muted-foreground">Stream active</p>
+                  </div>
+                  <Form.Item name="cctvStreamActive" valuePropName="checked" noStyle>
+                    <Switch />
+                  </Form.Item>
+                </div>
               </div>
-            )}
-          </Form.List>
+            </div>
+          </div>
         </Card>
 
-        <Card title="Media">
-          <Row gutter={16}>
-            <Col xs={24} md={8}>
-              <Form.Item label="Cover image" name="coverImageUrl">
-                <UploadMedia
-                  form={form}
-                  fieldPath="coverImageUrl"
-                  idFieldPath="coverImage"
-                  type="image"
-                />
-              </Form.Item>
-              <Form.Item name="coverImage" hidden>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={16}>
-              <Form.Item label="Gallery" name="imageUrls">
-                <UploadMedia
-                  form={form}
-                  fieldPath="imageUrls"
-                  idFieldPath="images"
-                  mode="multiple"
-                  type="image"
-                />
-              </Form.Item>
-              <Form.Item name="images" hidden>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Card>
-
-        <Card title="The description">
-          <Form.Item
-            label="Description (English)"
-            name="description"
-            tooltip="Detailed project description with rich formatting."
-          >
-            <RichTextEditor
-              placeholder="Enter description in English..."
-              height={420}
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <div className="flex items-center justify-between w-full gap-2">
-                <span>Description (Bangla)</span>
-                <Tooltip title="ইংরেজিতে লেখা বিবরণ থেকে বাংলায় রূপান্তর করুন">
-                  <Button
-                    type="link"
-                    size="small"
-                    className="!px-1 !h-auto !text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 shrink-0 whitespace-nowrap"
-                    onClick={handleTranslateDescription}
-                    loading={translatingDescBn}
-                    icon={
-                      translatingDescBn ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                      ) : (
-                        <Languages className="w-3.5 h-3.5" />
-                      )
-                    }
-                  >
-                    {translatingDescBn ? "রূপান্তর হচ্ছে..." : "বাংলা করুন"}
-                  </Button>
-                </Tooltip>
-              </div>
-            }
-            name="descriptionBn"
-            tooltip="বাংলায় বিস্তারিত বিবরণ"
-          >
-            <RichTextEditor placeholder="বাংলায় বিবরণ লিখুন..." height={420} />
-          </Form.Item>
-        </Card>
-
-        <div className="flex justify-end gap-2 pb-6">
+        {/* Actions Bottom Bar */}
+        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
           <Button onClick={() => navigate("/projects")}>Cancel</Button>
-          <Button type="primary" htmlType="submit" loading={saving}>
+          <Button type="primary" htmlType="submit" loading={saving} size="large">
             {submitLabel}
           </Button>
         </div>

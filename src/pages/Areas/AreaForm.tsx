@@ -128,256 +128,289 @@ const AreaForm = ({
           isHome: false,
         }}
       >
-        <div className="space-y-6">
-          {/* 1. Basic Details */}
-          <Card title="Basic Details (মৌলিক তথ্য)" className="shadow-xs">
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <LangInput
-                  label="Name (English)"
-                  name="name"
-                  lang="en"
-                  required
-                  placeholder="Gulshan (1 & 2)"
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <LangInput
-                  label="Name (Bangla)"
-                  name="nameBn"
-                  lang="bn"
-                  sourceFieldName="name"
-                  form={form}
-                  placeholder="গুলশান (১ ও ২)"
-                />
-              </Col>
+        <Card className="shadow-sm border border-border/80 rounded-2xl mb-6">
+          <div className="space-y-8 divide-y divide-border/60">
+            {/* 1. Basic Details */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Basic Details (মৌলিক তথ্য)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Name, tagline and general location information
+                </p>
+              </div>
 
-              <Col xs={24} md={12}>
-                <LangInput
-                  label="Tagline (English)"
-                  name="tagline"
-                  lang="en"
-                  placeholder="Diplomatic Zone & Luxury Living"
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <LangInput
-                  label="Tagline (Bangla)"
-                  name="taglineBn"
-                  lang="bn"
-                  sourceFieldName="tagline"
-                  form={form}
-                  placeholder="কূটনৈতিক অঞ্চল এবং বিলাসবহুল জীবনযাপন"
-                />
-              </Col>
+              <Row gutter={16}>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Name (English)"
+                    name="name"
+                    lang="en"
+                    required
+                    placeholder="Gulshan (1 & 2)"
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Name (Bangla)"
+                    name="nameBn"
+                    lang="bn"
+                    sourceFieldName="name"
+                    form={form}
+                    placeholder="গুলশান (১ ও ২)"
+                  />
+                </Col>
 
-              <Col xs={24} md={12}>
-                <LangInput
-                  label="City (শহর)"
-                  name="city"
-                  lang="en"
-                  placeholder="Dhaka"
-                />
-              </Col>
-            </Row>
-          </Card>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Tagline (English)"
+                    name="tagline"
+                    lang="en"
+                    placeholder="Diplomatic Zone & Luxury Living"
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="Tagline (Bangla)"
+                    name="taglineBn"
+                    lang="bn"
+                    sourceFieldName="tagline"
+                    form={form}
+                    placeholder="কূটনৈতিক অঞ্চল এবং বিলাসবহুল জীবনযাপন"
+                  />
+                </Col>
 
-          {/* 2. Note / Why People Choose This Area */}
-          <Card title="Area Highlights & Overview (কেন মানুষ পছন্দ করে)" className="shadow-xs">
-            <Row gutter={16}>
-              <Col xs={24}>
-                <LangInput
-                  label="Note (English)"
-                  name="note"
-                  lang="en"
-                  isTextArea
-                  placeholder="Why people choose it — short overview of neighbourhood..."
-                />
-              </Col>
-              <Col xs={24}>
-                <LangInput
-                  label="Note (Bangla)"
-                  name="noteBn"
-                  lang="bn"
-                  isTextArea
-                  sourceFieldName="note"
-                  form={form}
-                  placeholder="কেন মানুষ এই এলাকা পছন্দ করে — বিস্তারিত বিবরণ..."
-                />
-              </Col>
-            </Row>
-          </Card>
+                <Col xs={24} md={12}>
+                  <LangInput
+                    label="City (শহর)"
+                    name="city"
+                    lang="en"
+                    placeholder="Dhaka"
+                  />
+                </Col>
+              </Row>
+            </div>
 
-          {/* 3. Market & Comparison Metrics */}
-          <Card
-            title={
+            {/* 2. Note / Why People Choose This Area */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Area Highlights & Overview (কেন মানুষ পছন্দ করে)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Detailed summary explaining what makes this neighborhood desirable
+                </p>
+              </div>
+
+              <Row gutter={16}>
+                <Col xs={24}>
+                  <LangInput
+                    label="Note (English)"
+                    name="note"
+                    lang="en"
+                    isTextArea
+                    placeholder="Why people choose it — short overview of neighbourhood..."
+                  />
+                </Col>
+                <Col xs={24}>
+                  <LangInput
+                    label="Note (Bangla)"
+                    name="noteBn"
+                    lang="bn"
+                    isTextArea
+                    sourceFieldName="note"
+                    form={form}
+                    placeholder="কেন মানুষ এই এলাকা পছন্দ করে — বিস্তারিত বিবরণ..."
+                  />
+                </Col>
+              </Row>
+            </div>
+
+            {/* 3. Market & Comparison Metrics */}
+            <div className="space-y-4 pt-8">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span>Market & Comparison Metrics (বাজার বিশ্লেষণ ও তুলনামূলক ডেটা)</span>
-                <span className="text-xs font-normal text-muted-foreground">
-                  💡 মাসিক ভাড়া ইনপুট দিলে বার্ষিক Rental Yield (%) স্বয়ংক্রিয়ভাবে হিসাব হবে
+                <div>
+                  <h3 className="text-base font-semibold text-foreground">
+                    Market & Comparison Metrics (বাজার বিশ্লেষণ ও তুলনামূলক ডেটা)
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Price benchmarks and connectivity data shown in comparison tables
+                  </p>
+                </div>
+                <span className="text-xs bg-primary/10 text-primary font-medium px-2.5 py-1 rounded-full border border-primary/20">
+                  💡 মাসিক ভাড়া দিলে Rental Yield (%) অটো হিসাব হবে
                 </span>
               </div>
-            }
-            className="shadow-xs"
-          >
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Median Asking Price (গড় ফ্ল্যাট মূল্য - BDT)"
-                  name="medianPrice"
-                  tooltip="এলাকার ফ্ল্যাটের গড় মূল্য। যেমন: ৫০ লাখ হলে 5000000 লিখবেন।"
-                >
-                  <InputNumber
-                    className="w-full"
-                    placeholder="e.g. 5000000"
-                    min={0}
-                    onChange={handleMedianPriceChange}
-                    formatter={(value) =>
-                      value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
+
+              <Row gutter={16}>
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Median Asking Price (গড় ফ্ল্যাট মূল্য - BDT)"
+                    name="medianPrice"
+                    tooltip="এলাকার ফ্ল্যাটের গড় মূল্য। যেমন: ৫০ লাখ হলে 5000000 লিখবেন।"
+                  >
+                    <InputNumber
+                      className="w-full"
+                      placeholder="e.g. 5000000"
+                      min={0}
+                      onChange={handleMedianPriceChange}
+                      formatter={(value) =>
+                        value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
+                      }
+                      parser={(value) =>
+                        value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Price Per Sq Ft (প্রতি বর্গফুটের গড় রেট - BDT)"
+                    name="pricePerSqft"
+                    tooltip="প্রতি বর্গফুটের গড় মূল্য। যেমন: 23000"
+                  >
+                    <InputNumber
+                      className="w-full"
+                      placeholder="e.g. 23000"
+                      min={0}
+                      formatter={(value) =>
+                        value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
+                      }
+                      parser={(value) =>
+                        value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Estimated Monthly Rent (আনুমানিক মাসিক ভাড়া - BDT)"
+                    tooltip="সাধারণ মাসিক ভাড়া লিখলে স্বয়ংক্রিয়ভাবে ১২ দিয়ে গুণ হয়ে বার্ষিক ভাড়া এবং Rental Yield (%) হিসাব হয়ে যাবে।"
+                    extra={
+                      monthlyRent
+                        ? `বার্ষিক মোট ভাড়া: ৳ ${(monthlyRent * 12).toLocaleString()} (${monthlyRent.toLocaleString()} × ১২ মাস)`
+                        : undefined
                     }
-                    parser={(value) =>
-                      value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
-                    }
-                  />
-                </Form.Item>
-              </Col>
+                  >
+                    <InputNumber
+                      className="w-full"
+                      placeholder="e.g. 25000"
+                      min={0}
+                      value={monthlyRent}
+                      onChange={handleMonthlyRentChange}
+                      formatter={(value) =>
+                        value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
+                      }
+                      parser={(value) =>
+                        value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
+                      }
+                    />
+                  </Form.Item>
+                </Col>
 
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Price Per Sq Ft (প্রতি বর্গফুটের গড় রেট - BDT)"
-                  name="pricePerSqft"
-                  tooltip="প্রতি বর্গফুটের গড় মূল্য। যেমন: 23000"
-                >
-                  <InputNumber
-                    className="w-full"
-                    placeholder="e.g. 23000"
-                    min={0}
-                    formatter={(value) =>
-                      value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
-                    }
-                    parser={(value) =>
-                      value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
-                    }
-                  />
-                </Form.Item>
-              </Col>
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Rental Yield (বার্ষিক ভাড়া আয়ের শতকরা হার)"
+                    name="rentalYield"
+                    tooltip="মাসিক ভাড়া লিখলে এটি ১২ মাসের হিসাবে স্বয়ংক্রিয়ভাবে বসে যাবে অথবা আপনি সরাসরি পরিবর্তনও করতে পারেন। যেমন: 6.0%"
+                    extra="পাবলিক ওয়েবসাইটের Comparison টেবিলে এই শতকরা হারটি দেখাবে"
+                  >
+                    <Input placeholder="e.g. 6.0%" />
+                  </Form.Item>
+                </Col>
 
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Estimated Monthly Rent (আনুমানিক মাসিক ভাড়া - BDT)"
-                  tooltip="সাধারণ মাসিক ভাড়া লিখলে স্বয়ংক্রিয়ভাবে ১২ দিয়ে গুণ হয়ে বার্ষিক ভাড়া এবং Rental Yield (%) হিসাব হয়ে যাবে।"
-                  extra={
-                    monthlyRent
-                      ? `বার্ষিক মোট ভাড়া: ৳ ${(monthlyRent * 12).toLocaleString()} (${monthlyRent.toLocaleString()} × ১২ মাস)`
-                      : undefined
-                  }
-                >
-                  <InputNumber
-                    className="w-full"
-                    placeholder="e.g. 25000"
-                    min={0}
-                    value={monthlyRent}
-                    onChange={handleMonthlyRentChange}
-                    formatter={(value) =>
-                      value ? `৳ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
-                    }
-                    parser={(value) =>
-                      value ? Number(value.replace(/৳\s?|(,*)/g, "")) : (undefined as any)
-                    }
-                  />
-                </Form.Item>
-              </Col>
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Security Tier (নিরাপত্তা ব্যবস্থা)"
+                    name="securityTier"
+                    tooltip="এলাকার নিরাপত্তা ব্যবস্থা। যেমন: 24/7 Diplomatic Police, CCTV Secured"
+                  >
+                    <Input placeholder="e.g. 24/7 Diplomatic Police" />
+                  </Form.Item>
+                </Col>
 
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Rental Yield (বার্ষিক ভাড়া আয়ের শতকরা হার)"
-                  name="rentalYield"
-                  tooltip="মাসিক ভাড়া লিখলে এটি ১২ মাসের হিসাবে স্বয়ংক্রিয়ভাবে বসে যাবে অথবা আপনি সরাসরি পরিবর্তনও করতে পারেন। যেমন: 6.0%"
-                  extra="পাবলিক ওয়েবসাইটের Comparison টেবিলে এই শতকরা হারটি দেখাবে"
-                >
-                  <Input placeholder="e.g. 6.0%" />
-                </Form.Item>
-              </Col>
+                <Col xs={24} md={12}>
+                  <Form.Item
+                    label="Metro Connectivity (মেট্রোরেল যোগাযোগ)"
+                    name="metroConnectivity"
+                    tooltip="মেট্রোরেল সুবিধা। যেমন: 10 mins to MRT Line 6"
+                  >
+                    <Input placeholder="e.g. 10 mins to MRT Line 6" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
 
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Security Tier (নিরাপত্তা ব্যবস্থা)"
-                  name="securityTier"
-                  tooltip="এলাকার নিরাপত্তা ব্যবস্থা। যেমন: 24/7 Diplomatic Police, CCTV Secured"
-                >
-                  <Input placeholder="e.g. 24/7 Diplomatic Police" />
-                </Form.Item>
-              </Col>
+            {/* 4. Media & Settings */}
+            <div className="space-y-4 pt-8">
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Media & Publishing (ছবি ও সেটিংস)
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Upload area thumbnail and configure visibility options
+                </p>
+              </div>
 
-              <Col xs={24} md={12}>
-                <Form.Item
-                  label="Metro Connectivity (মেট্রোরেল যোগাযোগ)"
-                  name="metroConnectivity"
-                  tooltip="মেট্রোরেল সুবিধা। যেমন: 10 mins to MRT Line 6"
-                >
-                  <Input placeholder="e.g. 10 mins to MRT Line 6" />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
+              <Row gutter={16}>
+                <Col xs={24} md={12}>
+                  <Form.Item label="Featured Area Image (এরিয়ার ছবি)">
+                    <UploadMedia
+                      form={form}
+                      fieldPath="imageUrl"
+                      idFieldPath="image"
+                      type="image"
+                    />
+                  </Form.Item>
+                </Col>
 
-          {/* 4. Media & Settings */}
-          <Card title="Media & Publishing (ছবি ও সেটিংস)" className="shadow-xs">
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Form.Item label="Featured Area Image (এরিয়ার ছবি)">
-                  <UploadMedia
-                    form={form}
-                    fieldPath="imageUrl"
-                    idFieldPath="image"
-                    type="image"
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <div className="space-y-4 rounded-xl border border-border/80 bg-muted/20 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-foreground text-sm">Featured Area</p>
-                      <p className="text-xs text-muted-foreground">Mark this area as a featured location</p>
+                <Col xs={24} md={12}>
+                  <div className="space-y-4 rounded-xl border border-border/80 bg-muted/20 p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-foreground text-sm">Featured Area</p>
+                        <p className="text-xs text-muted-foreground">Mark this area as a featured location</p>
+                      </div>
+                      <Form.Item name="featured" valuePropName="checked" noStyle>
+                        <Switch />
+                      </Form.Item>
                     </div>
-                    <Form.Item name="featured" valuePropName="checked" noStyle>
-                      <Switch />
-                    </Form.Item>
-                  </div>
 
-                  <div className="flex items-center justify-between border-t border-border/60 pt-3">
-                    <div>
-                      <p className="font-semibold text-foreground text-sm">Show on Home Page</p>
-                      <p className="text-xs text-muted-foreground">Display this area card on the website home page</p>
+                    <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                      <div>
+                        <p className="font-semibold text-foreground text-sm">Show on Home Page</p>
+                        <p className="text-xs text-muted-foreground">Display this area card on the website home page</p>
+                      </div>
+                      <Form.Item name="isHome" valuePropName="checked" noStyle>
+                        <Switch />
+                      </Form.Item>
                     </div>
-                    <Form.Item name="isHome" valuePropName="checked" noStyle>
-                      <Switch />
-                    </Form.Item>
-                  </div>
 
-                  <div className="flex items-center justify-between border-t border-border/60 pt-3">
-                    <div>
-                      <p className="font-semibold text-foreground text-sm">Active Status</p>
-                      <p className="text-xs text-muted-foreground">Toggle visibility across the whole portal</p>
+                    <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                      <div>
+                        <p className="font-semibold text-foreground text-sm">Active Status</p>
+                        <p className="text-xs text-muted-foreground">Toggle visibility across the whole portal</p>
+                      </div>
+                      <Form.Item name="isActive" valuePropName="checked" noStyle>
+                        <Switch />
+                      </Form.Item>
                     </div>
-                    <Form.Item name="isActive" valuePropName="checked" noStyle>
-                      <Switch />
-                    </Form.Item>
                   </div>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-
-          {/* Actions Bottom Bar */}
-          <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
-            <Button onClick={() => navigate("/areas")}>Cancel</Button>
-            <Button type="primary" htmlType="submit" loading={saving} size="large">
-              {submitLabel}
-            </Button>
+                </Col>
+              </Row>
+            </div>
           </div>
+        </Card>
+
+        {/* Actions Bottom Bar */}
+        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
+          <Button onClick={() => navigate("/areas")}>Cancel</Button>
+          <Button type="primary" htmlType="submit" loading={saving} size="large">
+            {submitLabel}
+          </Button>
         </div>
       </Form>
     </div>
