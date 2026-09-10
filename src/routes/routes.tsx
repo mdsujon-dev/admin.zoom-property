@@ -6,6 +6,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import AllActionLogs from "../pages/ActionLog/AllActionLogs";
 import AllErrorLogs from "../pages/ActionLog/AllErrorLogs";
 import Areas from "../pages/Areas/Areas";
+import CreateArea from "../pages/Areas/CreateArea";
+import UpdateArea from "../pages/Areas/UpdateArea";
 import Blog from "../pages/Blog/Blog";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
@@ -69,7 +71,14 @@ const routes = [
           { path: "edit/:id", element: <UpdateProject /> },
         ],
       },
-      { path: "areas", element: <Areas /> },
+      {
+        path: "areas",
+        children: [
+          { path: "", element: <Areas /> },
+          { path: "create", element: <CreateArea /> },
+          { path: "edit/:id", element: <UpdateArea /> },
+        ],
+      },
       { path: "cms/:pageId", element: <CmsPage /> },
       { path: "showcase-videos", element: <ShowcaseVideos /> },
 
