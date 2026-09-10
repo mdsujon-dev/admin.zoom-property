@@ -7,16 +7,17 @@ import {
   Popconfirm,
   Space,
   Switch,
-  Table,
   Tooltip,
 } from "antd";
-import { Edit, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Edit, Plus, Search, Trash2, icons } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import PageHeader from "../../../components/Common/PageHeader";
 import PageMeta from "../../../components/Common/PageMeta";
 import PermissionGate from "../../../components/Common/PermissionGate";
+import OrderInputCell from "../../../components/shared/OrderInputCell";
+import DataTable from "../../../components/Table/DataTable";
 import {
   useCreatePropertyOptionMutation,
   useDeletePropertyOptionMutation,
@@ -24,27 +25,82 @@ import {
   useUpdatePropertyOptionMutation,
 } from "../../../redux/features/property/propertyApi";
 
+/** Helper to resolve dynamic Lucide icon by kebab-case or PascalCase name */
+const getLucideIcon = (name?: string) => {
+  if (!name) return null;
+  const clean = name.trim();
+  const pascal = clean
+    .split(/[-_ ]+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join("");
+
+  return (icons as any)[pascal] || (icons as any)[clean] || null;
+};
+
+const AmenityIconBadge = ({ iconName }: { iconName?: string }) => {
+  if (!iconName) {
+    return <span className="text-secondary-300">—</span>;
+  }
+  const IconComponent = getLucideIcon(iconName);
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary-100 bg-primary-50 text-primary-600 shadow-xs">
+        {IconComponent ? (
+          <IconComponent className="h-4 w-4" />
+        ) : (
+          <span className="font-mono text-xs font-semibold text-secondary-400">?</span>
+        )}
+      </div>
+      <span className="font-mono text-xs text-secondary-600">{iconName}</span>
+    </div>
+  );
+};
+
 /**
  * The amenity list every listing form picks from.
- *
- * Deleting one that listings still use is refused by the server — their feature
- * lists would come back with holes in them. Switching it off keeps the existing
- * listings honest and stops it being offered on new ones, which is what
- * "we don't advertise that any more" actually means.
  */
 const Amenities = () => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const iconValue = Form.useWatch("icon", form);
 
   const { data: rows = [], isFetching } = useGetPropertyOptionsQuery({
     kind: "amenities",
   });
+
   const [createOption, { isLoading: creating }] =
     useCreatePropertyOptionMutation();
   const [updateOption, { isLoading: updating }] =
     useUpdatePropertyOptionMutation();
   const [deleteOption] = useDeletePropertyOptionMutation();
+
+  const handleUpdateOrder = async (id: string, nextOrder: number) => {
+    return updateOption({
+      kind: "amenities",
+      id,
+      data: { order: nextOrder },
+    }).unwrap();
+  };
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((r: any) =>
+      [r.name, r.nameBn, r.icon, r.description]
+        .filter(Boolean)
+        .some((v: string) => v.toLowerCase().includes(q))
+    );
+  }, [rows, search]);
+
+  const visible = useMemo(
+    () => filtered.slice((page - 1) * limit, page * limit),
+    [filtered, page, limit]
+  );
 
   useEffect(() => {
     if (!open) return form.resetFields();
@@ -98,20 +154,22 @@ const Amenities = () => {
       title: "Icon",
       dataIndex: "icon",
       key: "icon",
-      width: 160,
-      render: (icon: string) =>
-        icon ? (
-          <span className="font-mono text-xs">{icon}</span>
-        ) : (
-          <span className="text-secondary-300">—</span>
-        ),
+      width: 200,
+      render: (icon: string) => <AmenityIconBadge iconName={icon} />,
     },
     {
       title: "Order",
       dataIndex: "order",
       key: "order",
-      width: 90,
+      width: 140,
       align: "center" as const,
+      render: (_: any, record: any, index: number) => (
+        <OrderInputCell
+          record={record}
+          index={index}
+          onUpdateOrder={handleUpdateOrder}
+        />
+      ),
     },
     {
       title: "Active",
@@ -199,13 +257,31 @@ const Amenities = () => {
         }
       />
 
-      <Table
-        dataSource={rows as any[]}
+      <div className="mb-6">
+        <Input
+          allowClear
+          placeholder="Search by name, Bangla name or icon"
+          prefix={<Search className="h-4 w-4 text-gray-400" />}
+          value={search}
+          onChange={(e) => {
+            setPage(1);
+            setSearch(e.target.value);
+          }}
+          className="max-w-sm"
+        />
+      </div>
+
+      <DataTable
+        data={visible}
         columns={columns as any}
+        currentPage={page}
+        setCurrentPage={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        total={filtered.length}
+        isPaginate={filtered.length > limit}
         loading={isFetching}
         rowKey="_id"
-        pagination={false}
-        className="rounded-xl bg-white"
       />
 
       <Modal
@@ -237,9 +313,27 @@ const Amenities = () => {
           <Form.Item
             label="Icon"
             name="icon"
-            tooltip="A lucide icon name, so the website can draw it without a lookup table."
+            tooltip="A lucide icon name (e.g., arrow-up-down, zap, car, shield-check, wifi). See lucide.dev/icons"
           >
-            <Input placeholder="arrow-up-down" />
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="e.g. arrow-up-down, car, zap, shield-check"
+                className="flex-1"
+              />
+              <div
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-secondary-700 shadow-xs"
+                title={iconValue ? `Preview: ${iconValue}` : "No icon"}
+              >
+                {(() => {
+                  const IconComp = getLucideIcon(iconValue);
+                  return IconComp ? (
+                    <IconComp className="h-5 w-5 text-primary-600" />
+                  ) : (
+                    <span className="font-mono text-xs text-gray-400">—</span>
+                  );
+                })()}
+              </div>
+            </div>
           </Form.Item>
           <Space size="large">
             <Form.Item label="Order" name="order">

@@ -195,31 +195,7 @@ const Areas = () => {
         </PermissionGate>
       ),
     },
-    {
-      title: "Featured",
-      dataIndex: "featured",
-      key: "featured",
-      width: 90,
-      align: "center" as const,
-      render: (featured: boolean, r: any) => (
-        <PermissionGate
-          module="Areas"
-          action="Update"
-          fallback={
-            <Tag color={featured ? "gold" : "default"}>
-              {featured ? "Yes" : "No"}
-            </Tag>
-          }
-        >
-          <Switch
-            size="small"
-            checked={!!featured}
-            loading={busyId === r._id}
-            onChange={(checked) => onToggle(r._id, "featured", checked)}
-          />
-        </PermissionGate>
-      ),
-    },
+
     {
       title: "Actions",
       key: "actions",
