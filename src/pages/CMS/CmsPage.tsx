@@ -410,7 +410,7 @@ const SectionForm = ({
     const groups: { header?: string; fields: CmsField[] }[] = [];
     let currentGroup: { header?: string; fields: CmsField[] } | null = null;
 
-    for (const field of allEffectiveFields) {
+    for (const field of section.fields) {
       if (field.groupHeader) {
         if (currentGroup) groups.push(currentGroup);
         currentGroup = { header: field.groupHeader, fields: [field] };

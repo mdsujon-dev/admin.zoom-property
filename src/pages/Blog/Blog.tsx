@@ -1,6 +1,6 @@
 import { Button, Input, Modal, Select, Space, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
-import { Edit, Plus, Search, Tags, Trash2 } from "lucide-react";
+import { Edit, FileText, Plus, Search, Tags, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,7 @@ import {
   useGetBlogCategoriesQuery,
   useGetPostsQuery,
 } from "../../redux/features/blog/blogApi";
+import { mediaSrc } from "../../utils/mediaSrc";
 import BlogCategoriesModal from "./BlogCategoriesModal";
 import { useNavigate } from "react-router-dom";
 
@@ -61,15 +62,38 @@ const Blog = () => {
       title: "Article",
       dataIndex: "title",
       key: "title",
-      render: (title: string, r: any) => (
-        <div className="min-w-0">
-          <p className="truncate font-medium text-secondary-800">{title}</p>
-          <p className="truncate text-xs text-secondary-500">
-            {r.author?.name || "—"}
-            {r.readMinutes ? ` · ${r.readMinutes} min read` : ""}
-          </p>
-        </div>
-      ),
+      // Bounded, so the columns after it stay on screen.
+      width: 420,
+      ellipsis: true,
+      render: (title: string, r: any) => {
+        // The card image is what the index shows, so it is what the row shows.
+        // Falls back to the banner, the same way the site does.
+        const image = mediaSrc(r.thumbnail) || mediaSrc(r.coverImage);
+
+        return (
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="relative h-11 w-16 shrink-0 overflow-hidden rounded bg-secondary-100">
+              {image ? (
+                <img
+                  src={image}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <FileText className="absolute inset-0 m-auto h-4 w-4 text-secondary-300" />
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate font-medium text-secondary-800">{title}</p>
+              <p className="truncate text-xs text-secondary-500">
+                {r.author?.name || "—"}
+                {r.readMinutes ? ` · ${r.readMinutes} min read` : ""}
+              </p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       title: "Category",
@@ -77,6 +101,19 @@ const Blog = () => {
       key: "category",
       width: 150,
       render: (c: any) => (c?.name ? <Tag>{c.name}</Tag> : "—"),
+    },
+    {
+      title: "Home",
+      dataIndex: "isHome",
+      key: "isHome",
+      width: 90,
+      align: "center" as const,
+      render: (isHome: boolean) =>
+        isHome ? (
+          <Tag color="blue">Home</Tag>
+        ) : (
+          <span className="text-secondary-300">—</span>
+        ),
     },
     {
       title: "Status",

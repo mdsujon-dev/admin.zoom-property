@@ -121,7 +121,12 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
         form={form}
         layout="vertical"
         onFinish={handleFinish}
-        initialValues={{ status: "draft", featured: false, trending: false }}
+        initialValues={{
+          status: "draft",
+          featured: false,
+          trending: false,
+          isHome: false,
+        }}
         className="space-y-4"
       >
         <Card title="The article">
@@ -350,6 +355,16 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
             </Col>
             <Col xs={6} md={4}>
               <Form.Item label="Trending" name="trending" valuePropName="checked">
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col xs={6} md={4}>
+              <Form.Item
+                label="On home page"
+                name="isHome"
+                valuePropName="checked"
+                tooltip="Nothing ticked and the home strip shows the newest instead."
+              >
                 <Switch />
               </Form.Item>
             </Col>
