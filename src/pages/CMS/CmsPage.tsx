@@ -211,6 +211,29 @@ const SectionForm = ({
   const handleAddProcess = () => {
     if (!repeatable) return;
     const nextIdx = repeatableIndices.length > 0 ? Math.max(...repeatableIndices) + 1 : 0;
+    
+    const defaultItem = repeatable.defaultItems?.[nextIdx];
+    if (defaultItem) {
+      const newValues: Record<string, string> = {};
+      for (const itemField of repeatable.itemFields) {
+        const key = `${repeatable.itemPrefix}.${nextIdx}.${itemField.suffix}`;
+        const defEn =
+          defaultItem?.[`${itemField.suffix}En`] ||
+          (itemField.suffix === "title" ? defaultItem?.titleEn : defaultItem?.bodyEn) ||
+          itemField.defaultEn ||
+          "";
+        const defBn =
+          defaultItem?.[`${itemField.suffix}Bn`] ||
+          (itemField.suffix === "title" ? defaultItem?.titleBn : defaultItem?.bodyBn) ||
+          itemField.defaultBn ||
+          "";
+        
+        if (defEn) newValues[`${key}|en`] = defEn;
+        if (defBn) newValues[`${key}|bn`] = defBn;
+      }
+      form.setFieldsValue(newValues);
+    }
+
     setRepeatableIndices((prev) => [...prev, nextIdx]);
     toast.success(`${repeatable.itemName || "Process"} #${nextIdx + 1} যোগ করা হয়েছে`);
   };
