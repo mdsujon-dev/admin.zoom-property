@@ -39,6 +39,7 @@ import {
   useMarkAllNotificationsAsReadMutation,
   useMarkNotificationAsReadMutation,
 } from "../../redux/features/notification/notificationApi";
+import brand from "../../theme/brand";
 
 const TYPE_META: Record<
   NotificationType,
@@ -465,7 +466,7 @@ const AllNotifications: FC = () => {
         </div>
         <div className="rounded-xl border border-secondary-100 bg-white p-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
-            <Badge dot={unreadCount > 0} color="#e11d48">
+            <Badge dot={unreadCount > 0} color={brand.danger}>
               <Bell size={18} />
             </Badge>
           </div>

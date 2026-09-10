@@ -2,6 +2,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
+import brand from "../theme/brand";
 
 export const useColumnSearch = () => {
   const [searchText, setSearchText] = useState("");
@@ -31,7 +32,7 @@ export const useColumnSearch = () => {
       </div>
     ),
     filterIcon: (filtered: any) => (
-      <SearchOutlined style={{ color: filtered ? "#4b802d" : undefined }} />
+      <SearchOutlined style={{ color: filtered ? brand.primary : undefined }} />
     ),
     onFilter: (value: any, record: any) => {
       const data = dataIndex

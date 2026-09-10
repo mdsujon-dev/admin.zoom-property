@@ -33,10 +33,25 @@ const AreaForm = ({
 
   useEffect(() => {
     if (!initial) return;
+    const img = initial.image;
+    let imgId = undefined;
+    let imgUrl = undefined;
+
+    if (img && typeof img === "object") {
+      imgId = img._id;
+      imgUrl = img.key || img.url;
+    } else if (typeof img === "string") {
+      if (img.startsWith("http") || img.includes("/")) {
+        imgUrl = img;
+      } else if (/^[0-9a-fA-F]{24}$/.test(img)) {
+        imgId = img;
+      }
+    }
+
     form.setFieldsValue({
       ...initial,
-      image: initial.image?._id ?? initial.image,
-      imageUrl: initial.image?.key,
+      image: imgId,
+      imageUrl: imgUrl,
     });
     // Try to estimate monthly rent if medianPrice and yield are present
     if (initial.medianPrice && initial.rentalYield) {
@@ -88,11 +103,11 @@ const AreaForm = ({
       <PageHeader
         title={heading}
         breadcrumbs={[
-          { label: "Dashboard", href: "/" },
-          { label: "Areas", href: "/areas" },
-          { label: heading },
+          { title: "Dashboard", path: "/" },
+          { title: "Areas", path: "/areas" },
+          { title: heading },
         ]}
-        actions={
+        extra={
           <Button
             icon={<ArrowLeft className="size-4" />}
             onClick={() => navigate("/areas")}
@@ -310,16 +325,13 @@ const AreaForm = ({
           <Card title="Media & Publishing (ছবি ও সেটিংস)" className="shadow-xs">
             <Row gutter={16}>
               <Col xs={24} md={12}>
-                <Form.Item label="Featured Area Image (এরিয়ার ছবি)" name="imageUrl">
+                <Form.Item label="Featured Area Image (এরিয়ার ছবি)">
                   <UploadMedia
                     form={form}
                     fieldPath="imageUrl"
                     idFieldPath="image"
                     type="image"
                   />
-                </Form.Item>
-                <Form.Item name="image" hidden>
-                  <Input />
                 </Form.Item>
               </Col>
 

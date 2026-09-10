@@ -14,6 +14,7 @@ import { Metric } from "./components/DashboardKit";
 import { riseIn } from "./components/dashboardMotion";
 import ListingTrendChart from "./components/ListingTrendChart";
 import WelcomeDashboard from "./components/WelcomeDashboard";
+import brand from "../../theme/brand";
 
 const EmployeeDashboard: React.FC = () => {
   const canListings = useHasPermission("Listings Summary", "View");
@@ -70,7 +71,7 @@ const EmployeeDashboard: React.FC = () => {
                 listings?.draft ?? 0
               } draft`}
               icon={Home}
-              accent="#4b802d"
+              accent={brand.primary}
               loading={isFetching}
             />
           )}
@@ -82,7 +83,7 @@ const EmployeeDashboard: React.FC = () => {
                 listings?.rented ?? 0
               } let`}
               icon={Banknote}
-              accent="#67ae3e"
+              accent={brand.primaryMid}
               loading={isFetching}
             />
           )}
@@ -104,7 +105,7 @@ const EmployeeDashboard: React.FC = () => {
                 overview?.enquiries?.quotations ?? 0
               } quotation requests`}
               icon={Mail}
-              accent="#f59e0b"
+              accent={brand.secondary}
               loading={isFetching}
             />
           )}

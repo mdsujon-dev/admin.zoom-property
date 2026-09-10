@@ -22,6 +22,7 @@ import {
   Users,
 } from "lucide-react";
 import React from "react";
+import { primary, secondary } from "../../../theme/brand";
 
 /**
  * The guide's contents.
@@ -51,15 +52,21 @@ export const GUIDE_GROUPS = [
 
 export type GuideGroup = (typeof GUIDE_GROUPS)[number];
 
-/** One accent per band, not per topic. */
+/**
+ * One accent per band, not per topic.
+ *
+ * Steps of the brand ramp rather than seven unrelated hues: the bands are
+ * sections of one guide, and a rainbow made them look like seven different
+ * products.
+ */
 export const GROUP_ACCENT: Record<GuideGroup, string> = {
-  "Getting started": "#4b802d",
-  "Setting up": "#0ea5e9",
-  "Clients & fees": "#7c3aed",
-  "Every day": "#f59e0b",
-  Money: "#059669",
-  "Records & reports": "#e11d48",
-  Administration: "#64748b",
+  "Getting started": primary[800],
+  "Setting up": primary[500],
+  "Clients & fees": secondary[800],
+  "Every day": primary[300],
+  Money: primary[950],
+  "Records & reports": secondary[500],
+  Administration: secondary[300],
 };
 
 export interface GuideSectionData {

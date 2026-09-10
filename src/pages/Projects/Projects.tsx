@@ -16,6 +16,7 @@ import {
   useUpdateProjectMutation,
 } from "../../redux/features/project/projectApi";
 import { STAGE_COLOUR, STAGES } from "./projectMeta";
+import brand from "../../theme/brand";
 
 const { confirm } = Modal;
 
@@ -155,7 +156,7 @@ const Projects = () => {
       key: "progress",
       width: 150,
       render: (p: number) => (
-        <Progress percent={p ?? 0} size="small" strokeColor="#4b802d" />
+        <Progress percent={p ?? 0} size="small" strokeColor={brand.primary} />
       ),
     },
     {

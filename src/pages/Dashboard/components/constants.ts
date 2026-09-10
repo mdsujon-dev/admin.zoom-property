@@ -1,35 +1,29 @@
 import { FileText, LayoutGrid, PenSquare, Video } from "lucide-react";
 import React from "react";
 import { DashboardStatKey } from "../../../redux/features/dashboard/dashboardApi";
+import { CHART_SERIES, primary, secondary } from "../../../theme/brand";
 
-// Brand palette used across every chart so the dashboard reads as one system.
+// Every chart reads from `theme/brand`, so the dashboard and the rest of the
+// panel cannot drift apart — and nothing here is a hex typed by hand.
 export const dashPalette = {
-  lightest: "#f6faf3",
-  lighter: "#dae6f2",
-  light: "#8db0d1",
-  mid: "#67ae3e",
-  bold: "#4b802d",
-  deep: "#4b802d",
-  darker: "#0f172a",
+  lightest: primary[50],
+  lighter: primary[100],
+  light: primary[300],
+  mid: primary[500],
+  bold: primary[800],
+  deep: primary[950],
+  darker: secondary[900],
 };
 
-// Two-series accent colors (Leads vs Leads) — teal + indigo read clearly
-// against each other and stay on-brand.
+// Two series, told apart by depth rather than by hue: they are quantities of
+// the same kind of thing, and two unrelated colours would imply otherwise.
 export const SERIES = {
-  leads: "#4b802d", // teal
-  quotations: "#6366f1", // indigo
+  leads: primary[800],
+  quotations: secondary[800],
 };
 
 // Categorical palette for the donut / breakdown charts.
-export const DONUT_COLORS = [
-  "#4b802d",
-  "#67ae3e",
-  "#8db0d1",
-  "#6366f1",
-  "#0ea5e9",
-  "#f59e0b",
-  "#1a4570",
-];
+export const DONUT_COLORS = [...CHART_SERIES];
 
 export const STAT_ICONS: Record<
   DashboardStatKey,

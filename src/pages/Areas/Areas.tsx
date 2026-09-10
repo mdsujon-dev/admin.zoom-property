@@ -1,6 +1,7 @@
 import { Button, Input, Modal, Space, Switch, Tag, Tooltip } from "antd";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import PageHeader from "../../components/Common/PageHeader";
@@ -12,19 +13,18 @@ import {
   useGetAreasQuery,
   useUpdateAreaMutation,
 } from "../../redux/features/area/areaApi";
-import AreaModal from "../../components/modal/area/AreaModal";
 import DateTimeStacked from "../../components/shared/DateTimeStacked";
 import OrderInputCell from "../../components/shared/OrderInputCell";
+import AntImage from "../../components/shared/AntImage";
 
 const { confirm } = Modal;
 
 /** Neighbourhoods, and how many listings each one is carrying. */
 const Areas = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
-  const [editing, setEditing] = useState<any>(null);
-  const [open, setOpen] = useState(false);
   const [busyKey, setBusyKey] = useState<string | null>(null);
 
   const { data, isLoading } = useGetAreasQuery({
@@ -96,15 +96,31 @@ const Areas = () => {
       title: "Area",
       dataIndex: "name",
       key: "name",
-      render: (name: string, r: any) => (
-        <div>
-          <p className="font-medium text-secondary-800">{name}</p>
-          <p className="text-xs text-secondary-500">
-            {r.city}
-            {r.nameBn ? ` · ${r.nameBn}` : ""}
-          </p>
-        </div>
-      ),
+      render: (name: string, r: any) => {
+        const imgUrl = r.image?.key || (typeof r.image === "string" ? r.image : undefined);
+        return (
+          <div className="flex items-center gap-3">
+            {imgUrl ? (
+              <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                <AntImage
+                  src={imgUrl}
+                  accessurl={!imgUrl.startsWith("http")}
+                  alt={name}
+                  className="size-full object-cover"
+                  preview={false}
+                />
+              </div>
+            ) : null}
+            <div>
+              <p className="font-medium text-secondary-800">{name}</p>
+              <p className="text-xs text-secondary-500">
+                {r.city}
+                {r.nameBn ? ` · ${r.nameBn}` : ""}
+              </p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       title: "Note",
@@ -187,6 +203,31 @@ const Areas = () => {
       ),
     },
     {
+      title: "Featured",
+      dataIndex: "featured",
+      key: "featured",
+      width: 90,
+      align: "center" as const,
+      render: (featured: boolean, r: any) => (
+        <PermissionGate
+          module="Areas"
+          action="Update"
+          fallback={
+            <Tag color={featured ? "gold" : "default"}>
+              {featured ? "Featured" : "Off"}
+            </Tag>
+          }
+        >
+          <Switch
+            size="small"
+            checked={!!featured}
+            loading={busyKey === `${r._id}-featured`}
+            onChange={(checked) => onToggle(r._id, "featured", checked)}
+          />
+        </PermissionGate>
+      ),
+    },
+    {
       title: "Active",
       dataIndex: "isActive",
       key: "isActive",
@@ -223,10 +264,7 @@ const Areas = () => {
             <Tooltip title="Edit">
               <Button
                 icon={<Edit className="h-4 w-4" />}
-                onClick={() => {
-                  setEditing(r);
-                  setOpen(true);
-                }}
+                onClick={() => navigate(`/areas/edit/${r._id}`)}
               />
             </Tooltip>
           </PermissionGate>
@@ -257,16 +295,11 @@ const Areas = () => {
         breadcrumbs={[{ title: "Dashboard", path: "/" }, { title: "Areas" }]}
         extra={
           <PermissionGate module="Areas" action="Create">
-            <Button
-              type="primary"
-              icon={<Plus className="h-4 w-4" />}
-              onClick={() => {
-                setEditing(null);
-                setOpen(true);
-              }}
-            >
-              Add area
-            </Button>
+            <Link to="/areas/create">
+              <Button type="primary" icon={<Plus className="h-4 w-4" />}>
+                Add area
+              </Button>
+            </Link>
           </PermissionGate>
         }
       />
@@ -296,15 +329,6 @@ const Areas = () => {
         isPaginate={total > limit}
         loading={isLoading}
         rowKey="_id"
-      />
-
-      <AreaModal
-        open={open}
-        area={editing}
-        onClose={() => {
-          setOpen(false);
-          setEditing(null);
-        }}
       />
     </div>
   );

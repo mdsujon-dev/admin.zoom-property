@@ -7,6 +7,7 @@ import {
 import { FormInput } from "../../../Form/FormInput";
 import AntModal from "../../../shared/AntModal";
 import UploadImage from "../../../shared/UploadImage";
+import brand from "../../../../theme/brand";
 
 const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
@@ -25,7 +26,7 @@ const CreateCountryModal = ({
       const accent =
         typeof values.accentSolid === "string"
           ? values.accentSolid
-          : values.accentSolid?.toHexString?.() || "#22c55e";
+          : values.accentSolid?.toHexString?.() || brand.primary;
 
       const payload = {
         ...values,
@@ -72,7 +73,7 @@ const CreateCountryModal = ({
         layout="vertical"
         onFinish={handleSubmit}
         className="space-y-4"
-        initialValues={{ accentSolid: "#22c55e", isActive: true }}
+        initialValues={{ accentSolid: brand.primary, isActive: true }}
       >
         <Form.Item
           label="Flag"

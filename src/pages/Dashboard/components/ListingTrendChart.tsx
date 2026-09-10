@@ -9,8 +9,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import brand from "../../../theme/brand";
 
-const BRAND = "#4b802d";
+const BRAND = brand.primary;
 
 /**
  * Listings taken on per month, last six.

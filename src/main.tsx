@@ -15,18 +15,20 @@ import { store } from "./redux/features/store";
 import router from "./routes/routes";
 import "./styles/index.css";
 import { initGlobalNumberInputHandler } from "./utils/globalNumberInputHandler";
+import brand from "./theme/brand";
 
 // Prevent text input globally in all numeric fields
 initGlobalNumberInputHandler();
 
 const config = {
   token: {
-    // Zoom Property brand — the same hex values the public site uses.
-    colorPrimary: "#4b802d",
-    // Links take the mid blue: navy on white reads as body text, not as a link.
-    colorLink: "#67ae3e",
-    colorPrimaryBg: "#4b802d18",
-    colorError: "#c00918",
+    // Zoom Property brand — the same numbers Tailwind and the charts use.
+    colorPrimary: brand.primary,
+    // Links take the mid green: the deep green on white reads as body text
+    // rather than as a link.
+    colorLink: brand.primaryMid,
+    colorPrimaryBg: `${brand.primary}18`,
+    colorError: brand.danger,
     // Match the Tailwind/global typeface so antd components don't fall back
     // to their own default sans stack.
     fontFamily: '"Montserrat", "Noto Sans Bengali", sans-serif',

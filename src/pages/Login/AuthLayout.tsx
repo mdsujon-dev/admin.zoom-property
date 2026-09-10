@@ -41,7 +41,7 @@ export function AuthLayout({
   return (
     <div className="flex min-h-screen flex-col bg-secondary-50 lg:flex-row">
       {/* Brand panel — desktop only */}
-      <aside className="relative hidden overflow-hidden bg-gradient-to-br from-[#0f2740] via-[#4b802d] to-[#4b802d] lg:flex lg:min-h-screen lg:w-[46%] xl:w-1/2">
+      <aside className="relative hidden overflow-hidden bg-gradient-to-br from-secondary-900 via-primary-900 to-primary-700 lg:flex lg:min-h-screen lg:w-[46%] xl:w-1/2">
         {/* Depth: one soft wash plus two drifting orbs. Decorative only. */}
         <div
           aria-hidden
@@ -53,7 +53,7 @@ export function AuthLayout({
         />
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-[#67ae3e]/40 blur-3xl"
+          className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-primary-500/40 blur-3xl"
           animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
           transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -162,7 +162,7 @@ export function AuthLayout({
       <style>{`
         .auth-form .ant-form-item-label > label { font-weight: 500; color: #333333; }
         .auth-form .ant-input-affix-wrapper:hover,
-        .auth-form .ant-input-affix-wrapper-focused { border-color: #4b802d !important; }
+        .auth-form .ant-input-affix-wrapper-focused { border-color: var(--primary) !important; }
         .auth-form .ant-input-affix-wrapper-focused { box-shadow: 0 0 0 3px rgba(19,48,80,0.12) !important; }
       `}</style>
     </div>

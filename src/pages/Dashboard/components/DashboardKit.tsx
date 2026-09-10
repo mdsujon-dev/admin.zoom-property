@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 
 import { riseIn } from "./dashboardMotion";
+import brand from "../../../theme/brand";
 
 /**
  * The two shells every dashboard on this system is built from.
@@ -107,7 +108,7 @@ export const Section = ({
   title,
   subtitle,
   icon: Icon,
-  accent = "#4b802d",
+  accent = brand.primary,
   action,
   children,
   className,

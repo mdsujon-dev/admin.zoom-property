@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import type { ReactNode } from "react";
+import brand from "../../../theme/brand";
 
 /**
  * The company's ID card, drawn from one description of a person.
@@ -168,7 +169,7 @@ export const DEFAULT_OPTIONS: Required<Omit<IdCardOptions, "terms" | "qrUrlPatte
   terms: string[];
   qrUrlPattern: string;
 } = {
-  accent: "#4b802d",
+  accent: brand.primary,
   showPhoto: true,
   // What the company's printed card carries today. Everything else in the
   // catalogue is off, so the card out of the box is the card they already
@@ -236,8 +237,8 @@ export const DEFAULT_BY_AUDIENCE: Record<
   string,
   { template: TemplateKey; accent: string }
 > = {
-  agent: { template: "company", accent: "#4b802d" },
-  employee: { template: "company", accent: "#4b802d" },
+  agent: { template: "company", accent: brand.primary },
+  employee: { template: "company", accent: brand.primary },
 };
 
 /** The starting point for one group: its design plus the shared defaults. */
@@ -254,7 +255,7 @@ export const templateFor = (audience: string): TemplateKey =>
 export const CARD_W = "54mm";
 export const CARD_H = "86mm";
 
-const BRAND = "#4b802d";
+const BRAND = brand.primary;
 const INK = "#0f172a";
 
 

@@ -21,6 +21,7 @@ import {
   useMarkAllNotificationsAsReadMutation,
   useMarkNotificationAsReadMutation,
 } from "../../../redux/features/notification/notificationApi";
+import brand from "../../../theme/brand";
 
 const TYPE_ICON: Record<NotificationType, LucideIcon> = {
   time_member_contact: MessageCircle,
@@ -271,7 +272,7 @@ const NotificationBell: FC = () => {
           overflowCount={99}
           size="small"
           offset={[-2, 2]}
-          color="#e11d48"
+          color={brand.danger}
         >
           <Bell size={20} />
         </Badge>
