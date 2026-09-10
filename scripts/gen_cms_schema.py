@@ -74,6 +74,8 @@ BANNER_ONLY = {
     "areas": "areas",
     "landowners": "landowner",
     "reviews": "reviews",
+    "blog": "blog",
+    "contact": "contact",
 }
 
 BANNER_KEYS = ["backgroundImage", "eyebrow", "title", "description"]
