@@ -1,9 +1,10 @@
 import { Button, Empty, Form, Input, Space, Spin, Tabs, Tag, Tooltip } from "antd";
-import { RotateCcw, Save } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { Languages, RotateCcw, Save } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { translateToBanglaApi } from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
@@ -113,6 +114,7 @@ const SectionForm = ({
   stored: Record<string, CmsContentDoc>;
 }) => {
   const [form] = Form.useForm();
+  const [translatingAll, setTranslatingAll] = useState(false);
   const [save, { isLoading: saving }] = useSaveCmsContentMutation();
   const [reset, { isLoading: resetting }] = useResetCmsContentMutation();
 
@@ -133,6 +135,32 @@ const SectionForm = ({
     (f) =>
       storedValue(stored, f.key, "en") || storedValue(stored, f.key, "bn")
   ).length;
+
+  const onTranslateAll = async () => {
+    setTranslatingAll(true);
+    let count = 0;
+    try {
+      for (const field of section.fields) {
+        const enVal = (form.getFieldValue(`${field.key}|en`) || field.en || "").trim();
+        if (enVal) {
+          const bnText = await translateToBanglaApi(enVal);
+          if (bnText) {
+            form.setFieldValue(`${field.key}|bn`, bnText);
+            count++;
+          }
+        }
+      }
+      if (count > 0) {
+        toast.success(`সেকশনের ${count}টি ফিল্ড বাংলায় অনুবাদ করা হয়েছে`);
+      } else {
+        toast.info("অনুবাদ করার মতো কোনো ইংরেজি টেক্সট পাওয়া যায়নি");
+      }
+    } catch {
+      toast.error("অনুবাদ করতে সমস্যা হয়েছে");
+    } finally {
+      setTranslatingAll(false);
+    }
+  };
 
   const onFinish = async (values: Record<string, string>) => {
     const contents: CmsUpsertItem[] = [];
@@ -202,6 +230,16 @@ const SectionForm = ({
           </Tag>
         </Space>
         <Space>
+          <Tooltip title="Translate all English fields in this section to Bangla">
+            <Button
+              icon={<Languages className="h-4 w-4 text-primary-600" />}
+              loading={translatingAll}
+              onClick={onTranslateAll}
+              className="text-primary-700 border-primary-200 hover:bg-primary-50"
+            >
+              সবগুলো বাংলা করুন
+            </Button>
+          </Tooltip>
           <PermissionGate module="Dynamic Content" action="Delete">
             <Tooltip title="Clear this section's edits and go back to the text built into the site">
               <Button
@@ -228,7 +266,7 @@ const SectionForm = ({
 
       <div className="space-y-1">
         {section.fields.map((field) => (
-          <FieldRow key={field.key} field={field} />
+          <FieldRow key={field.key} field={field} form={form} />
         ))}
       </div>
     </Form>
@@ -238,11 +276,37 @@ const SectionForm = ({
 /**
  * One string, in both languages.
  *
- * Side by side rather than two tabs: the point of the Bangla box is that
- * somebody can see what the English says while they write it.
+ * Side by side with 1-click English to Bangla auto-translation button.
  */
-const FieldRow = ({ field }: { field: CmsField }) => {
+const FieldRow = ({
+  field,
+  form,
+}: {
+  field: CmsField;
+  form: any;
+}) => {
+  const [translating, setTranslating] = useState(false);
   const Control = field.type === "textarea" ? Input.TextArea : Input;
+
+  const handleTranslate = async () => {
+    const enVal = (form.getFieldValue(`${field.key}|en`) || field.en || "").trim();
+    if (!enVal) {
+      toast.warning("অনুবাদ করার জন্য প্রথমে ইংরেজি বক্সে লিখুন");
+      return;
+    }
+    setTranslating(true);
+    try {
+      const bnText = await translateToBanglaApi(enVal);
+      if (bnText) {
+        form.setFieldValue(`${field.key}|bn`, bnText);
+        toast.success("বাংলায় অনুবাদ সম্পন্ন হয়েছে");
+      }
+    } catch {
+      toast.error("অনুবাদ করতে সমস্যা হয়েছে");
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   return (
     <div className="grid gap-3 border-b border-secondary-50 py-3 last:border-0 md:grid-cols-2">
@@ -263,9 +327,21 @@ const FieldRow = ({ field }: { field: CmsField }) => {
       </Form.Item>
       <Form.Item
         label={
-          <span className="text-xs font-medium text-secondary-500">
-            {field.label} (বাংলা)
-          </span>
+          <div className="flex w-full items-center justify-between">
+            <span className="text-xs font-medium text-secondary-500">
+              {field.label} (বাংলা)
+            </span>
+            <Button
+              type="link"
+              size="small"
+              onClick={handleTranslate}
+              loading={translating}
+              icon={!translating ? <Languages className="h-3.5 w-3.5 text-primary-600" /> : undefined}
+              className="!h-auto !p-0 !text-xs !font-medium text-primary-600 hover:text-primary-700 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              বাংলা করুন
+            </Button>
+          </div>
         }
         name={`${field.key}|bn`}
         className="!mb-0"
