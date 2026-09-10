@@ -18,11 +18,11 @@ import LandownerProjectModal from "./LandownerProjectModal";
 const { confirm } = Modal;
 
 /**
- * Joint-venture case studies - the evidence on the landowners page.
+ * The blocks on the landowners page - a photograph, a heading, a passage.
  *
  * Publishing is its own column rather than a field inside the form: putting a
- * completed deal on the website is a different act from recording it, and the
- * log keeps who did it.
+ * block on the website is a different act from writing it, and the log keeps
+ * who did it.
  */
 const Landowners = () => {
   const [page, setPage] = useState(1);
@@ -44,26 +44,26 @@ const Landowners = () => {
 
   const onDelete = (id: string, name: string) =>
     confirm({
-      title: "Delete this case study?",
+      title: "Delete this block?",
       content: `"${name}" will be removed from the landowners page.`,
       okText: "Yes, delete",
       okType: "danger",
       onOk: async () => {
         try {
           await deleteProject(id).unwrap();
-          toast.success("Case study deleted");
+          toast.success("Block deleted");
         } catch (e: any) {
-          toast.error(e?.data?.message || "Could not delete the case study");
+          toast.error(e?.data?.message || "Could not delete the block");
         }
       },
     });
 
   const columns = [
     {
-      title: "Project",
-      dataIndex: "name",
-      key: "name",
-      render: (name: string, r: any) => (
+      title: "Block",
+      dataIndex: "title",
+      key: "title",
+      render: (title: string, r: any) => (
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-11 w-16 shrink-0 overflow-hidden rounded bg-secondary-100">
             {mediaSrc(r.image) ? (
@@ -77,46 +77,35 @@ const Landowners = () => {
             )}
           </div>
           <div className="min-w-0">
-            <p className="truncate font-medium text-secondary-800">{name}</p>
+            <p className="truncate font-medium text-secondary-800">{title}</p>
+            {/* The passage is HTML, so the preview is its text with the tags
+                taken out — a row is not the place to render markup. */}
             <p className="truncate text-xs text-secondary-500">
-              {r.location || "—"}
+              {String(r.description || "").replace(/<[^>]*>/g, " ").trim() || "—"}
             </p>
           </div>
         </div>
       ),
     },
     {
-      title: "Land",
-      dataIndex: "landSizeKatha",
-      key: "landSizeKatha",
-      width: 110,
-      align: "center" as const,
-      render: (v: number) => (v ? `${v} katha` : "—"),
-    },
-    {
-      title: "Floors",
-      dataIndex: "floors",
-      key: "floors",
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
       width: 90,
       align: "center" as const,
-      render: (v: number) => v ?? "—",
     },
     {
-      title: "Owner share",
-      dataIndex: "ownerSharePercent",
-      key: "ownerSharePercent",
-      width: 120,
+      title: "On page",
+      dataIndex: "isHome",
+      key: "isHome",
+      width: 100,
       align: "center" as const,
-      render: (v: number) =>
-        typeof v === "number" ? <Tag color="green">{v}%</Tag> : "—",
-    },
-    {
-      title: "Completed",
-      dataIndex: "completedYear",
-      key: "completedYear",
-      width: 110,
-      align: "center" as const,
-      render: (v: number) => v ?? "—",
+      render: (isHome: boolean) =>
+        isHome ? (
+          <Tag color="blue">On page</Tag>
+        ) : (
+          <span className="text-secondary-300">—</span>
+        ),
     },
     {
       title: "Published",
@@ -162,7 +151,7 @@ const Landowners = () => {
               <Button
                 danger
                 icon={<Trash2 className="h-4 w-4" />}
-                onClick={() => onDelete(r._id, r.name)}
+                onClick={() => onDelete(r._id, r.title)}
               />
             </Tooltip>
           </PermissionGate>
@@ -175,12 +164,12 @@ const Landowners = () => {
     <div>
       <PageMeta
         title="Landowners · Zoom Property Admin"
-        description="Joint-venture case studies shown to landowners."
+        description="The blocks on the landowners page."
         noindex
       />
       <PageHeader
         title="Landowners"
-        subtitle="Completed joint ventures, and what the landowner got"
+        subtitle="A photograph, a heading and a passage, in the order they appear"
         breadcrumbs={[{ title: "Dashboard", path: "/" }, { title: "Landowners" }]}
         extra={
           <PermissionGate module="Landowners" action="Create">
@@ -192,7 +181,7 @@ const Landowners = () => {
                 setOpen(true);
               }}
             >
-              Add case study
+              Add block
             </Button>
           </PermissionGate>
         }
@@ -201,7 +190,7 @@ const Landowners = () => {
       <div className="mb-6">
         <Input
           allowClear
-          placeholder="Search by project name or location"
+          placeholder="Search by title"
           prefix={<Search className="h-4 w-4 text-gray-400" />}
           value={search}
           onChange={(e) => {

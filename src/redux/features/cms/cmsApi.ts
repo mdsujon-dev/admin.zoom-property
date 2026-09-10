@@ -9,7 +9,8 @@ export interface CmsContentDoc {
 
 export interface CmsUpsertItem {
   key: string;
-  value: string;
+  /** A gallery field stores several URLs, so this is not string-only. */
+  value: string | string[];
   group: string;
   type: "text";
 }

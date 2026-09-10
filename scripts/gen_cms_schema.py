@@ -224,7 +224,14 @@ def build():
  * `<path>.<lang>` in the Dynamic Content collection, grouped by page id.
  */
 
-export type CmsFieldType = "text" | "textarea" | "url" | "image";
+export type CmsFieldType =
+  | "text"
+  | "textarea"
+  | "url"
+  /** One uploaded image, stored as its URL. */
+  | "image"
+  /** A gallery: several images, stored as an array of URLs. */
+  | "images";
 
 export interface CmsField {
   /** Dictionary path, e.g. `hero.trust.rajuk`. */

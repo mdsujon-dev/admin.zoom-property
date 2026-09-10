@@ -191,7 +191,7 @@ const SectionForm = ({
   }, [section.fields, repeatable, repeatableIndices]);
 
   const initial = useMemo(() => {
-    const values: Record<string, string> = {};
+    const values: Record<string, string | string[]> = {};
     for (const field of allEffectiveFields) {
       values[`${field.key}|en`] = storedValue(stored, field.key, "en");
       values[`${field.key}|bn`] = storedValue(stored, field.key, "bn");
@@ -276,7 +276,7 @@ const SectionForm = ({
     }
   };
 
-  const onFinish = async (values: Record<string, string>) => {
+  const onFinish = async (values: Record<string, string | string[]>) => {
     const contents: CmsUpsertItem[] = [];
     const clear: string[] = [];
 
@@ -313,7 +313,9 @@ const SectionForm = ({
 
       for (const lang of ["en", "bn"] as const) {
         const key = cmsStorageKey(field.key, lang);
-        const next = (values[`${field.key}|${lang}`] ?? "").trim();
+        const raw = values[`${field.key}|${lang}`] ?? "";
+        // This branch only runs for the text kinds; a gallery is handled above.
+        const next = (typeof raw === "string" ? raw : "").trim();
         const before = storedValue(stored, field.key, lang);
         if (next) {
           if (next !== before) {
