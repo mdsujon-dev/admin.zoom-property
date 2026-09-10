@@ -14,7 +14,9 @@ const ErrorPage = () => {
       transition={{ duration: 0.3 }}
       className="flex h-full min-h-[80vh] flex-col items-center justify-center text-center p-4"
     >
-      <h1 className="mb-4 text-9xl font-bold text-primary-500">
+      {/* Red, not the brand green: an error has to read as an error, and a
+          page rendered in the brand colour reads as a page that is working. */}
+      <h1 className="mb-4 text-9xl font-bold text-red-600">
         {error?.status || '404'}
       </h1>
       <h2 className="mb-6 text-3xl font-semibold">

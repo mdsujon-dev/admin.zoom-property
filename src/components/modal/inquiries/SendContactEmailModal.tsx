@@ -165,7 +165,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Friendly follow-up",
     description: "Polite nudge if they haven't replied",
     icon: <RefreshCw className="w-4 h-4" />,
-    accent: "bg-pink-50 text-pink-600 ring-pink-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Re: {{subject}} — gentle nudge",
     body: `<p>Hi {{name}},</p>
 <p>Just floating this one back to the top of your inbox — wanted to make sure my previous reply about <strong>"{{subject}}"</strong> didn't get buried.</p>

@@ -678,3 +678,35 @@ html.app-shell-locked body {
   padding-left: 20px;
   border-left: 1px solid rgb(241 245 249);
 }
+
+/* ── Ant Design Image Mask Perfect Centering ────────────────────────── */
+.ant-image {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden;
+}
+
+.ant-image-mask {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: inherit;
+}
+
+.ant-image-mask-info {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 0 !important; /* hide default text if any */
+}
+

@@ -60,12 +60,12 @@ export const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
           isCollapsed ? "justify-center px-3 py-2" : "px-4 py-2"
         } ${
           isActive
-            // A soft tint rather than a solid green bar. The brand green is
-            // light enough now that white on it is 2.9:1 — unreadable at this
-            // size — so the active item is the brand colour as a wash with the
-            // dark step for the label, which reads at a glance and passes
-            // contrast comfortably.
-            ? "bg-primary-100 text-primary-800 font-semibold"
+            // A solid brand bar, not a tint. `primary-100` is a 3%-saturation
+            // wash: it is the brand hue, but at this size it is indistinguishable
+            // from grey, so the panel looked unbranded even after the palette
+            // changed. White on `primary` measures 4.75:1 and passes AA, so the
+            // active item can carry the colour outright.
+            ? "bg-primary text-white font-semibold shadow-sm"
             : "text-secondary-600 hover:bg-primary-50 hover:text-primary hover:shadow-sm"
         }`
       }
@@ -109,7 +109,7 @@ export const SidebarMenuItem: FC<SidebarMenuItemProps> = ({
       )}
 
       {isActive && !isCollapsed && badge === 0 && (
-        <span className="absolute right-3 w-1.5 h-1.5 bg-primary rounded-full"></span>
+        <span className="absolute right-3 w-1.5 h-1.5 bg-white rounded-full"></span>
       )}
     </NavLink>
   );

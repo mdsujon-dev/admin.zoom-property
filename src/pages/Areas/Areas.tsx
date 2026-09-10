@@ -16,6 +16,7 @@ import {
 import DateTimeStacked from "../../components/shared/DateTimeStacked";
 import OrderInputCell from "../../components/shared/OrderInputCell";
 import AntImage from "../../components/shared/AntImage";
+import { mediaSrc } from "../../utils/mediaSrc";
 
 const { confirm } = Modal;
 
@@ -101,12 +102,14 @@ const Areas = () => {
         return (
           <div className="flex items-center gap-3">
             {imgUrl ? (
-              <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+              <div className="w-11 h-11 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity">
                 <AntImage
                   src={imgUrl}
                   alt={name}
-                  className="size-full object-cover"
-                  preview={false}
+                  width="100%"
+                  height="100%"
+                  className="!w-full !h-full !object-cover"
+                  preview={true}
                 />
               </div>
             ) : null}

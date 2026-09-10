@@ -1,4 +1,5 @@
 import { Image } from "antd";
+import { Eye } from "lucide-react";
 import { mediaSrc } from "../../utils/mediaSrc";
 
 interface AntImageProps {
@@ -6,6 +7,7 @@ interface AntImageProps {
   alt?: string;
   accessurl?: boolean;
   className?: string;
+  rootClassName?: string;
   height?: number | string;
   width?: number | string;
   title?: string;
@@ -18,7 +20,8 @@ export default function AntImage({
   src,
   alt = "image",
   accessurl = false,
-  className,
+  className = "!w-full !h-full !object-cover",
+  rootClassName = "!w-full !h-full !flex !items-center !justify-center",
   height,
   width,
   title,
@@ -26,7 +29,13 @@ export default function AntImage({
   preview = true,
   fallback,
 }: AntImageProps) {
-  const finalSrc = src ? (accessurl ? mediaSrc(src) : (src.startsWith("http") ? src : mediaSrc(src))) : "";
+  const finalSrc = src
+    ? accessurl
+      ? mediaSrc(src)
+      : src.startsWith("http")
+      ? src
+      : mediaSrc(src)
+    : "";
 
   return (
     <Image
@@ -34,15 +43,27 @@ export default function AntImage({
       alt={alt}
       title={title}
       className={className}
+      rootClassName={rootClassName}
+      height={height}
+      width={width}
       style={{
-        ...style,
-        height,
-        width,
+        width: width ?? "100%",
+        height: height ?? "100%",
         objectFit: "cover",
-        borderRadius: "0px",
+        ...style,
       }}
       loading="lazy"
-      preview={preview}
+      preview={
+        preview
+          ? {
+              mask: (
+                <div className="flex items-center justify-center w-full h-full text-white">
+                  <Eye className="w-4 h-4 drop-shadow-sm" />
+                </div>
+              ),
+            }
+          : false
+      }
       fallback={fallback}
     />
   );

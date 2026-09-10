@@ -176,7 +176,7 @@ const presetTemplates: EmailTemplate[] = [
     label: "Project kickoff",
     description: "Confirm engagement and next steps",
     icon: <PartyPopper className="w-4 h-4" />,
-    accent: "bg-pink-50 text-pink-600 ring-pink-200",
+    accent: "bg-primary-50 text-primary-600 ring-primary-200",
     subject: "Welcome aboard — kicking off your {{service}} project",
     body: `<p>Hi {{name}},</p>
 <p>It's official — we're thrilled to be partnering with you on your <strong>{{service}}</strong> project! Thank you for trusting Zoom Property with this work; we'll do everything we can to make it a great experience.</p>

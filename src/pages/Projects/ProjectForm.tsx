@@ -146,8 +146,8 @@ const ProjectForm = ({
           unitsLeft: 0,
         }}
       >
-        <Card className="shadow-sm border border-border/80 rounded-2xl mb-6">
-          <div className="space-y-8 divide-y divide-border/60">
+        <Card className="border border-gray-300 rounded-lg bg-white shadow-xs mb-6">
+          <div className="space-y-8 divide-y divide-gray-200">
             {/* 1. The Basics */}
             <div className="space-y-4">
               <div>
@@ -275,7 +275,7 @@ const ProjectForm = ({
               <div className="pt-2">
                 <Form.List name="milestones">
                   {(fields, { add, remove }) => (
-                    <div className="rounded-xl border border-border/80 bg-muted/20 p-4">
+                    <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
                       <div className="mb-3 flex items-center justify-between">
                         <div>
                           <p className="text-sm font-semibold text-foreground">
@@ -468,7 +468,7 @@ const ProjectForm = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-foreground text-sm">Active</p>
                     <p className="text-xs text-muted-foreground">Show in portal</p>
@@ -478,7 +478,7 @@ const ProjectForm = ({
                   </Form.Item>
                 </div>
 
-                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-foreground text-sm">Featured</p>
                     <p className="text-xs text-muted-foreground">Highlight badge</p>
@@ -488,7 +488,7 @@ const ProjectForm = ({
                   </Form.Item>
                 </div>
 
-                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-foreground text-sm">On Home Page</p>
                     <p className="text-xs text-muted-foreground">Home showcase</p>
@@ -498,7 +498,7 @@ const ProjectForm = ({
                   </Form.Item>
                 </div>
 
-                <div className="rounded-xl border border-border/80 bg-muted/20 p-4 flex items-center justify-between">
+                <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-foreground text-sm">CCTV Live</p>
                     <p className="text-xs text-muted-foreground">Stream active</p>
@@ -513,7 +513,7 @@ const ProjectForm = ({
         </Card>
 
         {/* Actions Bottom Bar */}
-        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-card/90 backdrop-blur-md p-4 rounded-2xl border border-border/80 shadow-lg">
+        <div className="flex items-center justify-end gap-3 sticky bottom-4 z-10 bg-white/95 backdrop-blur-md p-4 rounded-lg border border-gray-300 shadow-md">
           <Button onClick={() => navigate("/projects")}>Cancel</Button>
           <Button type="primary" htmlType="submit" loading={saving} size="large">
             {submitLabel}

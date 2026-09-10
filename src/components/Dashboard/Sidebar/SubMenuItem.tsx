@@ -36,8 +36,8 @@ export const SubMenuItem: FC<SubMenuItemProps> = ({
       className={({ isActive: navActive }) =>
         `flex items-center gap-2 font-display py-2 px-3 rounded-[7px] transition-all duration-300 group min-w-0 ${
           (active ?? navActive)
-            ? "bg-primary-50 text-primary font-semibold"
-            : "text-secondary-500 hover:text-primary hover:bg-primary-50/50"
+            ? "bg-primary-100 text-primary-800 font-semibold"
+            : "text-secondary-500 hover:text-primary hover:bg-primary-50"
         }`
       }
     >
