@@ -14,7 +14,7 @@ import {
   useGetPostsQuery,
 } from "../../redux/features/blog/blogApi";
 import BlogCategoriesModal from "./BlogCategoriesModal";
-import PostModal from "./PostModal";
+import { useNavigate } from "react-router-dom";
 
 const { confirm } = Modal;
 
@@ -24,8 +24,7 @@ const Blog = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>();
   const [category, setCategory] = useState<string | undefined>();
-  const [editing, setEditing] = useState<any>(null);
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const [catsOpen, setCatsOpen] = useState(false);
 
   const { data, isFetching } = useGetPostsQuery({
@@ -116,10 +115,7 @@ const Blog = () => {
             <Tooltip title="Edit">
               <Button
                 icon={<Edit className="h-4 w-4" />}
-                onClick={() => {
-                  setEditing(r);
-                  setOpen(true);
-                }}
+                onClick={() => navigate(`/blog/edit/${r._id}`)}
               />
             </Tooltip>
           </PermissionGate>
@@ -162,10 +158,7 @@ const Blog = () => {
               <Button
                 type="primary"
                 icon={<Plus className="h-4 w-4" />}
-                onClick={() => {
-                  setEditing(null);
-                  setOpen(true);
-                }}
+                onClick={() => navigate("/blog/create")}
               >
                 Write article
               </Button>
@@ -231,14 +224,6 @@ const Blog = () => {
         rowKey="_id"
       />
 
-      <PostModal
-        open={open}
-        post={editing}
-        onClose={() => {
-          setOpen(false);
-          setEditing(null);
-        }}
-      />
       <BlogCategoriesModal open={catsOpen} onClose={() => setCatsOpen(false)} />
     </div>
   );

@@ -661,6 +661,17 @@ const FieldRow = ({
   }
 
   if (field.type === "url" || field.type === "icon") {
+    const isIcon = field.type === "icon";
+    const tooltipContent = isIcon ? (
+      <div className="flex flex-col gap-1 text-xs">
+        <span>You can use exact names (e.g. <code>check</code>) or FontAwesome classes / tags.</span>
+        <span>Example: <code>fa-solid fa-house</code> or <code>&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;</code></span>
+        <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" rel="noreferrer" className="text-blue-300 hover:text-blue-100 underline mt-1">
+          Search FontAwesome Icons ↗
+        </a>
+      </div>
+    ) : field.key;
+
     return (
       <div className="border-b border-secondary-50 py-3 last:border-0">
         <Form.Item
@@ -671,9 +682,9 @@ const FieldRow = ({
           }
           name={`${field.key}|en`}
           className="!mb-0"
-          tooltip={field.key}
+          tooltip={tooltipContent}
         >
-          <Input placeholder={field.en || "—"} />
+          <Input placeholder={isIcon ? 'e.g. "fa-solid fa-house" or "<i class=\'fa-solid fa-house\'></i>"' : field.en || "—"} />
         </Form.Item>
       </div>
     );

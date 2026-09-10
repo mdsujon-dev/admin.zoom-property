@@ -716,6 +716,259 @@ export const cmsPages: CmsPageDef[] = [
           },
         ],
       },
+      {
+        id: "story",
+        label: "Story",
+        fields: [
+          {
+            key: "about.story.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            hint: "Max 3-5 words. Keep it very short.",
+            en: "Who we are",
+            bn: "আমরা কারা"
+          },
+          {
+            key: "about.story.title",
+            label: "Title",
+            type: "text",
+            hint: "Main heading. 6-10 words maximum to avoid breaking the layout.",
+            en: "We started because buying here was a leap of faith",
+            bn: "আমরা শুরু করেছিলাম কারণ এখানে কেনা ছিল একটি বিশ্বাসের ব্যাপার"
+          },
+          {
+            key: "about.story.lead",
+            label: "Lead",
+            type: "textarea",
+            hint: "Short introductory paragraph (2-3 lines). Keep text balanced.",
+            en: "Zoom Property was built by people who had bought property in Dhaka themselves, and knew how little of it could be checked before the money moved.",
+            bn: "জুম প্রপার্টি এমন লোকেদের দ্বারা তৈরি হয়েছিল যারা নিজেরাই ঢাকায় সম্পত্তি কিনেছিলেন এবং জানতেন যে টাকা লেনদেনের আগে এর কত সামান্যই চেক করা যায়।"
+          },
+          {
+            key: "about.story.bodyOne",
+            label: "Body One",
+            type: "textarea",
+            hint: "First main paragraph. Keep it around 40-50 words.",
+            en: "Every listing on this site has been walked by a member of our survey team, photographed the month it went live, and had its RAJUK plan and title deed read line by line before it was published. Nothing is listed on a developer's word.",
+            bn: "এই সাইটের প্রতিটি লিস্টিং আমাদের সার্ভে টিমের একজন সদস্য পরিদর্শন করেছেন, এটি লাইভ হওয়ার মাসেই ছবি তোলা হয়েছে এবং প্রকাশিত হওয়ার আগে এর রাজউক প্ল্যান ও টাইটেল ডিড লাইন বাই লাইন পড়া হয়েছে। কোনো কিছুই ডেভেলপারের কথার ওপর লিস্টিং করা হয় না।"
+          },
+          {
+            key: "about.story.bodyTwo",
+            label: "Body Two",
+            type: "textarea",
+            hint: "Second main paragraph. Keep it similar in length to Body One.",
+            en: "That is slower than the way this market usually works. It is also the only version of the job we were willing to do — a buyer should be told what is wrong with a property by us, not by their lawyer three months later.",
+            bn: "এটি এই বাজার সাধারণত যেভাবে কাজ করে তার চেয়ে ধীর। এটিই একমাত্র কাজ যা আমরা করতে ইচ্ছুক ছিলাম — একজন ক্রেতাকে আমাদেরই বলা উচিত সম্পত্তির কী ভুল আছে, তিন মাস পরে তাদের আইনজীবীর দ্বারা নয়।"
+          },
+          {
+            key: "about.story.badge",
+            label: "Badge",
+            type: "text",
+            hint: "Short text for the small badge under the text (e.g. 5-8 words).",
+            en: "Every paper read before it is listed",
+            bn: "তালিকাভুক্ত হওয়ার আগে প্রতিটি কাগজ পড়া হয়"
+          },
+          {
+            key: "about.story.imageOne",
+            label: "Image One",
+            type: "image",
+            hint: "Portrait image (4:3 ratio). Recommended size: 1200x900px.",
+            en: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+            bn: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+          },
+          {
+            key: "about.story.imageTwo",
+            label: "Image Two",
+            type: "image",
+            hint: "Square overlapping image. Recommended size: 900x900px.",
+            en: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80",
+            bn: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80"
+          }
+        ]
+      },
+      {
+        id: "figures",
+        label: "Figures",
+        fields: [
+          {
+            key: "about.figuresTitle",
+            label: "Title",
+            type: "text",
+            hint: "Short heading (4-6 words).",
+            en: "The numbers behind the promise",
+            bn: "প্রতিশ্রুতির পেছনের সংখ্যাগুলো"
+          },
+          {
+            key: "about.figuresLead",
+            label: "Lead",
+            type: "textarea",
+            hint: "Short subtitle (1-2 lines).",
+            en: "Counted from our own records, not the market's.",
+            bn: "বাজারের নয়, আমাদের নিজেদের রেকর্ড থেকে গণনা করা হয়েছে।"
+          },
+        ],
+        repeatable: {
+          itemPrefix: "about.stats",
+          itemName: "Stat",
+          addButtonText: "Add stat",
+          initialCount: 4,
+          itemFields: [
+            { suffix: "value", label: "Number Value", type: "text", hint: "Just the number (e.g. 4850 or 99)" },
+            { suffix: "suffix", label: "Suffix", type: "text", hint: "e.g. Cr+ or %" },
+            { suffix: "compact", label: "Format Compactly?", type: "text", hint: "Type 'true' for 4.9K, leave empty for exact." },
+            { suffix: "label", label: "Label", type: "text", hint: "Short description" }
+          ]
+        }
+      },
+      {
+        id: "vetting",
+        label: "Vetting",
+        fields: [
+          {
+            key: "pages.vetting.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            hint: "Short eyebrow text (e.g., 'Our standard').",
+            en: "Our standard",
+            bn: "আমাদের মান"
+          },
+          {
+            key: "pages.vetting.title",
+            label: "Title",
+            type: "text",
+            hint: "Main heading.",
+            en: "What a listing has to pass",
+            bn: "লিস্টিং হতে যা পাস করতে হয়"
+          },
+          {
+            key: "pages.vetting.description",
+            label: "Description",
+            type: "textarea",
+            hint: "Short paragraph describing the process.",
+            en: "Seven checks. If one fails, the listing does not go online — which is why you find fewer results here than on the big portals.",
+            bn: "সাতটি চেক। একটি ব্যর্থ হলে, লিস্টিং অনলাইনে যায় না — যে কারণে আপনি বড় পোর্টালগুলোর চেয়ে এখানে কম ফলাফল পাবেন।"
+          },
+          {
+            key: "pages.vetting.checks.0",
+            label: "Check 1",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "RAJUK approved plan, matched against what is actually built",
+            bn: "রাজউক অনুমোদিত প্ল্যান, যা আসলে তৈরি হয়েছে তার সাথে মেলানো হয়"
+          },
+          {
+            key: "pages.vetting.checks.1",
+            label: "Check 2",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Title deed traced through the CS, SA, RS and BS records",
+            bn: "CS, SA, RS এবং BS রেকর্ডের মাধ্যমে টাইটেল ডিড ট্রেস করা হয়"
+          },
+          {
+            key: "pages.vetting.checks.2",
+            label: "Check 3",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Mutation in the current owner name",
+            bn: "বর্তমান মালিকের নামে নামজারি"
+          },
+          {
+            key: "pages.vetting.checks.3",
+            label: "Check 4",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Non-encumbrance certificate from the sub-registry",
+            bn: "সাব-রেজিস্ট্রি থেকে নন-এনকামব্রেন্স সার্টিফিকেট"
+          },
+          {
+            key: "pages.vetting.checks.4",
+            label: "Check 5",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Physical inspection by our surveyor, dated",
+            bn: "আমাদের সার্ভেয়ার দ্বারা তারিখসহ ফিজিক্যাল ইন্সপেকশন"
+          },
+          {
+            key: "pages.vetting.checks.5",
+            label: "Check 6",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Our own photography, taken the same month",
+            bn: "আমাদের নিজেদের তোলা ছবি, একই মাসে তোলা"
+          },
+          {
+            key: "pages.vetting.checks.6",
+            label: "Check 7",
+            type: "textarea",
+            hint: "Keep it under 15 words so it fits in a single or double line.",
+            en: "Asking price confirmed by the owner in writing",
+            bn: "মালিকের দ্বারা লিখিতভাবে নিশ্চিতকৃত দাম"
+          }
+        ]
+      },
+      {
+        id: "milestones",
+        label: "Milestones",
+        fields: [
+          {
+            key: "pages.milestones.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            hint: "Short text.",
+            en: "Our story",
+            bn: "আমাদের গল্প"
+          },
+          {
+            key: "pages.milestones.title",
+            label: "Title",
+            type: "text",
+            hint: "Main heading.",
+            en: "How we got here",
+            bn: "আমরা কীভাবে এখানে এসেছি"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "pages.milestones.items",
+          itemName: "Milestone",
+          addButtonText: "Add milestone",
+          initialCount: 5,
+          itemFields: [
+            { suffix: "year", label: "Year", type: "text", hint: "4-digit year (e.g., 2024)." },
+            { suffix: "title", label: "Title", type: "text", hint: "Short milestone title (e.g., 3-5 words)." },
+            { suffix: "body", label: "Description", type: "textarea", hint: "Keep it under 20-25 words to avoid long scrolling." }
+          ]
+        }
+      },
+      {
+        id: "gallery",
+        label: "Gallery",
+        fields: [
+          {
+            key: "gallery.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            hint: "Short text (e.g. 2-4 words).",
+            en: "Architectural photography",
+            bn: "স্থাপত্য আলোকচিত্র"
+          },
+          {
+            key: "gallery.title",
+            label: "Title",
+            type: "text",
+            hint: "Main heading.",
+            en: "Our photographs, not CGI renders",
+            bn: "আমাদের তোলা ছবি, কম্পিউটারের নকশা নয়"
+          },
+          {
+            key: "gallery.description",
+            label: "Description",
+            type: "textarea",
+            hint: "Short paragraph (approx. 10-20 words).",
+            en: "Click any photograph for the full-screen pinch-and-zoom viewer.",
+            bn: "যেকোনো ছবিতে ক্লিক করলে পূর্ণ পর্দায় জুম করে দেখা যাবে।"
+          }
+        ]
+      }
     ],
   },
   {

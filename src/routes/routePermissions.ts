@@ -20,6 +20,8 @@ export const routePermissions: Record<string, RoutePermission> = {
   "/landowners": { module: "Landowners", action: "View" },
 
   "/blog": { module: "Blog", action: "View" },
+  "/blog/create": { module: "Blog", action: "Create" },
+  "/blog/edit/:id": { module: "Blog", action: "Update" },
   "/reviews": { module: "Reviews", action: "View" },
 
   "/enquiries/contact-messages": {

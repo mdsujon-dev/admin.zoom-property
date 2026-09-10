@@ -18,6 +18,26 @@ import LandownerProjectModal from "./LandownerProjectModal";
 const { confirm } = Modal;
 
 /**
+ * A one-line preview of an HTML passage.
+ *
+ * Tags out, then the handful of entities the editor emits turned back into
+ * characters — otherwise the row reads "Gulshan &mdash; 52% owner share".
+ */
+const plainText = (html?: string) =>
+  String(html || "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/**
  * The blocks on the landowners page - a photograph, a heading, a passage.
  *
  * Publishing is its own column rather than a field inside the form: putting a
@@ -30,6 +50,8 @@ const Landowners = () => {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any>(null);
   const [open, setOpen] = useState(false);
+  /** Which row is mid-save, so only its switch spins. */
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   const { data, isFetching } = useGetLandownerProjectsQuery({
     page,
@@ -41,6 +63,26 @@ const Landowners = () => {
 
   const rows = data?.result ?? [];
   const total = data?.meta?.total ?? 0;
+
+  /**
+   * Publish or unpublish from the row.
+   *
+   * The row is the natural place for it: deciding a block goes on the website
+   * is a different act from writing it, and going through the form to flip one
+   * switch means opening an editor to make an editorial decision.
+   */
+  const onTogglePublished = async (row: any) => {
+    const next = !row.isPublished;
+    setSavingId(row._id);
+    try {
+      await updateProject({ id: row._id, data: { isPublished: next } }).unwrap();
+      toast.success(next ? "Block published" : "Block unpublished");
+    } catch (e: any) {
+      toast.error(e?.data?.message || "Could not change the publish state");
+    } finally {
+      setSavingId(null);
+    }
+  };
 
   const onDelete = (id: string, name: string) =>
     confirm({
@@ -63,6 +105,10 @@ const Landowners = () => {
       title: "Block",
       dataIndex: "title",
       key: "title",
+      // Bounded on purpose: with no width the passage stretches this column
+      // until every other one is pushed off the right edge.
+      width: 460,
+      ellipsis: true,
       render: (title: string, r: any) => (
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-11 w-16 shrink-0 overflow-hidden rounded bg-secondary-100">
@@ -81,7 +127,7 @@ const Landowners = () => {
             {/* The passage is HTML, so the preview is its text with the tags
                 taken out — a row is not the place to render markup. */}
             <p className="truncate text-xs text-secondary-500">
-              {String(r.description || "").replace(/<[^>]*>/g, " ").trim() || "—"}
+              {plainText(r.description) || "—"}
             </p>
           </div>
         </div>
@@ -111,20 +157,34 @@ const Landowners = () => {
       title: "Published",
       dataIndex: "isPublished",
       key: "isPublished",
-      width: 110,
+      width: 150,
+      fixed: "right" as const,
       render: (published: boolean, r: any) => (
         <PermissionGate
           module="Landowners"
           action="Update"
-          fallback={<span>{published ? "Yes" : "No"}</span>}
+          fallback={
+            <Tag color={published ? "green" : "default"}>
+              {published ? "Published" : "Draft"}
+            </Tag>
+          }
         >
-          <Switch
-            size="small"
-            checked={published}
-            onChange={() =>
-              updateProject({ id: r._id, data: { isPublished: !published } })
-            }
-          />
+          <Space size={8}>
+            <Switch
+              size="small"
+              checked={published}
+              loading={savingId === r._id}
+              onChange={() => onTogglePublished(r)}
+            />
+            {/* The word beside the switch: a lone toggle tells you its state
+                only if you already know which way is on. */}
+            <Tag
+              color={published ? "green" : "default"}
+              className="!m-0 !text-[11px]"
+            >
+              {published ? "Published" : "Draft"}
+            </Tag>
+          </Space>
         </PermissionGate>
       ),
     },
