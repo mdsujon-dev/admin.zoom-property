@@ -1119,6 +1119,143 @@ export const cmsPages: CmsPageDef[] = [
     ],
   },
   {
+    id: "legal",
+    label: "Legal",
+    description: "The terms and privacy pages linked from the footer.",
+    sections: [
+      {
+        id: "terms",
+        label: "Terms & Conditions",
+        fields: [
+          {
+            key: "terms.backgroundImage",
+            label: "Background Image",
+            type: "image",
+            en: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=2000&q=80",
+            bn: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=2000&q=80"
+          },
+          {
+            key: "terms.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Legal",
+            bn: "আইনি"
+          },
+          {
+            key: "terms.title",
+            label: "Title",
+            type: "text",
+            en: "Terms & Conditions",
+            bn: "শর্তাবলী"
+          },
+          {
+            key: "terms.description",
+            label: "Description",
+            type: "textarea",
+            en: "What you agree to when you use this site, make an enquiry, or view a property with us.",
+            bn: "এই সাইট ব্যবহার, অনুসন্ধান বা আমাদের সঙ্গে সম্পত্তি দেখার সময় আপনি যে শর্তে সম্মত হচ্ছেন।"
+          },
+          {
+            key: "terms.updated",
+            label: "Last updated",
+            type: "text",
+            hint: "Change this whenever you change a clause \u2014 it is the line readers check first.",
+            en: "Last updated 11 September 2026",
+            bn: "সর্বশেষ হালনাগাদ: ১১ সেপ্টেম্বর ২০২৬"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "terms.sections",
+          itemName: "Clause",
+          addButtonText: "+ Add clause",
+          initialCount: 10,
+          titleSuffix: "title",
+          itemFields: [
+            { suffix: "title", label: "Heading", type: "text", hint: "A few words. It is numbered automatically." },
+            { suffix: "body", label: "Text", type: "textarea", hint: "One paragraph. Plain sentences \u2014 this is read by people, not lawyers." }
+          ],
+          defaultItems: [
+            { titleEn: "Who we are", titleBn: "আমরা কারা", bodyEn: "Zoom Property is a licensed real estate agency operating in Dhaka and Chattogram. “We” and “us” in this document mean Zoom Property; “you” means anyone using this website or dealing with us through it.", bodyBn: "জুম প্রপার্টি ঢাকা ও চট্টগ্রামে কাজ করা একটি লাইসেন্সপ্রাপ্ত রিয়েল এস্টেট এজেন্সি। এই নথিতে “আমরা” বলতে জুম প্রপার্টি, আর “আপনি” বলতে এই সাইট ব্যবহারকারী বোঝায়।" },
+            { titleEn: "What this website is", titleBn: "এই ওয়েবসাইট কী", bodyEn: "This site advertises property we have been instructed to sell or let. Every listing has been inspected by our survey team and its title documents read before publication. A listing is an invitation to enquire, not an offer capable of acceptance — nothing on this site forms a contract of sale.", bodyBn: "এখানে সেই সম্পত্তিই থাকে যেগুলো বিক্রি বা ভাড়া দেওয়ার দায়িত্ব আমাদের দেওয়া হয়েছে। প্রতিটি লিস্টিং সরেজমিনে দেখা ও দলিল যাচাই করা। লিস্টিং একটি আমন্ত্রণ, চূড়ান্ত প্রস্তাব নয়।" },
+            { titleEn: "Accuracy of listings", titleBn: "তথ্যের সঠিকতা", bodyEn: "Measurements, prices, completion dates and construction percentages are given in good faith and were correct on the date of inspection shown on the listing. Availability and price can change without notice. Before you commit money, verify everything independently through your own lawyer and surveyor — we will hand over every document we hold to help you do so.", bodyBn: "মাপ, দাম, হস্তান্তরের তারিখ ও নির্মাণের শতকরা হার পরিদর্শনের তারিখ অনুযায়ী সঠিক ছিল। দাম ও প্রাপ্যতা নোটিশ ছাড়াই বদলাতে পারে। টাকা দেওয়ার আগে নিজের আইনজীবী ও সার্ভেয়ার দিয়ে সব যাচাই করে নিন — আমাদের কাছে থাকা প্রতিটি কাগজ আমরা দিয়ে দেব।" },
+            { titleEn: "Enquiries and viewings", titleBn: "অনুসন্ধান ও পরিদর্শন", bodyEn: "An enquiry places you under no obligation and costs nothing. We do not charge buyers or tenants a search fee. Viewings are arranged with the owner’s consent and at their convenience; we ask that you give reasonable notice if you cannot attend.", bodyBn: "অনুসন্ধানে কোনো বাধ্যবাধকতা নেই, খরচও নেই। ক্রেতা বা ভাড়াটের কাছ থেকে আমরা সার্চ ফি নেই না। মালিকের সম্মতিতে ও তাঁর সুবিধামতো পরিদর্শনের সময় ঠিক করা হয়।" },
+            { titleEn: "Fees", titleBn: "ফি", bodyEn: "Our commission is payable by the party who instructed us, on the terms set out in their agency agreement. Any fee payable by you will be stated in writing before you are asked to commit to anything. We do not take a markup on the price shown.", bodyBn: "আমাদের কমিশন দেন যিনি আমাদের দায়িত্ব দিয়েছেন, তাঁর চুক্তি অনুযায়ী। আপনাকে কোনো ফি দিতে হলে তা আগেই লিখিতভাবে জানানো হবে। দামের উপর আমরা কোনো মার্কআপ নেই না।" },
+            { titleEn: "Your responsibilities", titleBn: "আপনার দায়িত্ব", bodyEn: "You agree not to scrape, republish or resell the content of this site, not to submit enquiries on behalf of someone who has not asked you to, and not to use our contact details to send unsolicited marketing.", bodyBn: "এই সাইটের তথ্য কপি করে অন্যত্র প্রকাশ বা বিক্রি করবেন না, অন্যের হয়ে অনুমতি ছাড়া অনুসন্ধান পাঠাবেন না, আর আমাদের ঠিকানায় অযাচিত বিজ্ঞাপন পাঠাবেন না।" },
+            { titleEn: "Our liability", titleBn: "আমাদের দায়", bodyEn: "We are responsible for the accuracy of what we tell you and for the care we take in inspecting a property. We are not liable for the acts of a developer, an owner, a bank or a government office, nor for loss arising from a decision you took without the independent advice we recommended.", bodyBn: "আমরা যা বলি তার সঠিকতা ও পরিদর্শনের যত্নের দায় আমাদের। ডেভেলপার, মালিক, ব্যাংক বা সরকারি অফিসের কাজের দায় আমাদের নয়; আর আমাদের পরামর্শ না নিয়ে নেওয়া সিদ্ধান্তের ক্ষতিরও নয়।" },
+            { titleEn: "Changes to these terms", titleBn: "শর্ত পরিবর্তন", bodyEn: "We may revise these terms. The date at the top of this page shows when they last changed. Continuing to use the site after a change means you accept the revised version.", bodyBn: "শর্ত বদলাতে পারি। পাতার উপরের তারিখে শেষ পরিবর্তনের দিন দেখানো আছে। পরিবর্তনের পরও সাইট ব্যবহার করলে নতুন শর্ত মানছেন ধরা হবে।" },
+            { titleEn: "Governing law", titleBn: "প্রযোজ্য আইন", bodyEn: "These terms are governed by the law of Bangladesh, and the courts of Bangladesh have exclusive jurisdiction over any dispute arising from them.", bodyBn: "এই শর্তাবলী বাংলাদেশের আইন দ্বারা পরিচালিত, এবং যেকোনো বিরোধের এখতিয়ার বাংলাদেশের আদালতের।" },
+            { titleEn: "Contact", titleBn: "যোগাযোগ", bodyEn: "Questions about these terms go to the desk — the phone number and email address on our contact page reach a person, not a queue.", bodyBn: "শর্তাবলী নিয়ে প্রশ্ন থাকলে যোগাযোগ পাতার নম্বর বা ইমেইলে লিখুন — উত্তর দেবেন একজন মানুষ।" }
+          ]
+        }
+      },
+      {
+        id: "privacy",
+        label: "Privacy Policy",
+        fields: [
+          {
+            key: "privacy.backgroundImage",
+            label: "Background Image",
+            type: "image",
+            en: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=2000&q=80",
+            bn: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=2000&q=80"
+          },
+          {
+            key: "privacy.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Legal",
+            bn: "আইনি"
+          },
+          {
+            key: "privacy.title",
+            label: "Title",
+            type: "text",
+            en: "Privacy Policy",
+            bn: "গোপনীয়তা নীতি"
+          },
+          {
+            key: "privacy.description",
+            label: "Description",
+            type: "textarea",
+            en: "What we collect when you enquire, why we hold it, and what we will never do with it.",
+            bn: "অনুসন্ধানের সময় আমরা কী নিই, কেন রাখি, আর কখনো কী করি না।"
+          },
+          {
+            key: "privacy.updated",
+            label: "Last updated",
+            type: "text",
+            hint: "Change this whenever you change a clause \u2014 it is the line readers check first.",
+            en: "Last updated 11 September 2026",
+            bn: "সর্বশেষ হালনাগাদ: ১১ সেপ্টেম্বর ২০২৬"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "privacy.sections",
+          itemName: "Clause",
+          addButtonText: "+ Add clause",
+          initialCount: 10,
+          titleSuffix: "title",
+          itemFields: [
+            { suffix: "title", label: "Heading", type: "text", hint: "A few words. It is numbered automatically." },
+            { suffix: "body", label: "Text", type: "textarea", hint: "One paragraph. Plain sentences \u2014 this is read by people, not lawyers." }
+          ],
+          defaultItems: [
+            { titleEn: "What we collect", titleBn: "কী নিই", bodyEn: "Only what an enquiry needs: your name, your phone number, your email address if you give one, and what you told us you are looking for. We do not ask for your national ID, your bank details or your income to answer an enquiry.", bodyBn: "অনুসন্ধানের জন্য যতটুকু দরকার শুধু ততটুকু: নাম, ফোন নম্বর, ইচ্ছা হলে ইমেইল, আর আপনি কী খুঁজছেন। জাতীয় পরিচয়পত্র, ব্যাংক তথ্য বা আয়ের হিসাব চাই না।" },
+            { titleEn: "Why we hold it", titleBn: "কেন রাখি", bodyEn: "To reply to you, to shortlist properties that fit what you asked for, and to arrange viewings. That is the whole of it. If you stop replying, the record stops being used.", bodyBn: "আপনাকে উত্তর দিতে, মানানসই সম্পত্তি বাছাই করতে আর পরিদর্শনের সময় ঠিক করতে। এর বাইরে কিছু নয়। আপনি উত্তর দেওয়া বন্ধ করলে রেকর্ডটির ব্যবহারও বন্ধ।" },
+            { titleEn: "What we never do", titleBn: "যা কখনো করি না", bodyEn: "We do not sell your details. We do not pass them to developers, banks or third-party agents so they can market to you. A developer learns your name when you ask us to arrange a viewing with them, and not before.", bodyBn: "আপনার তথ্য বিক্রি করি না। ডেভেলপার, ব্যাংক বা অন্য এজেন্টকে বিজ্ঞাপন পাঠানোর জন্য দিই না। আপনি নিজে পরিদর্শনের কথা বললে তবেই ডেভেলপার আপনার নাম জানে, তার আগে নয়।" },
+            { titleEn: "Cookies", titleBn: "কুকি", bodyEn: "This site sets a cookie to remember your language choice, and nothing else that identifies you. There is no advertising tracker and no cross-site profiling on these pages.", bodyBn: "শুধু আপনার ভাষা মনে রাখার জন্য একটি কুকি, আর পরিচয় শনাক্ত করে এমন কিছু নয়। এই পাতাগুলোয় কোনো বিজ্ঞাপন ট্র্যাকার নেই।" },
+            { titleEn: "How long we keep it", titleBn: "কতদিন রাখি", bodyEn: "An enquiry record is kept for as long as it is useful to you — through the search, and for the period afterwards in which a buyer typically comes back. Ask us to delete it and we delete it.", bodyBn: "যতদিন আপনার কাজে লাগে — খোঁজার সময়টুকু, আর তার পরে যতদিনে একজন ক্রেতা সাধারণত ফিরে আসেন। মুছতে বললে মুছে ফেলি।" },
+            { titleEn: "Who can see it", titleBn: "কারা দেখতে পায়", bodyEn: "The advisors working on your enquiry, and the staff who administer our systems. Access is logged. Nobody outside the company sees your details without your say-so.", bodyBn: "আপনার অনুসন্ধানে কাজ করা পরামর্শদাতা আর সিস্টেম পরিচালনাকারী কর্মী। প্রবেশের রেকর্ড রাখা হয়। আপনার অনুমতি ছাড়া কোম্পানির বাইরে কেউ দেখে না।" },
+            { titleEn: "Where it is stored", titleBn: "কোথায় রাখা হয়", bodyEn: "On managed servers with encrypted storage and encrypted transfer. Documents you send us — papers, photographs — are held in the same place under the same controls.", bodyBn: "এনক্রিপ্ট করা সার্ভারে, এনক্রিপ্ট করা সংযোগে। আপনার পাঠানো কাগজ ও ছবিও একই নিয়মে একই জায়গায়।" },
+            { titleEn: "Your rights", titleBn: "আপনার অধিকার", bodyEn: "You can ask what we hold about you, ask us to correct it, and ask us to delete it. Write to the address on our contact page and we will answer within a working week.", bodyBn: "আমরা কী রেখেছি জানতে পারেন, ভুল সংশোধন করাতে পারেন, মুছতে বলতে পারেন। যোগাযোগ পাতার ঠিকানায় লিখুন — এক কর্মসপ্তাহের মধ্যে উত্তর পাবেন।" },
+            { titleEn: "Children", titleBn: "শিশু", bodyEn: "This site is for adults transacting in property. We do not knowingly collect information from anyone under eighteen.", bodyBn: "এই সাইট প্রাপ্তবয়স্কদের জন্য। আঠারো বছরের কম কারও তথ্য জেনেশুনে নিই না।" },
+            { titleEn: "Changes to this policy", titleBn: "নীতি পরিবর্তন", bodyEn: "The date at the top of this page shows when this policy last changed. A change that materially affects what we do with your information will be told to you directly, not just posted here.", bodyBn: "পাতার উপরের তারিখে শেষ পরিবর্তনের দিন। বড় পরিবর্তন হলে আপনাকে সরাসরি জানানো হবে, শুধু এখানে লিখে রাখা হবে না।" }
+          ]
+        }
+      },
+    ],
+  },
+  {
     id: "contact",
     label: "Contact",
     description: "The contact page and its enquiry form.",

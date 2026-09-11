@@ -113,6 +113,15 @@ const Reviews = () => {
       render: (v: number) => <Rate disabled value={v} className="!text-sm" />,
     },
     {
+      // Film beats voice beats type — the same order the card resolves in, so
+      // the tag here says what a visitor will actually get.
+      title: "Format",
+      key: "format",
+      width: 110,
+      render: (_: unknown, r: any) =>
+        r.video?.youtubeUrl ? <Tag color="blue">Video</Tag> : <Tag>Text</Tag>,
+    },
+    {
       title: "On the site",
       dataIndex: "isPublished",
       key: "isPublished",
@@ -132,6 +141,7 @@ const Reviews = () => {
             />
           </PermissionGate>
           {r.featured && <Tag color="gold">Featured</Tag>}
+          {r.isHome && <Tag color="blue">Home</Tag>}
         </Space>
       ),
     },

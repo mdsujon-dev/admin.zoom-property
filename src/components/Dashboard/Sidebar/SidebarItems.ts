@@ -156,6 +156,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Dynamic Content",
         icon: Phone,
       },
+      {
+        label: "Legal",
+        address: "/cms/legal",
+        module: "Dynamic Content",
+        icon: ScrollText,
+      },
     ],
   },
   {
