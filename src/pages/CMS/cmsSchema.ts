@@ -1310,6 +1310,40 @@ export const cmsPages: CmsPageDef[] = [
         }
       },
       {
+        id: "sharedCta",
+        label: "Shared contact CTA",
+        fields: [
+          {
+            key: "cta.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Uncompromising transparency",
+            bn: "স্বচ্ছ পরামর্শ"
+          },
+          {
+            key: "cta.title",
+            label: "Title",
+            type: "text",
+            en: "Ready to see the shortlist?",
+            bn: "আপনার পছন্দের তালিকা দেখতে প্রস্তুত?"
+          },
+          {
+            key: "cta.description",
+            label: "Description",
+            type: "textarea",
+            en: "Send us your criteria. We will prepare a focused shortlist and arrange the next visit.",
+            bn: "আপনার চাহিদা জানান। আমরা আপনার জন্য বাছাই করা তালিকা তৈরি করে পরের ভিজিটের ব্যবস্থা করব।"
+          },
+          {
+            key: "cta.contact",
+            label: "Button",
+            type: "text",
+            en: "Contact the team",
+            bn: "টিমের সঙ্গে যোগাযোগ করুন"
+          }
+        ]
+      },
+      {
         id: "contactDock",
         label: "Side contact strip",
         fields: [],
