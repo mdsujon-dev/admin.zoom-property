@@ -1128,50 +1128,6 @@ export const cmsPages: CmsPageDef[] = [
         label: "Header",
         fields: [
           {
-            key: "nav.properties",
-            label: "Properties",
-            type: "text",
-            groupHeader: "Menu",
-            hint: "The menu label. The same word names the footer column.",
-            en: "Properties",
-            bn: "সম্পত্তি"
-          },
-          {
-            key: "nav.projects",
-            label: "Projects",
-            type: "text",
-            en: "Projects",
-            bn: "প্রকল্প"
-          },
-          {
-            key: "nav.areas",
-            label: "Areas",
-            type: "text",
-            en: "Areas",
-            bn: "এলাকা"
-          },
-          {
-            key: "nav.landowners",
-            label: "Landowners",
-            type: "text",
-            en: "Landowners",
-            bn: "জমির মালিক"
-          },
-          {
-            key: "nav.blog",
-            label: "Blog",
-            type: "text",
-            en: "Blog",
-            bn: "ব্লগ"
-          },
-          {
-            key: "nav.contact",
-            label: "Contact",
-            type: "text",
-            en: "Contact",
-            bn: "যোগাযোগ"
-          },
-          {
             key: "nav.bookViewing",
             label: "Button",
             type: "text",
@@ -1199,6 +1155,30 @@ export const cmsPages: CmsPageDef[] = [
         ]
       },
       {
+        id: "headerMenu",
+        label: "Header \u00b7 Menu",
+        fields: [],
+        repeatable: {
+          itemPrefix: "nav.menu",
+          itemName: "Menu item",
+          addButtonText: "+ Add menu item",
+          initialCount: 6,
+          titleSuffix: "label",
+          itemFields: [
+            { suffix: "label", label: "Text", type: "text", hint: "What the menu item says." },
+            { suffix: "href", label: "Goes to", type: "url", hint: "A path on this site, starting with a slash \u2014 /properties, /about. The language prefix is added for you." }
+          ],
+          defaultItems: [
+            { labelEn: "Properties", labelBn: "প্রপার্টি", hrefEn: "/properties" },
+            { labelEn: "Projects", labelBn: "প্রজেক্ট", hrefEn: "/projects" },
+            { labelEn: "Areas", labelBn: "এলাকা", hrefEn: "/areas" },
+            { labelEn: "Landowners", labelBn: "জমির মালিক", hrefEn: "/landowners" },
+            { labelEn: "Blog", labelBn: "ব্লগ", hrefEn: "/blog" },
+            { labelEn: "Contact", labelBn: "যোগাযোগ", hrefEn: "/contact" }
+          ]
+        }
+      },
+      {
         id: "footer",
         label: "Footer",
         fields: [
@@ -1210,6 +1190,29 @@ export const cmsPages: CmsPageDef[] = [
             hint: "The paragraph beside the logo. Also the description a search engine shows for the home page, so keep it under about 30 words.",
             en: "Buy, rent and invest in Dhaka and Chattogram property. Every listing RAJUK-checked, every price the real one, every agent answers in minutes.",
             bn: "ঢাকা ও চট্টগ্রামে ফ্ল্যাট কিনুন, ভাড়া নিন বা বিনিয়োগ করুন। প্রতিটি লিস্টিং রাজউক-যাচাই করা, দাম যা লেখা তাই, আর পরামর্শদাতারা মিনিটেই উত্তর দেন।"
+          },
+          {
+            key: "footer.phoneIcon",
+            label: "Phone icon",
+            type: "icon",
+            groupHeader: "Contact row icons",
+            hint: "Font Awesome class. The number beside it is edited under Contact.",
+            en: "fa-solid fa-phone",
+            bn: "fa-solid fa-phone"
+          },
+          {
+            key: "footer.emailIcon",
+            label: "Email icon",
+            type: "icon",
+            en: "fa-solid fa-envelope",
+            bn: "fa-solid fa-envelope"
+          },
+          {
+            key: "footer.addressIcon",
+            label: "Address icon",
+            type: "icon",
+            en: "fa-solid fa-location-dot",
+            bn: "fa-solid fa-location-dot"
           },
           {
             key: "footer.companyName",
@@ -1303,6 +1306,28 @@ export const cmsPages: CmsPageDef[] = [
             { labelEn: "Reviews", labelBn: "রিভিউ", hrefEn: "/reviews", hrefBn: "/reviews" },
             { labelEn: "Blog", labelBn: "ব্লগ", hrefEn: "/blog", hrefBn: "/blog" },
             { labelEn: "About us", labelBn: "আমাদের সম্পর্কে", hrefEn: "/about", hrefBn: "/about" }
+          ]
+        }
+      },
+      {
+        id: "contactDock",
+        label: "Side contact strip",
+        fields: [],
+        repeatable: {
+          itemPrefix: "contact.dock",
+          itemName: "Cell",
+          addButtonText: "+ Add cell",
+          initialCount: 3,
+          titleSuffix: "label",
+          itemFields: [
+            { suffix: "icon", label: "Icon", type: "icon", hint: "A Font Awesome class \u2014 fa-solid fa-phone, fa-brands fa-whatsapp. Search fontawesome.com and copy the class." },
+            { suffix: "label", label: "Name", type: "text", hint: "Read out by screen readers and shown on hover." },
+            { suffix: "href", label: "Opens", type: "url", hint: "Written in full: tel:+8801958253301, mailto:you@example.com, or an https:// address. The first tel: cell is the one that rings." }
+          ],
+          defaultItems: [
+            { iconEn: "fa-solid fa-phone", labelEn: "Call the desk", labelBn: "সরাসরি ফোন", hrefEn: "tel:+8801958253301" },
+            { iconEn: "fa-brands fa-whatsapp", labelEn: "WhatsApp", labelBn: "হোয়াটসঅ্যাপ", hrefEn: "https://wa.me/8801958253301" },
+            { iconEn: "fa-solid fa-envelope", labelEn: "Email", labelBn: "ইমেইল", hrefEn: "mailto:concierge@zoomproperty.com" }
           ]
         }
       },
