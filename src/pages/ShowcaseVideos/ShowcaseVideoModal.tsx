@@ -6,6 +6,7 @@ import {
   InputNumber,
   Modal,
   Row,
+  Select,
   Switch,
 } from "antd";
 import { useEffect } from "react";
@@ -13,6 +14,7 @@ import { toast } from "react-toastify";
 
 import LangInput from "../../components/Common/LangInput";
 import UploadMedia from "../../components/shared/UploadMedia";
+import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import {
   useCreateShowcaseVideoMutation,
   useUpdateShowcaseVideoMutation,
@@ -38,6 +40,7 @@ const ShowcaseVideoModal = ({ open, onClose, video }: Props) => {
     useCreateShowcaseVideoMutation();
   const [updateVideo, { isLoading: updating }] =
     useUpdateShowcaseVideoMutation();
+  const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
 
   useEffect(() => {
     if (!open) return form.resetFields();
@@ -112,9 +115,15 @@ const ShowcaseVideoModal = ({ open, onClose, video }: Props) => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Description (Bangla)" name="descriptionBn">
-              <Input.TextArea autoSize={{ minRows: 2 }} />
-            </Form.Item>
+            <LangInput
+              label="Description (Bangla)"
+              name="descriptionBn"
+              lang="bn"
+              sourceFieldName="description"
+              form={form}
+              isTextArea
+              rows={2}
+            />
           </Col>
 
           <Col xs={24} md={16}>
@@ -150,20 +159,39 @@ const ShowcaseVideoModal = ({ open, onClose, video }: Props) => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Category (Bangla)" name="categoryBn">
-              <Input placeholder="পেন্টহাউস ট্যুর" />
-            </Form.Item>
+            <LangInput
+              label="Category (Bangla)"
+              name="categoryBn"
+              lang="bn"
+              sourceFieldName="category"
+              form={form}
+              placeholder="পেন্টহাউস ট্যুর"
+            />
           </Col>
 
           <Col xs={24} md={12}>
             <Form.Item label="Location" name="location">
-              <Input placeholder="Gulshan 2, Dhaka" />
+              <Select
+                showSearch
+                allowClear
+                optionFilterProp="label"
+                placeholder="Select an area"
+                options={(areaData?.result || []).map((area: any) => ({
+                  value: [area.name, area.city].filter(Boolean).join(", "),
+                  label: [area.name, area.city].filter(Boolean).join(", "),
+                }))}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Location (Bangla)" name="locationBn">
-              <Input placeholder="গুলশান ২, ঢাকা" />
-            </Form.Item>
+            <LangInput
+              label="Location (Bangla)"
+              name="locationBn"
+              lang="bn"
+              sourceFieldName="location"
+              form={form}
+              placeholder="গুলশান ২, ঢাকা"
+            />
           </Col>
 
           <Col xs={24} md={12}>
