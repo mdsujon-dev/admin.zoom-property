@@ -18,6 +18,7 @@ import LangInput from "../../components/Common/LangInput";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
 import { useGetPropertiesQuery } from "../../redux/features/property/propertyApi";
+import { useGetProjectsQuery } from "../../redux/features/project/projectApi";
 import {
   useCreateReviewMutation,
   useUpdateReviewMutation,
@@ -67,6 +68,7 @@ const formatOf = (review?: any): Format =>
 const ReviewModal = ({ open, onClose, review }: Props) => {
   const [form] = Form.useForm();
   const [propertySearch, setPropertySearch] = useState("");
+  const [projectSearch, setProjectSearch] = useState("");
   const [format, setFormat] = useState<Format>("text");
   const [createReview, { isLoading: creating }] = useCreateReviewMutation();
   const [updateReview, { isLoading: updating }] = useUpdateReviewMutation();
@@ -91,6 +93,11 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
   const { data: properties } = useGetPropertiesQuery({
     limit: 20,
     searchTerm: propertySearch || undefined,
+  });
+
+  const { data: projects } = useGetProjectsQuery({
+    limit: 20,
+    searchTerm: projectSearch || undefined,
   });
 
   useEffect(() => {
@@ -324,7 +331,21 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
                   : "For deals that closed before this system, or that the client would rather not have linked."
               }
             >
-              <Input placeholder={isVideo ? "Lake View Residence, Gulshan 2" : ""} />
+              {isVideo ? (
+                <Select
+                  allowClear
+                  showSearch
+                  filterOption={false}
+                  onSearch={setProjectSearch}
+                  placeholder="Search projects"
+                  options={(projects?.result || []).map((p: any) => ({
+                    value: p.name,
+                    label: p.name,
+                  }))}
+                />
+              ) : (
+                <Input placeholder="" />
+              )}
             </Form.Item>
           </Col>
 
@@ -431,3 +452,4 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
 };
 
 export default ReviewModal;
+
