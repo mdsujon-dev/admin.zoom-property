@@ -1,7 +1,7 @@
 import { baseApi } from "../../api/baseApi";
 
 /** The managed option lists a listing draws from. */
-export type PropertyOptionKind = "amenities";
+export type PropertyOptionKind = "amenities" | "types";
 
 export type PropertyStatus =
   | "draft"
@@ -87,14 +87,33 @@ const propertyApi = baseApi.injectEndpoints({
       query: ({
         kind,
         activeOnly,
+        page,
+        limit,
+        searchTerm,
       }: {
         kind: PropertyOptionKind;
         activeOnly?: boolean;
+        page?: number;
+        limit?: number;
+        searchTerm?: string;
       }) => ({
-        url: `properties/options/${kind}${activeOnly ? "?activeOnly=true" : ""}`,
+        url: (() => {
+          const params = new URLSearchParams();
+          if (activeOnly) params.set("activeOnly", "true");
+          if (page) params.set("page", String(page));
+          if (limit) params.set("limit", String(limit));
+          if (searchTerm) params.set("searchTerm", searchTerm);
+          const query = params.toString();
+          return `properties/options/${kind}${query ? `?${query}` : ""}`;
+        })(),
         method: "GET",
       }),
-      transformResponse: (r: { data: any[] }) => r.data || [],
+      transformResponse: (r: { data: any[]; meta?: any }) =>
+        r.meta
+          ? { rows: Array.isArray(r.data) ? r.data : [], meta: r.meta }
+          : Array.isArray(r.data)
+            ? r.data
+            : [],
       providesTags: ["property-options"],
     }),
 

@@ -199,9 +199,12 @@ const PropertyForm = ({
                 <Col xs={24} md={8}>
                   <Form.Item label="Type" name="type" rules={[{ required: true }]}>
                     <Select
+                      placeholder="Select property type"
                       options={(propertyTypes || []).map((t: any) => ({
                         value: t.name,
-                        label: t.description || t.name,
+                        label: t.nameBn
+                          ? `${t.description || t.name} (${t.nameBn})`
+                          : t.description || t.name,
                       }))}
                     />
                   </Form.Item>

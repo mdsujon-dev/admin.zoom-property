@@ -69,9 +69,10 @@ const Amenities = () => {
   const [limit, setLimit] = useState(10);
   const iconValue = Form.useWatch("icon", form);
 
-  const { data: rows = [], isFetching } = useGetPropertyOptionsQuery({
+  const { data: optionResult = { rows: [], meta: {} }, isFetching } = useGetPropertyOptionsQuery({
     kind: "amenities",
   });
+  const rows = Array.isArray(optionResult) ? optionResult : optionResult.rows;
 
   const [createOption, { isLoading: creating }] =
     useCreatePropertyOptionMutation();

@@ -10,10 +10,11 @@ import {
   Tooltip,
 } from "antd";
 import { Edit, Plus, Search, Trash2, icons } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import PageHeader from "../../../components/Common/PageHeader";
+import LangInput from "../../../components/Common/LangInput";
 import PageMeta from "../../../components/Common/PageMeta";
 import PermissionGate from "../../../components/Common/PermissionGate";
 import OrderInputCell from "../../../components/shared/OrderInputCell";
@@ -69,9 +70,13 @@ const PropertyTypes = () => {
   const [limit, setLimit] = useState(10);
   const iconValue = Form.useWatch("icon", form);
 
-  const { data: rows = [], isFetching } = useGetPropertyOptionsQuery({
+  const { data: optionResult = { rows: [], meta: {} }, isFetching } = useGetPropertyOptionsQuery({
     kind: "types",
+    page,
+    limit,
+    searchTerm: search,
   });
+  const { rows, meta } = optionResult;
 
   const [createOption, { isLoading: creating }] =
     useCreatePropertyOptionMutation();
@@ -86,21 +91,6 @@ const PropertyTypes = () => {
       data: { order: nextOrder },
     }).unwrap();
   };
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return rows;
-    return rows.filter((r: any) =>
-      [r.name, r.nameBn, r.icon, r.description]
-        .filter(Boolean)
-        .some((v: string) => v.toLowerCase().includes(q))
-    );
-  }, [rows, search]);
-
-  const visible = useMemo(
-    () => filtered.slice((page - 1) * limit, page * limit),
-    [filtered, page, limit]
-  );
 
   useEffect(() => {
     if (!open) return form.resetFields();
@@ -272,14 +262,14 @@ const PropertyTypes = () => {
       </div>
 
       <DataTable
-        data={visible}
+        data={rows}
         columns={columns as any}
         currentPage={page}
         setCurrentPage={setPage}
         limit={limit}
         setLimit={setLimit}
-        total={filtered.length}
-        isPaginate={filtered.length > limit}
+        total={meta.total || 0}
+        isPaginate={(meta.total || 0) > limit}
         loading={isFetching}
         rowKey="_id"
       />
@@ -300,25 +290,23 @@ const PropertyTypes = () => {
           onFinish={onFinish}
           initialValues={{ isActive: true, order: 0 }}
         >
-          <Form.Item
-            label="Value (Unique ID)"
-            name="name"
-            rules={[{ required: true, message: "Name the Property Type" }]}
-            tooltip="Used in URLs and DB (e.g. apartment, duplex). Make it lowercase without spaces."
-          >
-            <Input placeholder="apartment" />
-          </Form.Item>
+         
           <Form.Item
             label="Label (English)"
-            name="description"
+            name="name"
             rules={[{ required: true, message: "Provide an English label" }]}
             tooltip="The English label shown on the frontend."
           >
             <Input placeholder="Apartments" />
           </Form.Item>
-          <Form.Item label="Label (Bangla)" name="nameBn">
-            <Input placeholder="অ্যাপার্টমেন্ট" />
-          </Form.Item>
+          <LangInput
+            label="Label (Bangla)"
+            name="nameBn"
+            lang="bn"
+            placeholder="অ্যাপার্টমেন্ট"
+            sourceFieldName="name"
+            form={form}
+          />
           <Form.Item
             label="Icon"
             name="icon"
