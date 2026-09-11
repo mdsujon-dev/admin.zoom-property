@@ -10,6 +10,7 @@ import CreateArea from "../pages/Areas/CreateArea";
 import UpdateArea from "../pages/Areas/UpdateArea";
 import Blog from "../pages/Blog/Blog";
 import BlogCategories from "../pages/Blog/BlogCategories";
+import BlogComments from "../pages/Blog/BlogComments";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import ContactMessages from "../pages/Inquiries/ContactMessage";
@@ -93,6 +94,7 @@ const routes = [
         children: [
           { path: "", element: <Blog /> },
           { path: "categories", element: <BlogCategories /> },
+          { path: "comments", element: <BlogComments /> },
           { path: "create", element: <CreatePost /> },
           { path: "edit/:id", element: <UpdatePost /> },
         ],

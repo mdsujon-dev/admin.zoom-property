@@ -26,6 +26,10 @@ interface ContactMessage {
   subject: string;
   message: string;
   type?: string;
+  enquiry?: string;
+  area?: string;
+  budget?: string;
+  source?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,10 +97,17 @@ const ContactMessages: React.FC = () => {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      render: (val: string) => {
-        if (!val || val === "General") return <Text type="secondary">General</Text>;
-        return <Text className="text-primary-500 font-semibold">{val}</Text>;
+      render: (_, r: ContactMessage) => {
+        const val = r.enquiry || r.type || "General";
+        if (val === "General") return <Text type="secondary">General</Text>;
+        return <Text className="text-primary-500 font-semibold capitalize">{val}</Text>;
       },
+    },
+    {
+      title: "Source",
+      dataIndex: "source",
+      key: "source",
+      render: (val: string) => val ? <Text>{val}</Text> : <Text type="secondary">—</Text>,
     },
     {
       title: "Phone",
@@ -108,6 +119,7 @@ const ContactMessages: React.FC = () => {
       dataIndex: "subject",
       key: "subject",
       ellipsis: true,
+      render: (val: string) => val || <Text type="secondary">—</Text>
     },
 
     {
@@ -251,6 +263,26 @@ const ContactMessages: React.FC = () => {
                     {selectedMessage.phone}
                   </a>
                 </Descriptions.Item>
+                {selectedMessage.enquiry && (
+                  <Descriptions.Item label={<span className="text-gray-500">Enquiry</span>}>
+                    <span className="capitalize">{selectedMessage.enquiry}</span>
+                  </Descriptions.Item>
+                )}
+                {selectedMessage.area && (
+                  <Descriptions.Item label={<span className="text-gray-500">Area</span>}>
+                    {selectedMessage.area === "any" ? "Any Area" : selectedMessage.area}
+                  </Descriptions.Item>
+                )}
+                {selectedMessage.budget && (
+                  <Descriptions.Item label={<span className="text-gray-500">Budget</span>}>
+                    {selectedMessage.budget}
+                  </Descriptions.Item>
+                )}
+                {selectedMessage.source && (
+                  <Descriptions.Item label={<span className="text-gray-500">Source</span>}>
+                    {selectedMessage.source}
+                  </Descriptions.Item>
+                )}
               </Descriptions>
             </div>
 

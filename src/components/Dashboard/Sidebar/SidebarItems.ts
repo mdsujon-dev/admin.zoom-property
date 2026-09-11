@@ -88,6 +88,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Blog",
         icon: FileText,
       },
+      {
+        label: "Blog Comments",
+        address: "/blog/comments",
+        module: "Blog",
+        icon: MessageSquareQuote,
+      },
     ],
   },
   {

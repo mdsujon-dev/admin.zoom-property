@@ -77,6 +77,36 @@ const blogApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["blog-categories"],
     }),
+    /* ── Comments ───────────────────────────────────────────────────── */
+    getBlogComments: builder.query({
+      query: (params: any) => {
+        const q = new URLSearchParams();
+        if (params) {
+          if (params.page) q.append("page", String(params.page));
+          if (params.limit) q.append("limit", String(params.limit));
+        }
+        return { url: `blog-comments?${q.toString()}`, method: "GET" };
+      },
+      transformResponse: (r: { data: any[]; meta: any }) => ({
+        result: r.data || [],
+        meta: r.meta || {},
+      }),
+      providesTags: ["blog-comments"],
+    }),
+
+    updateBlogCommentStatus: builder.mutation({
+      query: ({ id, status }: { id: string; status: string }) => ({
+        url: `blog-comments/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["blog-comments"],
+    }),
+
+    deleteBlogComment: builder.mutation({
+      query: (id: string) => ({ url: `blog-comments/${id}`, method: "DELETE" }),
+      invalidatesTags: ["blog-comments"],
+    }),
   }),
 });
 
@@ -90,4 +120,7 @@ export const {
   useCreateBlogCategoryMutation,
   useUpdateBlogCategoryMutation,
   useDeleteBlogCategoryMutation,
+  useGetBlogCommentsQuery,
+  useUpdateBlogCommentStatusMutation,
+  useDeleteBlogCommentMutation,
 } = blogApi;
