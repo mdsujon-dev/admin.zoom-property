@@ -21,9 +21,9 @@ export type CmsFieldType =
   | "url"
   /** One uploaded image, stored as its URL. */
   | "image"
-  /** A gallery: several images, stored as an array of URLs. */
   | "images"
-  | "icon";
+  | "icon"
+  | "richtext";
 
 export interface CmsField {
   /** Dictionary path, e.g. `hero.trust.rajuk`. */
@@ -433,6 +433,40 @@ export const cmsPages: CmsPageDef[] = [
           }
         ]
       },
+      {
+        id: "sharedCta",
+        label: "Shared contact CTA",
+        fields: [
+          {
+            key: "cta.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Uncompromising transparency",
+            bn: "স্বচ্ছ পরামর্শ"
+          },
+          {
+            key: "cta.title",
+            label: "Title",
+            type: "text",
+            en: "Ready to see the shortlist?",
+            bn: "আপনার পছন্দের তালিকা দেখতে প্রস্তুত?"
+          },
+          {
+            key: "cta.description",
+            label: "Description",
+            type: "textarea",
+            en: "Send us your criteria. We will prepare a focused shortlist and arrange the next visit.",
+            bn: "আপনার চাহিদা জানান। আমরা আপনার জন্য বাছাই করা তালিকা তৈরি করে পরের ভিজিটের ব্যবস্থা করব।"
+          },
+          {
+            key: "cta.contact",
+            label: "Button",
+            type: "text",
+            en: "Contact the team",
+            bn: "টিমের সঙ্গে যোগাযোগ করুন"
+          }
+        ]
+      }
     ],
   },
   {
@@ -1310,40 +1344,6 @@ export const cmsPages: CmsPageDef[] = [
         }
       },
       {
-        id: "sharedCta",
-        label: "Shared contact CTA",
-        fields: [
-          {
-            key: "cta.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Uncompromising transparency",
-            bn: "স্বচ্ছ পরামর্শ"
-          },
-          {
-            key: "cta.title",
-            label: "Title",
-            type: "text",
-            en: "Ready to see the shortlist?",
-            bn: "আপনার পছন্দের তালিকা দেখতে প্রস্তুত?"
-          },
-          {
-            key: "cta.description",
-            label: "Description",
-            type: "textarea",
-            en: "Send us your criteria. We will prepare a focused shortlist and arrange the next visit.",
-            bn: "আপনার চাহিদা জানান। আমরা আপনার জন্য বাছাই করা তালিকা তৈরি করে পরের ভিজিটের ব্যবস্থা করব।"
-          },
-          {
-            key: "cta.contact",
-            label: "Button",
-            type: "text",
-            en: "Contact the team",
-            bn: "টিমের সঙ্গে যোগাযোগ করুন"
-          }
-        ]
-      },
-      {
         id: "contactDock",
         label: "Side contact strip",
         fields: [],
@@ -1389,6 +1389,13 @@ export const cmsPages: CmsPageDef[] = [
             type: "text",
             en: "Legal",
             bn: "আইনি"
+          },
+          {
+            key: "terms.body",
+            label: "Body",
+            type: "richtext",
+            en: "<p>The Terms and Conditions</p>",
+            bn: "<p>শর্তাবলী</p>"
           },
           {
             key: "terms.title",
@@ -1454,6 +1461,13 @@ export const cmsPages: CmsPageDef[] = [
             type: "text",
             en: "Legal",
             bn: "আইনি"
+          },
+          {
+            key: "privacy.body",
+            label: "Body",
+            type: "richtext",
+            en: "<p>The Privacy Policy</p>",
+            bn: "<p>গোপনীয়তা নীতি</p>"
           },
           {
             key: "privacy.title",
@@ -1663,6 +1677,47 @@ export const cmsPages: CmsPageDef[] = [
         ]
       },
       {
+        id: "contactMap",
+        label: "Map Location",
+        fields: [
+          {
+            key: "contact.mapUrl",
+            label: "Map Embed URL",
+            type: "url",
+            hint: "The Google Maps embed src URL.",
+            en: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14603.220550064567!2d90.4079836!3d23.789965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c709bd51a1a9%3A0xc34a0283c8edfb96!2sGulshan%20%2C%20Dhaka%201212!5e0!3m2!1sen!2sbd!4v1714571217734!5m2!1sen!2sbd",
+            bn: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14603.220550064567!2d90.4079836!3d23.789965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c709bd51a1a9%3A0xc34a0283c8edfb96!2sGulshan%20%2C%20Dhaka%201212!5e0!3m2!1sen!2sbd!4v1714571217734!5m2!1sen!2sbd"
+          }
+        ]
+      },
+      {
+        id: "contactCta",
+        label: "Contact CTA",
+        fields: [
+          {
+            key: "contact.cta.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Get in touch",
+            bn: "যোগাযোগ করুন"
+          },
+          {
+            key: "contact.cta.title",
+            label: "Title",
+            type: "text",
+            en: "How can we help?",
+            bn: "আমরা কীভাবে সাহায্য করতে পারি?"
+          },
+          {
+            key: "contact.cta.description",
+            label: "Description",
+            type: "textarea",
+            en: "Have questions? Our team is ready to assist.",
+            bn: "কোনো প্রশ্ন আছে? আমাদের টিম সাহায্য করতে প্রস্তুত।"
+          }
+        ]
+      },
+      {
         id: "contact-social",
         label: "Social links",
         fields: [],
@@ -1702,6 +1757,59 @@ export const cmsPages: CmsPageDef[] = [
           ],
         },
       },
+      {
+        id: "contactFaq",
+        label: "Contact FAQ",
+        fields: [
+          {
+            key: "faq.title",
+            label: "Title",
+            type: "text",
+            en: "Legal, financial and handover questions",
+            bn: "আইনি, আর্থিক এবং হস্তান্তরের প্রশ্ন"
+          },
+          {
+            key: "faq.description",
+            label: "Description",
+            type: "textarea",
+            en: "Something specific about deed mutation or consular power of attorney? Call the desk \u2014 someone picks up.",
+            bn: "দলিল মিউটেশন বা পাওয়ার অফ অ্যাটর্নি নিয়ে নির্দিষ্ট কিছু জানতে চান? আমাদের কল করুন \u2014 কেউ না কেউ উত্তর দেবেন।"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "content.faqs",
+          itemName: "FAQ Item",
+          addButtonText: "+ Add FAQ",
+          initialCount: 3,
+          titleSuffix: "question",
+          itemFields: [
+            {
+              suffix: "question",
+              label: "Question",
+              type: "text",
+              hint: "The question asked by the user."
+            },
+            {
+              suffix: "answer",
+              label: "Answer",
+              type: "richtext",
+              hint: "The detailed answer in rich text format."
+            }
+          ],
+          defaultItems: [
+            { questionEn: "What does \u201cverified\u201d actually mean on a listing?", questionBn: "একটি লিস্টিংয়ে \u201cverified\u201d বলতে আসলে কী বোঝায়?", answerEn: "<p>A surveyor and a lawyer from our team visit in person, take timestamped photography, and check the RAJUK approved plan, mutation porcha, khatiyan and non-encumbrance certificate. If any link in the chain is doubtful, the listing is rejected.</p>", answerBn: "<p>আমাদের টিমের একজন সার্ভেয়ার এবং একজন আইনজীবী সশরীরে পরিদর্শন করেন, সময়-সাপেক্ষ ফটোগ্রাফি নেন এবং রাজউকের অনুমোদিত প্ল্যান, মিউটেশন পর্চা, খতিয়ান এবং নন-এনকামব্রেন্স সার্টিফিকেট পরীক্ষা করেন। কোনো কাগজপত্রে সন্দেহ থাকলে লিস্টিংটি বাতিল করা হয়।</p>" },
+            { questionEn: "How long does the verification process take?", questionBn: "যাচাই প্রক্রিয়া কতক্ষণ সময় নেয়?", answerEn: "<p>Typically 3-5 business days.</p>", answerBn: "<p>সাধারণত ৩-৫ কর্মদিবস।</p>" },
+            { questionEn: "Are there any hidden fees?", questionBn: "কোনো লুকানো ফি আছে কি?", answerEn: "<p>No, we maintain uncompromising transparency.</p>", answerBn: "<p>না, আমরা পূর্ণ স্বচ্ছতা বজায় রাখি।</p>" },
+            { questionEn: "Can I schedule a weekend visit?", questionBn: "আমি কি সাপ্তাহিক ছুটির দিনে পরিদর্শনের সময় নির্ধারণ করতে পারি?", answerEn: "<p>Yes, our team is available 7 days a week.</p>", answerBn: "<p>হ্যাঁ, আমাদের দল সপ্তাহে ৭ দিনই উপলব্ধ।</p>" },
+            { questionEn: "Do you help with bank loans?", questionBn: "আপনারা কি ব্যাংক ঋণের ক্ষেত্রে সাহায্য করেন?", answerEn: "<p>Yes, we assist with documentation for partner banks.</p>", answerBn: "<p>হ্যাঁ, আমরা পার্টনার ব্যাংকগুলোর জন্য কাগজপত্রে সাহায্য করি।</p>" },
+            { questionEn: "Is mutation support included?", questionBn: "মিউটেশন সাপোর্ট কি অন্তর্ভুক্ত?", answerEn: "<p>Yes, we guide you through the mutation process.</p>", answerBn: "<p>হ্যাঁ, আমরা মিউটেশন প্রক্রিয়ায় আপনাকে গাইড করি।</p>" },
+            { questionEn: "How is the pricing determined?", questionBn: "মূল্য কীভাবে নির্ধারিত হয়?", answerEn: "<p>Prices reflect fair market value evaluated by our experts.</p>", answerBn: "<p>আমাদের বিশেষজ্ঞদের মূল্যায়নকৃত ন্যায্য বাজার মূল্যের ভিত্তিতে দাম নির্ধারিত হয়।</p>" },
+            { questionEn: "Do I need to pay a reservation fee?", questionBn: "আমাকে কি কোনো রিজার্ভেশন ফি দিতে হবে?", answerEn: "<p>A small deposit secures the property while papers are finalized.</p>", answerBn: "<p>কাগজপত্র চূড়ান্ত হওয়ার সময় সম্পত্তি নিশ্চিত করতে একটি ছোট ডিপোজিট দিতে হয়।</p>" },
+            { questionEn: "What if the title deed has issues?", questionBn: "যদি দলিল বা টাইটেলে কোনো সমস্যা থাকে?", answerEn: "<p>We will not list or sell properties with compromised titles.</p>", answerBn: "<p>আমরা ত্রুটিপূর্ণ দলিলের সম্পত্তি তালিকাভুক্ত বা বিক্রি করি না।</p>" },
+            { questionEn: "Can non-resident Bangladeshis buy?", questionBn: "প্রবাসী বাংলাদেশিরা কি কিনতে পারবেন?", answerEn: "<p>Absolutely. We handle the entire process remotely for NRBs.</p>", answerBn: "<p>অবশ্যই। প্রবাসীদের জন্য আমরা পুরো প্রক্রিয়াটি অনলাইনেই সম্পন্ন করতে পারি।</p>" }
+          ]
+        }
+      }
     ],
   },
 ];

@@ -8,6 +8,7 @@ import { translateToBanglaApi } from "../../components/Common/LangInput";
 import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
+import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadImage from "../../components/shared/UploadImage";
 import {
   useGetCmsContentQuery,
@@ -73,7 +74,7 @@ const CmsPage = () => {
       ) : (
         <div className="rounded-xl border border-secondary-100 bg-white p-4">
           <Tabs
-            tabPosition="left"
+            tabPosition="top"
             className="cms-tabs"
             items={page.sections.map((section) => ({
               key: section.id,
@@ -735,10 +736,14 @@ const FieldRow = ({
         className="!mb-0"
         tooltip={field.key}
       >
-        <Control
-          placeholder={field.en || "—"}
-          autoSize={field.type === "textarea" ? { minRows: 2 } : undefined}
-        />
+        {field.type === "richtext" ? (
+          <RichTextEditor placeholder={field.en || "—"} height={500} />
+        ) : (
+          <Control
+            placeholder={field.en || "—"}
+            autoSize={field.type === "textarea" ? { minRows: 2 } : undefined}
+          />
+        )}
       </Form.Item>
       <Form.Item
         label={
@@ -746,25 +751,31 @@ const FieldRow = ({
             <span className="text-xs font-medium text-secondary-500">
               {field.label} (বাংলা)
             </span>
-            <Button
-              type="link"
-              size="small"
-              onClick={handleTranslate}
-              loading={translating}
-              icon={!translating ? <Languages className="h-3.5 w-3.5 text-primary-600" /> : undefined}
-              className="!h-auto !p-0 !text-xs !font-medium text-primary-600 hover:text-primary-700 hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              বাংলা করুন
-            </Button>
+            {field.type !== "richtext" && (
+              <Button
+                type="link"
+                size="small"
+                onClick={handleTranslate}
+                loading={translating}
+                icon={!translating ? <Languages className="h-3.5 w-3.5 text-primary-600" /> : undefined}
+                className="!h-auto !p-0 !text-xs !font-medium text-primary-600 hover:text-primary-700 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                বাংলা করুন
+              </Button>
+            )}
           </div>
         }
         name={`${field.key}|bn`}
         className="!mb-0"
       >
-        <Control
-          placeholder={field.bn || "—"}
-          autoSize={field.type === "textarea" ? { minRows: 2 } : undefined}
-        />
+        {field.type === "richtext" ? (
+          <RichTextEditor placeholder={field.bn || "—"} height={500} />
+        ) : (
+          <Control
+            placeholder={field.bn || "—"}
+            autoSize={field.type === "textarea" ? { minRows: 2 } : undefined}
+          />
+        )}
       </Form.Item>
     </div>
   );

@@ -113,7 +113,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onEditorChange={(content: string) => onChange?.(content)}
         init={{
           height,
-          menubar: 'file edit view insert format tools table help',
+          menubar: false, // 'file edit view insert format tools table help',
           menu: {
             file: {
               title: 'File',
@@ -319,9 +319,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           },
 
           toolbar: [
-            'undo redo | save restoredraft | blocks fontfamilysearch fontsize | bold italic underline strikethrough subscript superscript | forecolor backcolor | removeformat',
-            'cut copy paste pastetext | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | blockquote codesample | link unlink anchor openlink',
-            'searchreplace | ltr rtl | lineheight | visualblocks visualchars nonbreaking | preview fullscreen code print | help | emoticons charmap insertdatetime | image media table hr pagebreak accordion',
+            'undo redo | blocks fontfamilysearch fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | removeformat fullscreen',
+            // 'save restoredraft | subscript superscript',
+            // 'cut copy paste pastetext | blockquote codesample | unlink anchor openlink',
+            // 'searchreplace | ltr rtl | lineheight | visualblocks visualchars nonbreaking | preview code print | help | emoticons charmap insertdatetime | table hr pagebreak accordion',
           ].join(' | '),
           toolbar_mode: 'wrap',
           toolbar_sticky: false,

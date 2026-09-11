@@ -5,7 +5,6 @@ import {
   BookOpen,
   Briefcase,
   Building2,
-  Contact,
   FileText,
   Handshake,
   Home,
@@ -157,12 +156,7 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Dynamic Content",
         icon: Star,
       },
-      {
-        label: "Agents",
-        address: "/cms/agents",
-        module: "Dynamic Content",
-        icon: Contact,
-      },
+
       {
         label: "Contact",
         address: "/cms/contact",
