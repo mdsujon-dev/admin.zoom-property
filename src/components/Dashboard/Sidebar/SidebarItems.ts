@@ -64,6 +64,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         icon: MapPin,
       },
       {
+        label: "Property Types",
+        address: "/settings/property-types",
+        module: "Properties",
+        icon: Building2,
+      },
+      {
         label: "Amenities",
         address: "/settings/amenities",
         module: "Properties",

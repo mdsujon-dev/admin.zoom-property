@@ -37,6 +37,7 @@ import Reports from "../pages/Reports/Reports";
 import Reviews from "../pages/Reviews/Reviews";
 import Amenities from "../pages/Settings/Amenities/Amenities";
 import Designation from "../pages/Settings/Desgination/Designation";
+import PropertyTypes from "../pages/Settings/Amenities/PropertyTypes";
 import MediaBin from "../pages/Settings/MediaBin/MediaBin";
 import NotificationSounds from "../pages/Settings/NotificationSounds/NotificationSounds";
 import ServicesCountries from "../pages/Settings/ServicesCountries/ServicesCountries";
@@ -174,6 +175,7 @@ const routes = [
           { path: "roles", element: <Roles /> },
           { path: "roles/:id/permissions", element: <RolePermissions /> },
           { path: "amenities", element: <Amenities /> },
+          { path: "property-types", element: <PropertyTypes /> },
           { path: "designation", element: <Designation /> },
           { path: "services-countries", element: <ServicesCountries /> },
           { path: "notification-sounds", element: <NotificationSounds /> },

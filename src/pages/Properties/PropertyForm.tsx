@@ -29,7 +29,6 @@ import { useGetPropertyOptionsQuery } from "../../redux/features/property/proper
 import {
   BADGES,
   FURNISHINGS,
-  PROPERTY_TYPES,
   STATUSES,
 } from "./propertyMeta";
 import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
@@ -86,6 +85,10 @@ const PropertyForm = ({
   const { data: projectData } = useGetProjectsQuery({ limit: 300, activeOnly: true });
   const { data: amenities = [] } = useGetPropertyOptionsQuery({
     kind: "amenities",
+    activeOnly: true,
+  });
+  const { data: propertyTypes = [] } = useGetPropertyOptionsQuery({
+    kind: "types",
     activeOnly: true,
   });
 
@@ -195,7 +198,12 @@ const PropertyForm = ({
 
                 <Col xs={24} md={8}>
                   <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-                    <Select options={PROPERTY_TYPES} />
+                    <Select
+                      options={(propertyTypes || []).map((t: any) => ({
+                        value: t.name,
+                        label: t.description || t.name,
+                      }))}
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={8}>
