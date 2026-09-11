@@ -16,6 +16,7 @@ import {
 import DateTimeStacked from "../../components/shared/DateTimeStacked";
 import OrderInputCell from "../../components/shared/OrderInputCell";
 import AntImage from "../../components/shared/AntImage";
+import { TakaIcon } from "../../components/shared/Icon";
 import { mediaSrc } from "../../utils/mediaSrc";
 
 const { confirm } = Modal;
@@ -155,11 +156,11 @@ const Areas = () => {
       width: 150,
       render: (_: any, r: any) => (
         <div className="text-xs">
-          <p className="font-semibold text-secondary-800">
-            {r.medianPrice ? `৳ ${(r.medianPrice / 10000000).toFixed(2)} Cr` : "—"}
+          <p className="font-semibold text-secondary-800 flex items-center gap-0.5">
+            {r.medianPrice ? <><TakaIcon />{(r.medianPrice / 10000000).toFixed(2)} Cr</> : "—"}
           </p>
-          <p className="text-secondary-500">
-            {r.pricePerSqft ? `৳ ${r.pricePerSqft.toLocaleString()}/sqft` : "—"}
+          <p className="text-secondary-500 flex items-center gap-0.5">
+            {r.pricePerSqft ? <><TakaIcon />{r.pricePerSqft.toLocaleString()}/sqft</> : "—"}
             {r.rentalYield ? ` · ${r.rentalYield}` : ""}
           </p>
         </div>

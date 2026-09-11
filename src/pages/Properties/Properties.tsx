@@ -10,6 +10,7 @@ import PermissionGate from "../../components/Common/PermissionGate";
 import DataTable from "../../components/Table/DataTable";
 import OrderInputCell from "../../components/shared/OrderInputCell";
 import AntImage from "../../components/shared/AntImage";
+import Money from "../../components/shared/Money";
 import { mediaSrc } from "../../utils/mediaSrc";
 import {
   useChangePropertyStatusMutation,
@@ -185,7 +186,7 @@ const Properties = () => {
       align: "right" as const,
       render: (price: number, r: any) => (
         <div className="text-right">
-          <p className="font-semibold text-secondary-800">৳ {money(price)}</p>
+          <p className="font-semibold text-secondary-800"><Money value={price} /></p>
           {r.purpose === "rent" && (
             <p className="text-[11px] text-secondary-400">per month</p>
           )}

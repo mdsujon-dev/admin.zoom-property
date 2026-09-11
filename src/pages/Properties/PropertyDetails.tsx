@@ -6,6 +6,7 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import PermissionGate from "../../components/Common/PermissionGate";
 import RecordHistory from "../../components/shared/RecordHistory";
+import Money from "../../components/shared/Money";
 import { useGetPropertyByIdQuery } from "../../redux/features/property/propertyApi";
 import { mediaSrc } from "../../utils/mediaSrc";
 import { STATUS_COLOUR, money, typeLabel } from "./propertyMeta";
@@ -99,9 +100,9 @@ const PropertyDetails = () => {
                 {
                   key: "price",
                   label: p.purpose === "rent" ? "Rent" : "Price",
-                  children: `৳ ${money(p.price)}${
+                  children: <><Money value={p.price} />{
                     p.purpose === "rent" ? " / month" : ""
-                  }`,
+                  }</>,
                 },
                 {
                   key: "size",
