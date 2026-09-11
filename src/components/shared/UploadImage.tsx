@@ -55,10 +55,24 @@ const UploadImage = ({
   ) => {
     e.preventDefault();
     if (mode === "multiple") {
-      const updated = imageUrls.filter((img: string) => img !== url);
-      form.setFieldValue(pathArray, updated);
-      // In multiple mode, we don't easily know which ID corresponds to the deleted URL
-      // If we wanted to, we'd need to filter the IDs array as well, but for now we'll just leave it or reset it if needed.
+      const index = imageUrls.indexOf(url);
+      if (index !== -1) {
+        const updated = [...imageUrls];
+        updated.splice(index, 1);
+        form.setFieldValue(pathArray, updated);
+
+        if (idFieldPath) {
+          const idPathArray = Array.isArray(idFieldPath)
+            ? idFieldPath
+            : idFieldPath.split(".").map((key) => (/^\d+$/.test(key) ? Number(key) : key));
+          const currentIds = form.getFieldValue(idPathArray) || [];
+          if (Array.isArray(currentIds) && currentIds.length > index) {
+            const updatedIds = [...currentIds];
+            updatedIds.splice(index, 1);
+            form.setFieldValue(idPathArray, updatedIds);
+          }
+        }
+      }
     } else {
       form.setFieldValue(pathArray, null);
       if (idFieldPath) {
@@ -69,11 +83,32 @@ const UploadImage = ({
 
   const handleImageSelect = (selected: string | string[], selectedData?: any) => {
     if (mode === "multiple") {
-      const updated = Array.isArray(selected) ? selected : [selected];
-      form.setFieldValue(pathArray, updated);
+      const newUrls = Array.isArray(selected) ? selected : [selected];
       
-      if (idFieldPath && selectedData) {
-        form.setFieldValue(idFieldPath, selectedData.map((d: any) => d._id || d.id || d.name || d.path));
+      // Prevent adding the exact same URL twice
+      const urlsToAdd = newUrls.filter(url => !(imageUrls || []).includes(url));
+      
+      if (urlsToAdd.length > 0) {
+        const updatedUrls = [...(imageUrls || []), ...urlsToAdd];
+        form.setFieldValue(pathArray, updatedUrls);
+        
+        if (idFieldPath && selectedData) {
+          const newIds = selectedData.map((d: any) => d._id || d.id || d.name || d.path);
+          
+          const idPathArray = Array.isArray(idFieldPath)
+            ? idFieldPath
+            : idFieldPath.split(".").map((key) => (/^\d+$/.test(key) ? Number(key) : key));
+            
+          const currentIds = form.getFieldValue(idPathArray) || [];
+          
+          const idsToAdd = urlsToAdd.map(url => {
+            const idx = newUrls.indexOf(url);
+            return newIds[idx];
+          });
+          
+          const updatedIds = [...currentIds, ...idsToAdd];
+          form.setFieldValue(idPathArray, updatedIds);
+        }
       }
     } else {
       form.setFieldValue(pathArray, selected);

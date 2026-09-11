@@ -36,7 +36,7 @@ const UpdateProject = () => {
     <ProjectForm
       heading="Edit project"
       submitLabel="Save changes"
-      initial={data}
+      initial={data?.project}
       saving={saving}
       onSubmit={onSubmit}
     />

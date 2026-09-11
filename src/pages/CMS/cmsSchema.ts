@@ -1212,47 +1212,18 @@ export const cmsPages: CmsPageDef[] = [
             bn: "ঢাকা ও চট্টগ্রামে ফ্ল্যাট কিনুন, ভাড়া নিন বা বিনিয়োগ করুন। প্রতিটি লিস্টিং রাজউক-যাচাই করা, দাম যা লেখা তাই, আর পরামর্শদাতারা মিনিটেই উত্তর দেন।"
           },
           {
-            key: "footer.explore",
-            label: "Column 1 heading",
+            key: "footer.companyName",
+            label: "Company name",
             type: "text",
-            groupHeader: "Columns",
-            hint: "The links under it are named in the Header tab \u2014 they are the same words.",
-            en: "Explore",
-            bn: "ঘুরে দেখুন"
-          },
-          {
-            key: "footer.services",
-            label: "Column 2 heading",
-            type: "text",
-            en: "Services",
-            bn: "সেবা"
-          },
-          {
-            key: "nav.agents",
-            label: "Advisors link",
-            type: "text",
-            en: "Advisors",
-            bn: "পরামর্শদাতা"
-          },
-          {
-            key: "nav.reviews",
-            label: "Reviews link",
-            type: "text",
-            en: "Reviews",
-            bn: "রিভিউ"
-          },
-          {
-            key: "nav.about",
-            label: "About link",
-            type: "text",
-            en: "About us",
-            bn: "আমাদের সম্পর্কে"
+            groupHeader: "Bottom bar",
+            hint: "Printed after the year, and read out as the name of the logo link.",
+            en: "Zoom Property Limited",
+            bn: "জুম প্রপার্টি লিমিটেড"
           },
           {
             key: "footer.rights",
             label: "Copyright line",
             type: "text",
-            groupHeader: "Bottom bar",
             hint: "Printed after the year and the company name.",
             en: "Limited · REHAB member",
             bn: "লিমিটেড · রিহ্যাব সদস্য"
@@ -1272,6 +1243,68 @@ export const cmsPages: CmsPageDef[] = [
             bn: "গোপনীয়তা নীতি"
           }
         ]
+      },
+      {
+        id: "footerExplore",
+        label: "Footer · Column 1",
+        fields: [
+          {
+            key: "footer.explore",
+            label: "Heading",
+            type: "text",
+            hint: "The heading over this column.",
+            en: "Explore",
+            bn: "ঘুরে দেখুন"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "footer.exploreLinks",
+          itemName: "Link",
+          addButtonText: "+ Add link",
+          initialCount: 4,
+          titleSuffix: "label",
+          itemFields: [
+            { suffix: "label", label: "Text", type: "text", hint: "What the link says." },
+            { suffix: "href", label: "Goes to", type: "url", hint: "A path on this site, starting with a slash \u2014 /properties, /about. The language prefix is added for you." }
+          ],
+          defaultItems: [
+            { labelEn: "Properties", labelBn: "প্রপার্টি", hrefEn: "/properties", hrefBn: "/properties" },
+            { labelEn: "Projects", labelBn: "প্রজেক্ট", hrefEn: "/projects", hrefBn: "/projects" },
+            { labelEn: "Areas", labelBn: "এলাকা", hrefEn: "/areas", hrefBn: "/areas" },
+            { labelEn: "Advisors", labelBn: "পরামর্শদাতা", hrefEn: "/agents", hrefBn: "/agents" }
+          ]
+        }
+      },
+      {
+        id: "footerServices",
+        label: "Footer · Column 2",
+        fields: [
+          {
+            key: "footer.services",
+            label: "Heading",
+            type: "text",
+            hint: "The heading over this column.",
+            en: "Services",
+            bn: "সেবা"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "footer.serviceLinks",
+          itemName: "Link",
+          addButtonText: "+ Add link",
+          initialCount: 4,
+          titleSuffix: "label",
+          itemFields: [
+            { suffix: "label", label: "Text", type: "text", hint: "What the link says." },
+            { suffix: "href", label: "Goes to", type: "url", hint: "A path on this site, starting with a slash \u2014 /properties, /about. The language prefix is added for you." }
+          ],
+          defaultItems: [
+            { labelEn: "Landowners", labelBn: "জমির মালিক", hrefEn: "/landowners", hrefBn: "/landowners" },
+            { labelEn: "Reviews", labelBn: "রিভিউ", hrefEn: "/reviews", hrefBn: "/reviews" },
+            { labelEn: "Blog", labelBn: "ব্লগ", hrefEn: "/blog", hrefBn: "/blog" },
+            { labelEn: "About us", labelBn: "আমাদের সম্পর্কে", hrefEn: "/about", hrefBn: "/about" }
+          ]
+        }
       },
     ],
   },

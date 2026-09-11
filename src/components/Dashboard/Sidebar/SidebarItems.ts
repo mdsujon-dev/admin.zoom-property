@@ -16,6 +16,7 @@ import {
   MessageSquareQuote,
   Newspaper,
   Phone,
+  PanelsTopLeft,
   ScrollText,
   Shield,
   Star,
