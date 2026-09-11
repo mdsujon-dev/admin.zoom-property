@@ -141,6 +141,7 @@ const ProjectForm = ({
           isActive: true,
           featured: false,
           isHome: false,
+          isFooter: false,
           cctvStreamActive: false,
           units: 0,
           unitsLeft: 0,
@@ -467,7 +468,7 @@ const ProjectForm = ({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-foreground text-sm">Active</p>
@@ -494,6 +495,16 @@ const ProjectForm = ({
                     <p className="text-xs text-muted-foreground">Home showcase</p>
                   </div>
                   <Form.Item name="isHome" valuePropName="checked" noStyle>
+                    <Switch />
+                  </Form.Item>
+                </div>
+
+                <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">In Footer</p>
+                    <p className="text-xs text-muted-foreground">Show in footer list</p>
+                  </div>
+                  <Form.Item name="isFooter" valuePropName="checked" noStyle>
                     <Switch />
                   </Form.Item>
                 </div>
