@@ -162,6 +162,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         module: "Dynamic Content",
         icon: ScrollText,
       },
+      {
+        label: "Header & Footer",
+        address: "/cms/headerFooter",
+        module: "Dynamic Content",
+        icon: PanelsTopLeft,
+      },
     ],
   },
   {

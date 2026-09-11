@@ -1119,6 +1119,163 @@ export const cmsPages: CmsPageDef[] = [
     ],
   },
   {
+    id: "headerFooter",
+    label: "Header & Footer",
+    description: "The bars at the top and bottom of every page. The phone number, email, addresses and social links they show are edited under Contact \u2014 one number, one place, so the header and the footer can never disagree.",
+    sections: [
+      {
+        id: "header",
+        label: "Header",
+        fields: [
+          {
+            key: "nav.properties",
+            label: "Properties",
+            type: "text",
+            groupHeader: "Menu",
+            hint: "The menu label. The same word names the footer column.",
+            en: "Properties",
+            bn: "সম্পত্তি"
+          },
+          {
+            key: "nav.projects",
+            label: "Projects",
+            type: "text",
+            en: "Projects",
+            bn: "প্রকল্প"
+          },
+          {
+            key: "nav.areas",
+            label: "Areas",
+            type: "text",
+            en: "Areas",
+            bn: "এলাকা"
+          },
+          {
+            key: "nav.landowners",
+            label: "Landowners",
+            type: "text",
+            en: "Landowners",
+            bn: "জমির মালিক"
+          },
+          {
+            key: "nav.blog",
+            label: "Blog",
+            type: "text",
+            en: "Blog",
+            bn: "ব্লগ"
+          },
+          {
+            key: "nav.contact",
+            label: "Contact",
+            type: "text",
+            en: "Contact",
+            bn: "যোগাযোগ"
+          },
+          {
+            key: "nav.bookViewing",
+            label: "Button",
+            type: "text",
+            groupHeader: "Controls",
+            hint: "The green button at the far right.",
+            en: "Book a viewing",
+            bn: "ভিজিট বুক করুন"
+          },
+          {
+            key: "nav.language",
+            label: "Language switcher",
+            type: "text",
+            hint: "Read out by screen readers; not printed.",
+            en: "Language",
+            bn: "ভাষা"
+          },
+          {
+            key: "nav.openMenu",
+            label: "Open menu",
+            type: "text",
+            hint: "The label on the hamburger button, phones only.",
+            en: "Open menu",
+            bn: "মেনু খুলুন"
+          }
+        ]
+      },
+      {
+        id: "footer",
+        label: "Footer",
+        fields: [
+          {
+            key: "meta.description",
+            label: "About the company",
+            type: "textarea",
+            groupHeader: "Under the logo",
+            hint: "The paragraph beside the logo. Also the description a search engine shows for the home page, so keep it under about 30 words.",
+            en: "Buy, rent and invest in Dhaka and Chattogram property. Every listing RAJUK-checked, every price the real one, every agent answers in minutes.",
+            bn: "ঢাকা ও চট্টগ্রামে ফ্ল্যাট কিনুন, ভাড়া নিন বা বিনিয়োগ করুন। প্রতিটি লিস্টিং রাজউক-যাচাই করা, দাম যা লেখা তাই, আর পরামর্শদাতারা মিনিটেই উত্তর দেন।"
+          },
+          {
+            key: "footer.explore",
+            label: "Column 1 heading",
+            type: "text",
+            groupHeader: "Columns",
+            hint: "The links under it are named in the Header tab \u2014 they are the same words.",
+            en: "Explore",
+            bn: "ঘুরে দেখুন"
+          },
+          {
+            key: "footer.services",
+            label: "Column 2 heading",
+            type: "text",
+            en: "Services",
+            bn: "সেবা"
+          },
+          {
+            key: "nav.agents",
+            label: "Advisors link",
+            type: "text",
+            en: "Advisors",
+            bn: "পরামর্শদাতা"
+          },
+          {
+            key: "nav.reviews",
+            label: "Reviews link",
+            type: "text",
+            en: "Reviews",
+            bn: "রিভিউ"
+          },
+          {
+            key: "nav.about",
+            label: "About link",
+            type: "text",
+            en: "About us",
+            bn: "আমাদের সম্পর্কে"
+          },
+          {
+            key: "footer.rights",
+            label: "Copyright line",
+            type: "text",
+            groupHeader: "Bottom bar",
+            hint: "Printed after the year and the company name.",
+            en: "Limited · REHAB member",
+            bn: "লিমিটেড · রিহ্যাব সদস্য"
+          },
+          {
+            key: "footer.terms",
+            label: "Terms link",
+            type: "text",
+            en: "Terms & Conditions",
+            bn: "শর্তাবলী"
+          },
+          {
+            key: "footer.privacy",
+            label: "Privacy link",
+            type: "text",
+            en: "Privacy Policy",
+            bn: "গোপনীয়তা নীতি"
+          }
+        ]
+      },
+    ],
+  },
+  {
     id: "legal",
     label: "Legal",
     description: "The terms and privacy pages linked from the footer.",

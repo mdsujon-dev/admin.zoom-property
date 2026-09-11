@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import LangInput from "../../components/Common/LangInput";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
 import { useGetPropertiesQuery } from "../../redux/features/property/propertyApi";
@@ -223,9 +224,13 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label="Client (Bangla)" name="clientNameBn">
-              <Input />
-            </Form.Item>
+            <LangInput
+              label="Client (Bangla)"
+              name="clientNameBn"
+              lang="bn"
+              sourceFieldName="clientName"
+              form={form}
+            />
           </Col>
 
           {isText ? (
@@ -236,9 +241,13 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
-                <Form.Item label="What they do (Bangla)" name="roleBn">
-                  <Input />
-                </Form.Item>
+                <LangInput
+                  label="What they do (Bangla)"
+                  name="roleBn"
+                  lang="bn"
+                  sourceFieldName="role"
+                  form={form}
+                />
               </Col>
             </>
           ) : null}
@@ -265,12 +274,15 @@ const ReviewModal = ({ open, onClose, review }: Props) => {
             </Form.Item>
           </Col>
           <Col xs={24}>
-            <Form.Item
+            <LangInput
               label={isText ? "Quote (Bangla)" : "Short description (Bangla)"}
               name="quoteBn"
-            >
-              <Input.TextArea rows={2} />
-            </Form.Item>
+              lang="bn"
+              sourceFieldName="quote"
+              form={form}
+              isTextArea
+              rows={2}
+            />
           </Col>
 
           {isText ? (
