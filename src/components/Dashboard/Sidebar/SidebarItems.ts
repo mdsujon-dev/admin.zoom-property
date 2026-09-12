@@ -143,6 +143,7 @@ const sidebarMenuRoutes: RouteItem[] = [
       },
       { label: "Areas", address: "/cms/areas", module: "Dynamic Content", icon: MapPin },
       { label: "About", address: "/cms/about", module: "Dynamic Content", icon: Info },
+      { label: "Agents", address: "/cms/agents", module: "Dynamic Content", icon: UserRound },
       {
         label: "Landowners",
         address: "/cms/landowners",
@@ -211,6 +212,12 @@ const sidebarMenuRoutes: RouteItem[] = [
         label: "Employees",
         address: "/employees",
         module: "Employees",
+        icon: UserRound,
+      },
+      {
+        label: "Agents",
+        address: "/employees/agents",
+        module: "Agents",
         icon: UserRound,
       },
       {

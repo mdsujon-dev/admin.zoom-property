@@ -1,6 +1,6 @@
 import { Button, Input, Modal, Select, Space, Switch, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
-import { Edit, FileText, Plus, Search, Tags, Trash2 } from "lucide-react";
+import { Edit, FileText, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 

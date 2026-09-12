@@ -176,6 +176,7 @@ export const baseApi = createApi({
     "dynamic-content",
     "showcase-videos",
     "landowner-projects",
+    "agents",
   ],
   endpoints: () => ({}),
 });

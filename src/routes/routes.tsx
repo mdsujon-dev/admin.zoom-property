@@ -46,6 +46,7 @@ import EmployeeDetails from "../pages/Users/EmployeeDetails";
 import RolePermissions from "../pages/Users/RolePermissions";
 import Roles from "../pages/Users/Roles";
 import Users from "../pages/Users/Users";
+import Agents from "../pages/Agents/Agents";
 
 const routes = [
   {
@@ -139,6 +140,7 @@ const routes = [
             element: <Navigate to="/settings/roles" replace />,
           },
           { path: "designations", element: <Designation /> },
+          { path: "agents", element: <Agents /> },
         ],
       },
       {

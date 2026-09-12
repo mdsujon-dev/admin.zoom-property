@@ -1097,8 +1097,15 @@ export const cmsPages: CmsPageDef[] = [
     sections: [
       {
         id: "agentsSection",
-        label: "Agents Section",
+        label: "Banner",
         fields: [
+          {
+            key: "agentsSection.backgroundImage",
+            label: "Background Image",
+            type: "image",
+            en: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2000&q=80",
+            bn: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2000&q=80",
+          },
           {
             key: "agentsSection.eyebrow",
             label: "Eyebrow",
@@ -1120,36 +1127,36 @@ export const cmsPages: CmsPageDef[] = [
             en: "Each advisor covers a handful of enclaves and nothing else. The reply time on every card is measured, not promised.",
             bn: "প্রত্যেকে গুটিকয়েক এলাকা দেখেন, তার বেশি নয়। প্রতিটি কার্ডে লেখা উত্তরের সময় মাপা, প্রতিশ্রুতি নয়।",
           },
-          {
-            key: "agentsSection.pageTitle",
-            label: "Page Title",
-            type: "text",
-            en: "Advisors, not a call centre",
-            bn: "কল সেন্টার নয়, পরামর্শদাতা",
-          },
-          {
-            key: "agentsSection.pageDescription",
-            label: "Page Description",
-            type: "textarea",
-            en: "Each one covers a handful of enclaves and nothing else. The reply time on every card is measured from real first responses, not promised.",
-            bn: "প্রত্যেকে গুটিকয়েক এলাকা দেখেন, তার বেশি নয়। প্রতিটি কার্ডে লেখা উত্তরের সময় প্রকৃত উত্তর থেকে মাপা, প্রতিশ্রুতি নয়।",
-          },
-          {
-            key: "agentsSection.metaTitle",
-            label: "Meta Title",
-            type: "text",
-            en: "Our advisors",
-            bn: "আমাদের পরামর্শদাতা",
-          },
-          {
-            key: "agentsSection.metaDescription",
-            label: "Meta Description",
-            type: "textarea",
-            en: "Four neighbourhood specialists covering Gulshan, Banani, Dhanmondi, Uttara, Bashundhara and Chattogram. Measured reply times on every profile.",
-            bn: "গুলশান, বনানী, ধানমন্ডি, উত্তরা, বসুন্ধরা ও চট্টগ্রামের চারজন এলাকা-বিশেষজ্ঞ। প্রতিটি প্রোফাইলে মাপা উত্তরের সময়।",
-          },
         ],
       },
+      {
+        id: "advisorMatch",
+        label: "Advisor Match",
+        fields: [
+          {
+            key: "pages.match.title",
+            label: "Title",
+            type: "text",
+            en: "You get one advisor, not a queue",
+            bn: "একজন পরামর্শদাতা পাবেন, সারি নয়"
+          }
+        ],
+        repeatable: {
+          itemPrefix: "pages.match.steps",
+          itemName: "Step",
+          addButtonText: "Add step",
+          initialCount: 3,
+          itemFields: [
+            { suffix: "title", label: "Title", type: "text" },
+            { suffix: "body", label: "Description", type: "textarea" }
+          ],
+          defaultItems: [
+            { titleEn: "By area, not by rota", bodyEn: "It routes to whoever covers that enclave, so the first answer already knows the building.", titleBn: "রোস্টার নয়, এলাকা ধরে", bodyBn: "যিনি ওই এলাকা দেখেন তাঁর কাছেই যায়, তাই প্রথম উত্তরটিই ভবনটি চেনে।" },
+            { titleEn: "One name, start to finish", bodyEn: "The same advisor handles the visit, the negotiation and the registration day.", titleBn: "শুরু থেকে শেষ, একই নাম", bodyBn: "পরিদর্শন, দরদাম ও রেজিস্ট্রেশনের দিন — একই পরামর্শদাতা সামলান।" },
+            { titleEn: "Response time on the record", bodyEn: "Every card shows a measured median. It is visible because it is measurable.", titleBn: "উত্তরের সময় প্রকাশ্যে", bodyBn: "প্রতিটি কার্ডে মাপা মধ্যম সময় লেখা। মাপা যায় বলেই দেখানো হয়।" }
+          ]
+        }
+      }
     ],
   },
   {
@@ -1812,6 +1819,129 @@ export const cmsPages: CmsPageDef[] = [
       }
     ],
   },
+  {
+    id: "agents",
+    label: "Agents / Advisors",
+    description: "The team members listing page.",
+    sections: [
+      {
+        id: "agentsSection",
+        label: "Agents Header",
+        fields: [
+          {
+            key: "agentsSection.backgroundImage",
+            label: "Background Image",
+            type: "image",
+            en: "",
+            bn: ""
+          },
+          {
+            key: "agentsSection.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Certified advisors",
+            bn: "সার্টিফাইড পরামর্শদাতা"
+          },
+          {
+            key: "agentsSection.pageTitle",
+            label: "Page Title",
+            type: "text",
+            en: "Advisors, not a call centre",
+            bn: "পরামর্শদাতা, কল সেন্টার নয়"
+          },
+          {
+            key: "agentsSection.pageDescription",
+            label: "Page Description",
+            type: "textarea",
+            en: "Each one covers a handful of enclaves and nothing else. The reply time on every card is measured from real first responses, not promised.",
+            bn: "প্রত্যেকে নির্দিষ্ট কিছু এলাকার দায়িত্বে থাকেন। প্রতিটি কার্ডের উত্তরের সময় মাপা হয়, প্রতিশ্রুতি দেওয়া নয়।"
+          },
+          {
+            key: "agentsSection.title",
+            label: "Section Title",
+            type: "text",
+            en: "Neighbourhood specialists, not a call centre",
+            bn: "এলাকার বিশেষজ্ঞ, কল সেন্টার নয়"
+          }
+        ]
+      },
+      {
+        id: "advisorMatch",
+        label: "Advisor Match Section",
+        fields: [
+          {
+            key: "pages.match.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            en: "Getting matched",
+            bn: "কীভাবে মিলবে"
+          },
+          {
+            key: "pages.match.title",
+            label: "Section Title",
+            type: "text",
+            en: "You get one advisor, not a queue",
+            bn: "একজন পরামর্শদাতা পাবেন, সারি নয়"
+          },
+          {
+            key: "pages.match.description",
+            label: "Section Description",
+            type: "textarea",
+            en: "Your enquiry goes to the person who works that area, and they stay with you through to handover.",
+            bn: "আপনার জিজ্ঞাসা সেই ব্যক্তির কাছে যায় যিনি ওই এলাকায় কাজ করেন, এবং হস্তান্তরের দিন পর্যন্ত তিনি আপনার সাথে থাকবেন।"
+          },
+          {
+            key: "pages.match.steps",
+            label: "Match Steps",
+            type: "array",
+            arraySchema: {
+              type: "object",
+              fields: [
+                {
+                  key: "title",
+                  label: "Title",
+                  type: "text"
+                },
+                {
+                  key: "body",
+                  label: "Body",
+                  type: "textarea"
+                }
+              ]
+            },
+            en: [
+              {
+                title: "By area, not by rota",
+                body: "It routes to whoever covers that enclave, so the first answer already knows the building."
+              },
+              {
+                title: "One name, start to finish",
+                body: "The same advisor handles the visit, the negotiation and the registration day."
+              },
+              {
+                title: "Response time on the record",
+                body: "Every card shows a measured median. It is visible because it is measurable."
+              }
+            ],
+            bn: [
+              {
+                title: "রোস্টার নয়, এলাকা ধরে",
+                body: "যিনি ওই এলাকা দেখেন তাঁর কাছেই যায়, তাই প্রথম উত্তরটিই ভবনটি চেনে।"
+              },
+              {
+                title: "শুরু থেকে শেষ, একই নাম",
+                body: "পরিদর্শন, দরদাম ও রেজিস্ট্রেশনের দিন — একই পরামর্শদাতা সামলান।"
+              },
+              {
+                title: "উত্তরের সময় প্রকাশ্যে",
+                body: "প্রতিটি কার্ডে মাপা মধ্যম সময় লেখা। মাপা যায় বলেই দেখানো হয়।"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 /** Page by its id, for the route to resolve `/cms/:pageId`. */

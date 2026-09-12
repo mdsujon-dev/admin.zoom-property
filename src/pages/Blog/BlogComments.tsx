@@ -1,6 +1,6 @@
-import { Button, Modal, Select, Space, Tag, Tooltip, Typography } from "antd";
+import { Button, Modal, Space, Tag, Tooltip, Typography } from "antd";
 import dayjs from "dayjs";
-import { Check, Edit, Trash2, X } from "lucide-react";
+import { Check, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
