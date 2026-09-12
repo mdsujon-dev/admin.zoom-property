@@ -58,7 +58,7 @@ const ProjectForm = ({
   const [translatingDescBn, setTranslatingDescBn] = useState(false);
 
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
-  const { data: agentData } = useGetAgentsQuery({ limit: 300, activeOnly: true });
+  const { data: agentData } = useGetAgentsQuery({ limit: 300 });
 
   const handleTranslateDescription = async () => {
     const enText = form.getFieldValue("description");

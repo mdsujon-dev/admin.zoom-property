@@ -83,7 +83,7 @@ const PropertyForm = ({
   };
 
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
-  const { data: agentData } = useGetAgentsQuery({ limit: 300, activeOnly: true });
+  const { data: agentData } = useGetAgentsQuery({ limit: 300 });
   const { data: projectData } = useGetProjectsQuery({ limit: 300, activeOnly: true });
   const { data: amenities = [] } = useGetPropertyOptionsQuery({
     kind: "amenities",
@@ -204,7 +204,7 @@ const PropertyForm = ({
                   <Form.Item label="Type" name="type" rules={[{ required: true }]}>
                     <Select
                       placeholder="Select property type"
-                      options={(propertyTypes || []).map((t: any) => ({
+                      options={(Array.isArray(propertyTypes) ? propertyTypes : (propertyTypes as any)?.rows || []).map((t: any) => ({
                         value: t.name,
                         label: t.nameBn
                           ? `${t.description || t.name} (${t.nameBn})`
@@ -368,7 +368,7 @@ const PropertyForm = ({
                       allowClear
                       optionFilterProp="label"
                       placeholder="Lift, generator, gym…"
-                      options={(amenities || []).map((a: any) => ({
+                      options={(Array.isArray(amenities) ? amenities : (amenities as any)?.rows || []).map((a: any) => ({
                         value: a._id,
                         label: a.name,
                       }))}

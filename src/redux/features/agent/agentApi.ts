@@ -8,6 +8,10 @@ export const agentApi = baseApi.injectEndpoints({
         method: "GET",
         params,
       }),
+      transformResponse: (r: { data: any[]; meta: any }) => ({
+        result: r.data || [],
+        meta: r.meta || {},
+      }),
       providesTags: ["agents"],
     }),
     createAgent: builder.mutation({
