@@ -1,23 +1,12 @@
-import { Form, Input, InputNumber, Modal, Select } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select } from "antd";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import LangInput from "../../components/Common/LangInput";
 import UploadMedia from "../../components/shared/UploadMedia";
 import {
   useCreateAgentMutation,
   useUpdateAgentMutation,
 } from "../../redux/features/agent/agentApi";
-
-const translateText = async (text: string) => {
-  if (!text) return "";
-  try {
-    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    return data[0][0][0];
-  } catch (err) {
-    console.error("Translation error:", err);
-    return "";
-  }
-};
 
 const AgentModal = ({ open, setOpen, editing, setEditing }: any) => {
   const [form] = Form.useForm();
@@ -72,45 +61,37 @@ const AgentModal = ({ open, setOpen, editing, setEditing }: any) => {
     >
       <Form form={form} onFinish={onFinish} layout="vertical" className="mt-4">
         <div className="grid grid-cols-2 gap-4">
-          <Form.Item
+          <LangInput
             name="name"
             label="Name (English)"
-            rules={[{ required: true, message: "Name is required" }]}
-          >
-            <Input
-              placeholder="John Doe"
-              onBlur={async (e) => {
-                const text = e.target.value;
-                if (text && !form.getFieldValue("nameBn")) {
-                  const translated = await translateText(text);
-                  if (translated) form.setFieldsValue({ nameBn: translated });
-                }
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="nameBn" label="Name (Bengali) - Auto translated">
-            <Input placeholder="জন ডো" />
-          </Form.Item>
+            lang="en"
+            required
+            placeholder="John Doe"
+          />
+          <LangInput
+            name="nameBn"
+            label="Name (Bengali) - Auto translated"
+            lang="bn"
+            sourceFieldName="name"
+            form={form}
+            placeholder="জন ডো"
+          />
 
-          <Form.Item
+          <LangInput
             name="role"
             label="Role (English)"
-            rules={[{ required: true, message: "Role is required" }]}
-          >
-            <Input
-              placeholder="Senior Advisor"
-              onBlur={async (e) => {
-                const text = e.target.value;
-                if (text && !form.getFieldValue("roleBn")) {
-                  const translated = await translateText(text);
-                  if (translated) form.setFieldsValue({ roleBn: translated });
-                }
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="roleBn" label="Role (Bengali) - Auto translated">
-            <Input placeholder="সিনিয়র পরামর্শদাতা" />
-          </Form.Item>
+            lang="en"
+            required
+            placeholder="Senior Advisor"
+          />
+          <LangInput
+            name="roleBn"
+            label="Role (Bengali) - Auto translated"
+            lang="bn"
+            sourceFieldName="role"
+            form={form}
+            placeholder="সিনিয়র পরামর্শদাতা"
+          />
 
           <Form.Item name="patch" label="Patch (Areas covered)">
             <Select mode="tags" placeholder="Gulshan, Banani..." />
