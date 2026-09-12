@@ -24,7 +24,7 @@ import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
 import { useGetAgentsQuery } from "../../redux/features/agent/agentApi";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
-import { normalizeUrl } from "../../utils/normalizeUrl";
+import { normalizeUrl, urlRule } from "../../utils/normalizeUrl";
 import { mediaSrc } from "../../utils/mediaSrc";
 import {
   isEmptyRichText,
@@ -105,6 +105,7 @@ const ProjectForm = ({
       video: rest.video
         ? { ...rest.video, youtubeUrl: normalizeUrl(rest.video.youtubeUrl) }
         : undefined,
+      mapUrl: normalizeUrl(values.mapUrl),
       description: toDescriptionArray(values.description),
       descriptionBn: toDescriptionArray(values.descriptionBn),
       lastInspected: values.lastInspected
@@ -209,6 +210,16 @@ const ProjectForm = ({
                 <Col xs={24} md={8}>
                   <Form.Item label="City" name="city">
                     <Input placeholder="Dhaka" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    label="Google Maps Embed URL"
+                    name="mapUrl"
+                    tooltip="Provide the src URL from Google Maps embed code, or any map link."
+                    rules={[urlRule]}
+                  >
+                    <Input placeholder="https://www.google.com/maps/embed?pb=..." />
                   </Form.Item>
                 </Col>
               </Row>

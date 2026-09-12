@@ -121,6 +121,7 @@ const PropertyForm = ({
       ...rest,
       virtualTourUrl: normalizeUrl(values.virtualTourUrl),
       videoUrl: normalizeUrl(values.videoUrl),
+      mapUrl: normalizeUrl(values.mapUrl),
       description: toDescriptionArray(values.description),
       descriptionBn: toDescriptionArray(values.descriptionBn),
       expiresAt: values.expiresAt ? values.expiresAt.toISOString() : null,
@@ -404,6 +405,16 @@ const PropertyForm = ({
                     rules={[urlRule]}
                   >
                     <Input placeholder="https://…" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    label="Google Maps Embed URL"
+                    name="mapUrl"
+                    tooltip="Provide the src URL from Google Maps embed code, or any map link."
+                    rules={[urlRule]}
+                  >
+                    <Input placeholder="https://www.google.com/maps/embed?pb=..." />
                   </Form.Item>
                 </Col>
               </Row>
