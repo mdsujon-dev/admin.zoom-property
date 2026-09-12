@@ -23,6 +23,7 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
+import { useGetAgentsQuery } from "../../redux/features/agent/agentApi";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import { useGetProjectsQuery } from "../../redux/features/project/projectApi";
 import { useGetPropertyOptionsQuery } from "../../redux/features/property/propertyApi";
@@ -82,6 +83,7 @@ const PropertyForm = ({
   };
 
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
+  const { data: agentData } = useGetAgentsQuery({ limit: 300, activeOnly: true });
   const { data: projectData } = useGetProjectsQuery({ limit: 300, activeOnly: true });
   const { data: amenities = [] } = useGetPropertyOptionsQuery({
     kind: "amenities",
@@ -97,6 +99,7 @@ const PropertyForm = ({
     form.setFieldsValue({
       ...initial,
       area: initial.area?._id ?? initial.area,
+      agent: initial.agent?._id ?? initial.agent,
       project: initial.project?._id ?? initial.project,
       amenities: (initial.amenities || []).map((a: any) => a?._id ?? a),
       coverImage: initial.coverImage?._id ?? initial.coverImage,
@@ -483,7 +486,25 @@ const PropertyForm = ({
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
-                  <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4">
+                  <Form.Item
+                    label="Agent / Consultant"
+                    name="agent"
+                    tooltip="The consultant associated with this property."
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="label"
+                      placeholder="Select an agent"
+                      options={(agentData?.result || []).map((a: any) => ({
+                        value: a._id,
+                        label: `${a.name} (${a.role})`,
+                      }))}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={24}>
+                  <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 mt-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-foreground text-sm">Featured Listing</p>

@@ -22,6 +22,7 @@ import PageHeader from "../../components/Common/PageHeader";
 import PageMeta from "../../components/Common/PageMeta";
 import RichTextEditor from "../../components/Common/RichEditor/RichTextEditor";
 import UploadMedia from "../../components/shared/UploadMedia";
+import { useGetAgentsQuery } from "../../redux/features/agent/agentApi";
 import { useGetAreasQuery } from "../../redux/features/area/areaApi";
 import { normalizeUrl } from "../../utils/normalizeUrl";
 import { mediaSrc } from "../../utils/mediaSrc";
@@ -57,6 +58,7 @@ const ProjectForm = ({
   const [translatingDescBn, setTranslatingDescBn] = useState(false);
 
   const { data: areaData } = useGetAreasQuery({ limit: 300, activeOnly: true });
+  const { data: agentData } = useGetAgentsQuery({ limit: 300, activeOnly: true });
 
   const handleTranslateDescription = async () => {
     const enText = form.getFieldValue("description");
@@ -81,6 +83,7 @@ const ProjectForm = ({
     form.setFieldsValue({
       ...initial,
       area: initial.area?._id ?? initial.area,
+      agent: initial.agent?._id ?? initial.agent,
       coverImage: initial.coverImage?._id ?? initial.coverImage,
       coverImageUrl: mediaSrc(initial.coverImage),
       images: (initial.images || []).map((i: any) => i?._id ?? i),
@@ -466,6 +469,26 @@ const ProjectForm = ({
                 <p className="text-xs text-muted-foreground">
                   Configure featured badges, homepage exposure, live CCTV and active status
                 </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <Form.Item
+                  label="Agent / Consultant"
+                  name="agent"
+                  tooltip="The consultant associated with this project."
+                  className="!mb-0"
+                >
+                  <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="label"
+                    placeholder="Select an agent"
+                    options={(agentData?.result || []).map((a: any) => ({
+                      value: a._id,
+                      label: `${a.name} (${a.role})`,
+                    }))}
+                  />
+                </Form.Item>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
