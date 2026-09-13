@@ -351,9 +351,12 @@ const AreaForm = ({
                 <h3 className="text-base font-semibold text-foreground">
                   Media & Publishing (ছবি ও সেটিংস)
                 </h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mb-4">
                   Upload area thumbnail and configure visibility options
                 </p>
+                <div className="rounded-md bg-secondary-50 p-3 text-xs leading-relaxed text-secondary-600">
+                  <strong>Design Guidelines:</strong> For the <strong>Featured Area Image</strong>, please use a photo with a <strong>4:3 aspect ratio (e.g. 800x600)</strong>. This image is displayed on the area cards across the website. Using appropriately sized images ensures the grid design does not break.
+                </div>
               </div>
 
               <Row gutter={16}>
