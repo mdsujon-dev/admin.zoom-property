@@ -209,6 +209,16 @@ const ShowcaseVideoModal = ({ open, onClose, video }: Props) => {
             </Form.Item>
           </Col>
 
+          <Col xs={24}>
+            <div className="mb-4 rounded-md bg-blue-50 p-4 border border-blue-200">
+              <h4 className="text-blue-800 font-semibold mb-1">Design Guidelines for Poster</h4>
+              <ul className="text-sm text-blue-700 list-disc list-inside">
+                <li>For the best card design, upload an image with a <strong>3:2 aspect ratio</strong> (e.g., 900x600 or 1200x800).</li>
+                <li>The image will be displayed on the video card and should represent the video clearly.</li>
+              </ul>
+            </div>
+          </Col>
+
           <Col xs={24} md={12}>
             <Form.Item label="Poster" name="posterUrl">
               <UploadMedia
