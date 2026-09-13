@@ -50,7 +50,13 @@ export interface CompanyOverview {
     expense: number | null;
     netProfit: number | null;
   } | null;
-  enquiries: { contact: number; quotations: number; total: number } | null;
+  enquiries: {
+    contact: number;
+    quotations: number;
+    total: number;
+    trend?: { label: string; leads: number; quotations: number }[];
+    breakdown?: { name: string; value: number }[];
+  } | null;
   /** Listings added per month for the last six, oldest first. */
   trend: { month: string; listings: number }[] | null;
   content: {

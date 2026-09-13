@@ -1,7 +1,7 @@
 import { Button, Empty, Form, Input, Popconfirm, Space, Spin, Tabs, Tag, Tooltip } from "antd";
 import { FileText, Info, Languages, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { translateToBanglaApi } from "../../components/Common/LangInput";
@@ -40,7 +40,9 @@ import {
  */
 const CmsPage = () => {
   const { pageId = "" } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const page = cmsPageById(pageId);
+  const activeTab = searchParams.get("tab") || page?.sections?.[0]?.id;
 
   const { data: stored = {}, isLoading } = useGetCmsContentQuery(pageId, {
     skip: !page,
@@ -72,13 +74,15 @@ const CmsPage = () => {
           <Spin />
         </div>
       ) : (
-        <div className="rounded-xl border border-secondary-100 bg-white p-4">
+        <div className="rounded-xl border border-secondary-100 bg-white p-4 shadow-xs">
           <Tabs
             tabPosition="top"
             className="cms-tabs"
+            activeKey={activeTab}
+            onChange={(key) => setSearchParams({ tab: key })}
             items={page.sections.map((section) => ({
               key: section.id,
-              label: <span className="text-sm">{section.label}</span>,
+              label: <span className="text-sm font-medium">{section.label}</span>,
               children: (
                 <SectionForm
                   key={`${pageId}-${section.id}`}

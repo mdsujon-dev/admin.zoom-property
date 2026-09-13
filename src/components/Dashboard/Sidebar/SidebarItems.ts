@@ -37,12 +37,12 @@ const sidebarMenuRoutes: RouteItem[] = [
     label: "Dashboard",
     address: "/",
     icon: DashboardIcon,
-    section: "Main",
+    section: "Overview",
   },
   {
-    label: "Listings",
+    label: "Property Listings",
     icon: Home,
-    section: "System",
+    section: "Property Management",
     submenus: [
       {
         label: "Properties",
@@ -77,9 +77,48 @@ const sidebarMenuRoutes: RouteItem[] = [
     ],
   },
   {
-    label: "Content",
+    label: "Landowners",
+    icon: Handshake,
+    address: "/landowners",
+    module: "Landowners",
+    section: "Property Management",
+  },
+  {
+    label: "Showcase Videos",
+    icon: Video,
+    address: "/showcase-videos",
+    module: "Showcase Videos",
+    section: "Property Management",
+  },
+  {
+    label: "Enquiries",
+    icon: Inbox,
+    section: "Engagement",
+    submenus: [
+      {
+        label: "Contact Messages",
+        address: "/enquiries/contact-messages",
+        module: "Contact Messages",
+        icon: MessageSquareQuote,
+      },
+      {
+        label: "Quotation Requests",
+        address: "/enquiries/quotation-requests",
+        module: "Quotation Requests",
+        icon: ScrollText,
+      },
+      {
+        label: "Notifications",
+        address: "/notifications",
+        module: "Notifications",
+        icon: Bell,
+      },
+    ],
+  },
+  {
+    label: "Blog & Content",
     icon: Newspaper,
-    section: "System",
+    section: "Engagement",
     submenus: [
       {
         label: "Blog",
@@ -102,30 +141,16 @@ const sidebarMenuRoutes: RouteItem[] = [
     ],
   },
   {
-    label: "Reviews",
+    label: "Client Reviews",
     icon: Star,
     address: "/reviews",
     module: "Reviews",
-    section: "System",
+    section: "Engagement",
   },
   {
-    label: "Landowners",
-    icon: Handshake,
-    address: "/landowners",
-    module: "Landowners",
-    section: "System",
-  },
-  {
-    label: "Showcase Videos",
-    icon: Video,
-    address: "/showcase-videos",
-    module: "Showcase Videos",
-    section: "System",
-  },
-  {
-    label: "CMS",
+    label: "Website CMS",
     icon: LayoutTemplate,
-    section: "System",
+    section: "Website CMS",
     module: "Dynamic Content",
     submenus: [
       { label: "Home", address: "/cms/home", module: "Dynamic Content", icon: Home },
@@ -179,34 +204,9 @@ const sidebarMenuRoutes: RouteItem[] = [
     ],
   },
   {
-    label: "Enquiries",
-    icon: Inbox,
-    section: "System",
-    submenus: [
-      {
-        label: "Contact Messages",
-        address: "/enquiries/contact-messages",
-        module: "Contact Messages",
-        icon: MessageSquareQuote,
-      },
-      {
-        label: "Quotation Requests",
-        address: "/enquiries/quotation-requests",
-        module: "Quotation Requests",
-        icon: ScrollText,
-      },
-      {
-        label: "Notifications",
-        address: "/notifications",
-        module: "Notifications",
-        icon: Bell,
-      },
-    ],
-  },
-  {
-    label: "HR",
+    label: "HR & Team",
     icon: Users,
-    section: "System",
+    section: "Administration",
     submenus: [
       {
         label: "Employees",
@@ -229,9 +229,9 @@ const sidebarMenuRoutes: RouteItem[] = [
     ],
   },
   {
-    label: "Logs",
+    label: "System Logs",
     icon: ActionLogsIcon,
-    section: "System",
+    section: "Administration",
     submenus: [
       {
         label: "Action Logs",
@@ -250,7 +250,7 @@ const sidebarMenuRoutes: RouteItem[] = [
   {
     label: "Settings",
     icon: SettingsIcon,
-    section: "System",
+    section: "Administration",
     submenus: [
       { label: "Profile", address: "/settings/profile", icon: UserRound },
       {
@@ -277,7 +277,7 @@ const sidebarMenuRoutes: RouteItem[] = [
     label: "User Guide",
     icon: BookOpen,
     address: "/user-guide",
-    section: "System",
+    section: "Administration",
   },
 ];
 

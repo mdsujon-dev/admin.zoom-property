@@ -38,59 +38,63 @@ export const Metric = ({
 }) => {
   if (loading) {
     return (
-      <div
-        className="h-[92px] animate-pulse rounded-xl border"
-        style={{
-          background: `linear-gradient(135deg, ${accent}14 0%, #ffffff 100%)`,
-          borderColor: `${accent}59`,
-        }}
-      />
+      <div className="h-[120px] animate-pulse rounded-xl bg-gray-200" />
     );
   }
 
   return (
     <motion.div
       onClick={onClick}
-      // No lift on hover — eight tiles jumping under the pointer is motion
-      // without meaning, and it made the row feel unsteady to read across.
-      // The shadow alone says "this responds".
-      className={`group relative overflow-hidden rounded-xl border p-4 transition-all duration-300 hover:shadow-card-hover ${
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-xl px-4 py-3 text-white shadow-md transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg ${
         onClick ? "cursor-pointer" : ""
       }`}
       style={{
-        background: `linear-gradient(135deg, ${accent}1a 0%, ${accent}08 42%, #ffffff 100%)`,
-        // 35% of the accent, not 20%. At 20% the border disappeared into the
-        // card's own pale wash and the tiles read as one floating block rather
-        // than eight.
-        borderColor: `${accent}59`,
+        background: `linear-gradient(135deg, ${accent}, ${accent}d9)`,
       }}
     >
-      <div
-        className="pointer-events-none absolute -right-8 -top-10 h-24 w-24 rounded-full opacity-25 blur-xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-40"
-        style={{ background: accent }}
-      />
-      <div className="relative flex items-start gap-3">
-        <span
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white shadow-sm transition-transform duration-300 group-hover:scale-110"
-          style={{ background: accent }}
-        >
-          <Icon className="h-[18px] w-[18px]" />
-        </span>
-        <div className="min-w-0">
-          <p
-            className="text-[11px] font-semibold uppercase tracking-wide"
-            style={{ color: accent }}
-          >
+      {/* Decorative Wave Background */}
+      <svg
+        className="absolute bottom-0 right-0 h-full w-full opacity-20 pointer-events-none"
+        viewBox="0 0 400 150"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0,150 C100,100 200,200 300,50 C350,0 400,100 400,150 Z"
+          fill="currentColor"
+        />
+        <path
+          d="M0,150 C150,50 250,150 400,0 L400,150 Z"
+          fill="currentColor"
+          opacity="0.5"
+        />
+      </svg>
+      
+      <div className="relative z-10 flex justify-between">
+        <div className="flex flex-col">
+          <span className="text-[12px] font-medium opacity-90 tracking-wide uppercase">
             {label}
-          </p>
-          <p className="mt-0.5 truncate text-[26px] font-bold leading-none text-secondary-900">
+          </span>
+          <span className="mt-0.5 text-2xl font-bold tracking-tight">
             {value}
-          </p>
-          {hint && (
-            <p className="mt-1 truncate text-[11px] text-secondary-400">
-              {hint}
-            </p>
-          )}
+          </span>
+        </div>
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+          <Icon className="h-4 w-4 text-white" />
+        </div>
+      </div>
+      
+      <div className="relative z-10 mt-2 flex items-end justify-between">
+        <div className="text-xs font-medium opacity-80">
+          {hint}
+        </div>
+        {/* Tiny mock bar chart to mimic the reference image */}
+        <div className="flex items-end gap-[3px] opacity-70 group-hover:opacity-100 transition-opacity">
+          <div className="w-[4px] h-[12px] bg-white rounded-t-sm" />
+          <div className="w-[4px] h-[20px] bg-white rounded-t-sm" />
+          <div className="w-[4px] h-[16px] bg-white rounded-t-sm" />
+          <div className="w-[4px] h-[24px] bg-white rounded-t-sm" />
+          <div className="w-[4px] h-[10px] bg-white rounded-t-sm" />
         </div>
       </div>
     </motion.div>

@@ -10,6 +10,7 @@ export const PERMISSION_GROUP_ORDER: string[] = [
   "Dashboard",
   "Listings",
   "Content",
+  "Website CMS",
   "Enquiries",
   "Employee Management",
   "Media Library",
@@ -35,9 +36,13 @@ export const PERMISSION_MODULES: PermissionModule[] = [
   { module: "Properties", permissions: CRUD, group: "Listings" },
   { module: "Projects", permissions: CRUD, group: "Listings" },
   { module: "Areas", permissions: CRUD, group: "Listings" },
+  { module: "Landowners", permissions: CRUD, group: "Listings" },
+  { module: "Showcase Videos", permissions: CRUD, group: "Listings" },
 
   { module: "Blog", permissions: CRUD, group: "Content" },
   { module: "Reviews", permissions: CRUD, group: "Content" },
+  
+  { module: "Dynamic Content", permissions: CRUD, group: "Website CMS" },
 
   {
     module: "Media Library",
@@ -66,6 +71,7 @@ export const PERMISSION_MODULES: PermissionModule[] = [
     permissions: [...CRUD, "Change Password"],
     group: "Employee Management",
   },
+  { module: "Agents", permissions: CRUD, group: "Employee Management" },
   {
     module: "Roles",
     permissions: [...CRUD, "Permission"],

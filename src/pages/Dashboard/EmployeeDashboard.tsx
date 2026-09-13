@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import {
-  Banknote,
   Building2,
   FileText,
   Home,
@@ -13,6 +12,8 @@ import { useCompanyOverviewQuery } from "../../redux/features/dashboard/dashboar
 import { Metric } from "./components/DashboardKit";
 import { riseIn } from "./components/dashboardMotion";
 import ListingTrendChart from "./components/ListingTrendChart";
+import EnquiriesTrendChart from "./components/EnquiriesTrendChart";
+import RecentLogsTable from "./components/RecentLogsTable";
 import WelcomeDashboard from "./components/WelcomeDashboard";
 import brand from "../../theme/brand";
 
@@ -22,7 +23,9 @@ const EmployeeDashboard: React.FC = () => {
   const canEnquiries = useHasPermission("Enquiries Summary", "View");
   const canContent = useHasPermission("Content Summary", "View");
   const canTrend = useHasPermission("Listing Trend", "View");
-
+  // Assuming if they can view the dashboard, they might have permission to see logs, or we can just show it.
+  // We'll show the table if they have any KPI.
+  
   const hasAnyKpi = canListings || canProjects || canEnquiries || canContent;
   const hasAnything = hasAnyKpi || canTrend;
 
@@ -44,6 +47,7 @@ const EmployeeDashboard: React.FC = () => {
   }
 
   const listings = overview?.listings;
+  const enquiries = overview?.enquiries;
 
   return (
     <motion.div
@@ -61,7 +65,7 @@ const EmployeeDashboard: React.FC = () => {
       {hasAnyKpi && (
         <motion.div
           variants={riseIn}
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
         >
           {canListings && (
             <Metric
@@ -75,18 +79,7 @@ const EmployeeDashboard: React.FC = () => {
               loading={isFetching}
             />
           )}
-          {canListings && (
-            <Metric
-              label="Sold / let"
-              value={(listings?.sold ?? 0) + (listings?.rented ?? 0)}
-              hint={`${listings?.sold ?? 0} sold · ${
-                listings?.rented ?? 0
-              } let`}
-              icon={Banknote}
-              accent={brand.primaryMid}
-              loading={isFetching}
-            />
-          )}
+
           {canProjects && (
             <Metric
               label="Projects"
@@ -100,9 +93,9 @@ const EmployeeDashboard: React.FC = () => {
           {canEnquiries && (
             <Metric
               label="Enquiries"
-              value={overview?.enquiries?.total ?? 0}
-              hint={`${overview?.enquiries?.contact ?? 0} messages · ${
-                overview?.enquiries?.quotations ?? 0
+              value={enquiries?.total ?? 0}
+              hint={`${enquiries?.contact ?? 0} messages · ${
+                enquiries?.quotations ?? 0
               } quotation requests`}
               icon={Mail}
               accent={brand.secondary}
@@ -126,14 +119,26 @@ const EmployeeDashboard: React.FC = () => {
         </motion.div>
       )}
 
-      {canTrend && (
-        <motion.div variants={riseIn} className="grid gap-4">
-          <ListingTrendChart
-            data={overview?.trend ?? []}
-            loading={isFetching}
-          />
+      {(canTrend || canEnquiries) && (
+        <motion.div variants={riseIn} className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          {canTrend && (
+            <ListingTrendChart
+              data={overview?.trend ?? []}
+              loading={isFetching}
+            />
+          )}
+          {canEnquiries && (
+            <EnquiriesTrendChart
+              data={enquiries?.trend ?? []}
+              loading={isFetching}
+            />
+          )}
         </motion.div>
       )}
+
+      <motion.div variants={riseIn}>
+        <RecentLogsTable />
+      </motion.div>
     </motion.div>
   );
 };
