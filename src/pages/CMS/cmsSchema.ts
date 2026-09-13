@@ -447,40 +447,6 @@ export const cmsPages: CmsPageDef[] = [
           }
         ]
       },
-      {
-        id: "sharedCta",
-        label: "Shared contact CTA",
-        fields: [
-          {
-            key: "cta.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Uncompromising transparency",
-            bn: "স্বচ্ছ পরামর্শ"
-          },
-          {
-            key: "cta.title",
-            label: "Title",
-            type: "text",
-            en: "Ready to see the shortlist?",
-            bn: "আপনার পছন্দের তালিকা দেখতে প্রস্তুত?"
-          },
-          {
-            key: "cta.description",
-            label: "Description",
-            type: "textarea",
-            en: "Send us your criteria. We will prepare a focused shortlist and arrange the next visit.",
-            bn: "আপনার চাহিদা জানান। আমরা আপনার জন্য বাছাই করা তালিকা তৈরি করে পরের ভিজিটের ব্যবস্থা করব।"
-          },
-          {
-            key: "cta.contact",
-            label: "Button",
-            type: "text",
-            en: "Contact the team",
-            bn: "টিমের সঙ্গে যোগাযোগ করুন"
-          }
-        ]
-      }
     ],
   },
   {
@@ -1395,6 +1361,46 @@ export const cmsPages: CmsPageDef[] = [
           ]
         }
       },
+      {
+        // Lives here, not under a single page: the same green band closes
+        // Properties, Projects, Areas, About, Agents, Blog and more. It is
+        // site furniture like the header and footer, and its stored rows
+        // are in this group — so the form shows the live text.
+        id: "sharedCta",
+        label: "Contact CTA (all pages)",
+        fields: [
+          {
+            key: "cta.eyebrow",
+            label: "Eyebrow",
+            type: "text",
+            groupHeader: "Shared contact CTA",
+            hint: "The green call-to-action band at the bottom of most pages. One edit changes it everywhere.",
+            en: "Uncompromising transparency",
+            bn: "স্বচ্ছ পরামর্শ"
+          },
+          {
+            key: "cta.title",
+            label: "Title",
+            type: "text",
+            en: "Ready to see the shortlist?",
+            bn: "আপনার পছন্দের তালিকা দেখতে প্রস্তুত?"
+          },
+          {
+            key: "cta.description",
+            label: "Description",
+            type: "textarea",
+            en: "Send us your criteria. We will prepare a focused shortlist and arrange the next visit.",
+            bn: "আপনার চাহিদা জানান। আমরা আপনার জন্য বাছাই করা তালিকা তৈরি করে পরের ভিজিটের ব্যবস্থা করব।"
+          },
+          {
+            key: "cta.contact",
+            label: "Button",
+            type: "text",
+            en: "Contact the team",
+            bn: "টিমের সঙ্গে যোগাযোগ করুন"
+          }
+        ]
+      },
     ],
   },
   {
@@ -1718,33 +1724,6 @@ export const cmsPages: CmsPageDef[] = [
             hint: "The Google Maps embed src URL.",
             en: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14603.220550064567!2d90.4079836!3d23.789965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c709bd51a1a9%3A0xc34a0283c8edfb96!2sGulshan%20%2C%20Dhaka%201212!5e0!3m2!1sen!2sbd!4v1714571217734!5m2!1sen!2sbd",
             bn: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14603.220550064567!2d90.4079836!3d23.789965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c709bd51a1a9%3A0xc34a0283c8edfb96!2sGulshan%20%2C%20Dhaka%201212!5e0!3m2!1sen!2sbd!4v1714571217734!5m2!1sen!2sbd"
-          }
-        ]
-      },
-      {
-        id: "contactCta",
-        label: "Contact CTA",
-        fields: [
-          {
-            key: "contact.cta.eyebrow",
-            label: "Eyebrow",
-            type: "text",
-            en: "Get in touch",
-            bn: "যোগাযোগ করুন"
-          },
-          {
-            key: "contact.cta.title",
-            label: "Title",
-            type: "text",
-            en: "How can we help?",
-            bn: "আমরা কীভাবে সাহায্য করতে পারি?"
-          },
-          {
-            key: "contact.cta.description",
-            label: "Description",
-            type: "textarea",
-            en: "Have questions? Our team is ready to assist.",
-            bn: "কোনো প্রশ্ন আছে? আমাদের টিম সাহায্য করতে প্রস্তুত।"
           }
         ]
       },
