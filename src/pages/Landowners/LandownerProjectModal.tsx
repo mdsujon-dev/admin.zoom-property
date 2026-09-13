@@ -96,6 +96,9 @@ const LandownerProjectModal = ({ open, onClose, project }: Props) => {
         onFinish={onFinish}
         initialValues={{ isPublished: false, isHome: true, order: 0 }}
       >
+        <p className="mb-6 rounded-md bg-secondary-50 p-3 text-xs leading-relaxed text-secondary-600">
+          <strong>Design Guidelines:</strong> To keep the website layout balanced, please keep the <strong>Title</strong> concise and the <strong>Description</strong> short (around 2-3 paragraphs). For the <strong>Image</strong>, upload a landscape photo with a roughly 4:3 aspect ratio (e.g. 800x600). Images that are too tall may break the card design.
+        </p>
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <LangInput

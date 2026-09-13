@@ -226,11 +226,8 @@ const BlogForm = ({ initial, saving, onSubmit, heading, submitLabel }: Props) =>
         </Card>
 
         <Card title="Images">
-          <p className="mb-4 text-xs text-secondary-500">
-            Two different crops doing two different jobs. The cover is wide and
-            carries the headline over it on the article page; the thumbnail is
-            close and has to read at a couple of hundred pixels in the card.
-            Leave the thumbnail empty and the card falls back to the cover.
+          <p className="mb-6 rounded-md bg-secondary-50 p-3 text-xs leading-relaxed text-secondary-600">
+            <strong>Design Guidelines:</strong> Two different crops doing two different jobs. The <strong>Cover image</strong> is wide (use a 16:9 aspect ratio, e.g. 1200x675) and carries the headline over it on the article page. The <strong>Thumbnail image</strong> is closer and used for blog cards (use a 4:3 or 1:1 aspect ratio, e.g. 800x600). Leave the thumbnail empty and the card will fall back to the cover image.
           </p>
           <Row gutter={16}>
             <Col xs={24} md={12}>
