@@ -77,6 +77,12 @@ export interface CmsRepeatable {
   /** How many blank items to show before anything has been saved. */
   initialCount?: number;
   /**
+   * Hard cap on how many items the editor may hold. When set, the add
+   * buttons disable at this count — used for fixed-width UI like the
+   * three-cell side contact strip.
+   */
+  maxItems?: number;
+  /**
    * Which item field names the row in the editor's heading. Defaults to
    * `title`; a list whose rows have no title says so here.
    */
@@ -105,6 +111,14 @@ export interface CmsPageDef {
   description: string;
   sections: CmsSection[];
 }
+
+/**
+ * Guidance on every inner-page banner title. The banner is a fixed-height
+ * band and the title is clamped to two lines on large screens — anything
+ * longer is cut off, so the panel says so where the title is typed.
+ */
+const BANNER_TITLE_HINT =
+  "Keep it short — max 2 lines on desktop (about 40–45 characters). Longer titles are cut off and break the banner layout.";
 
 export const cmsPages: CmsPageDef[] = [
   {
@@ -496,6 +510,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "listings.pageTitle",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Properties for sale and rent",
             bn: "বিক্রয় ও ভাড়ার সম্পত্তি",
           },
@@ -539,6 +554,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "projects.pageTitle",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Projects under construction",
             bn: "নির্মাণাধীন প্রকল্প",
           },
@@ -581,6 +597,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "areas.pageTitle",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Service Areas for Luxury Flats",
             bn: "আমাদের সার্ভিস এরিয়া ও এলাকাসমূহ",
           },
@@ -622,6 +639,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "about.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Fewer listings, checked properly",
             bn: "কম লিস্টিং, ঠিকভাবে যাচাই করা",
           },
@@ -932,6 +950,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "landowner.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Put your land into a development",
             bn: "আপনার জমি উন্নয়নে দিন",
           },
@@ -1035,6 +1054,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "blog.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Explore News, Insights and Guides",
             bn: "রিয়েল এস্টেট সংবাদ, বিশ্লেষণ ও গাইড",
           },
@@ -1076,6 +1096,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "reviews.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Real stories from people who bought here",
             bn: "যাঁরা এখান থেকে কিনেছেন, তাঁদের কথা",
           },
@@ -1117,6 +1138,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "agentsSection.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Neighbourhood specialists, not a call centre",
             bn: "কল সেন্টার নয়, এলাকার বিশেষজ্ঞ",
           },
@@ -1359,6 +1381,7 @@ export const cmsPages: CmsPageDef[] = [
           itemName: "Cell",
           addButtonText: "+ Add cell",
           initialCount: 3,
+          maxItems: 3,
           titleSuffix: "label",
           itemFields: [
             { suffix: "icon", label: "Icon", type: "icon", hint: "A Font Awesome class \u2014 fa-solid fa-phone, fa-brands fa-whatsapp. Search fontawesome.com and copy the class." },
@@ -1552,6 +1575,7 @@ export const cmsPages: CmsPageDef[] = [
             key: "contact.title",
             label: "Title",
             type: "text",
+            hint: BANNER_TITLE_HINT,
             en: "Talk to an advisor",
             bn: "একজন পরামর্শদাতার সঙ্গে কথা বলুন",
           },

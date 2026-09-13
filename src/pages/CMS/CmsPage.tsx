@@ -221,6 +221,13 @@ const SectionForm = ({
 
   const handleAddProcess = () => {
     if (!repeatable) return;
+    if (
+      typeof repeatable.maxItems === "number" &&
+      repeatableIndices.length >= repeatable.maxItems
+    ) {
+      toast.error(`সর্বোচ্চ ${repeatable.maxItems} টি ${repeatable.itemName || "item"} যোগ করা যাবে`);
+      return;
+    }
     const nextIdx = repeatableIndices.length > 0 ? Math.max(...repeatableIndices) + 1 : 0;
     
     const defaultItem = repeatable.defaultItems?.[nextIdx];
@@ -527,17 +534,27 @@ const SectionForm = ({
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-semibold text-secondary-900">
-                  {repeatable.itemName} List ({repeatableIndices.length} টি)
+                  {repeatable.itemName} List ({repeatableIndices.length}
+                  {typeof repeatable.maxItems === "number"
+                    ? ` / ${repeatable.maxItems}`
+                    : ""}{" "}
+                  টি)
                 </h4>
                 <p className="text-xs text-secondary-500">
-                  যেকোনো আইটেম পরিবর্তন করুন, নতুন যোগ করুন বা মুছে ফেলুন
+                  {typeof repeatable.maxItems === "number"
+                    ? `সর্বোচ্চ ${repeatable.maxItems} টি পর্যন্ত — পরিবর্তন করুন বা মুছে ফেলুন`
+                    : "যেকোনো আইটেম পরিবর্তন করুন, নতুন যোগ করুন বা মুছে ফেলুন"}
                 </p>
               </div>
               <Button
                 type="dashed"
                 onClick={handleAddProcess}
+                disabled={
+                  typeof repeatable.maxItems === "number" &&
+                  repeatableIndices.length >= repeatable.maxItems
+                }
                 icon={<Plus className="h-4 w-4 text-primary-600" />}
-                className="border-primary-300 text-primary-700 bg-primary-50/50 hover:bg-primary-50 hover:border-primary-500 font-medium"
+                className="border-primary-300 text-primary-700 bg-primary-50/50 hover:bg-primary-50 hover:border-primary-500 font-medium disabled:opacity-50"
               >
                 {repeatable.addButtonText || "+ Add Process"}
               </Button>
@@ -617,10 +634,17 @@ const SectionForm = ({
               type="dashed"
               block
               onClick={handleAddProcess}
+              disabled={
+                typeof repeatable.maxItems === "number" &&
+                repeatableIndices.length >= repeatable.maxItems
+              }
               icon={<Plus className="h-4 w-4 text-primary-600" />}
-              className="py-5 border-dashed border-primary-300 text-primary-700 bg-primary-50/30 hover:bg-primary-50 hover:border-primary-500 font-semibold text-sm flex items-center justify-center gap-2"
+              className="py-5 border-dashed border-primary-300 text-primary-700 bg-primary-50/30 hover:bg-primary-50 hover:border-primary-500 font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {repeatable.addButtonText || "+ Add Process (নতুন ধাপ যোগ করুন)"}
+              {typeof repeatable.maxItems === "number" &&
+              repeatableIndices.length >= repeatable.maxItems
+                ? `সর্বোচ্চ ${repeatable.maxItems} টি ${repeatable.itemName}`
+                : repeatable.addButtonText || "+ Add Process (নতুন ধাপ যোগ করুন)"}
             </Button>
           </div>
         )}
